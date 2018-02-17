@@ -18,7 +18,9 @@ public class StackUtils {
     public Optional<String> methodName() {
         return Arrays.stream(Thread.currentThread().getStackTrace())
                 .filter(e -> e.getClassName().equals(className))
+                .filter(e -> !e.getMethodName().startsWith("lambda$"))
                 .map(e -> e.getMethodName())
                 .findFirst();
     }
+
 }
