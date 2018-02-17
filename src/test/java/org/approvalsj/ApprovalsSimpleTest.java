@@ -1,6 +1,5 @@
-package org.approvalsj.example;
+package org.approvalsj;
 
-import org.approvalsj.Approvals;
 import org.approvalsj.util.FileUtils;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +7,7 @@ import static java.nio.file.Files.delete;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ApproveSimpleObject {
+public class ApprovalsSimpleTest {
     Approvals approvals = new Approvals(getClass());
     FileUtils fileUtils = new FileUtils(getClass());
 
