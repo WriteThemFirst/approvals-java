@@ -9,6 +9,9 @@ import java.io.BufferedWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class ApproveSimpleObject {
     Approvals approvals = new Approvals(getClass());
 
@@ -36,7 +39,8 @@ public class ApproveSimpleObject {
             writer.write("expected test");
         }
 
-        Assertions.assertThrows(AssertionError.class, () -> approvals.verify("actual text"));
+        AssertionError error = assertThrows(AssertionError.class, () -> approvals.verify("actual text"));
+        assertEquals("expected: <expected test> but was: <actual text>", error.getMessage());
 
         Files.delete(approvedFile);
     }
