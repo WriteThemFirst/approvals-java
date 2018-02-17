@@ -12,17 +12,16 @@ public class ApproveSimpleObject {
     Approvals approvals = new Approvals(getClass());
 
     @Test
-    void approvalShouldDoNothingWhenApprovedFileExists() throws Exception {
+    void approvalShouldDoNothingWhenApprovedFileExistsAndIsCorrect() throws Exception {
         FileUtils fileUtils = new FileUtils(getClass());
-        String methodName = "approvalShouldDoNothingWhenApprovedFileExists";
-        Path approvedFile = fileUtils.getApprovedFile(methodName);
+        Path approvedFile = fileUtils.getApprovedFile();
 
         Files.createDirectories(approvedFile.getParent());
         try (BufferedWriter writer = Files.newBufferedWriter(approvedFile)) {
             writer.write("some test");
         }
 
-        approvals.verify(methodName,"some text");
+        approvals.verify("some text");
         Files.delete(approvedFile);
     }
 

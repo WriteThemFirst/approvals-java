@@ -23,4 +23,7 @@ public class FileUtils {
         return packageResourcesPath.resolve(aClass.getSimpleName());
     }
 
+    public Path getApprovedFile() {
+        return getApprovedFile(new StackUtils(aClass).methodName().get());
+    }
 }

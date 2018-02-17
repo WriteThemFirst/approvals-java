@@ -7,6 +7,6 @@ public class Approvals {
         this.testedClass = testedClass;
     }
 
-    public void verify(String methodName, Object actual) {
+    public void verify(Object actual) {
     }
 }
