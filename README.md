@@ -17,9 +17,18 @@
 
 # Approvals
 
-Approvals is an lightweight open source assertion/verification library to aid unit testing.
+Approvals is an lightweight open source assertion/verification library to aid unit testing. 
+It alleviates the burden of hand-writing assertions.
+Instead you call a `verify` method.
 
-It is compatible with JUnit.
+1. The first time `verify` is called, a file is generated with a representation of its argument
+2. You review the content and *approve* it by renaming the file
+3. You commit the file, it is now part of the unit test and contains part of the specification for your code
+4. Now each time `verify` is called, the argument is compared with the *approved* file. 
+This replaces the calls to traditional `assert` methods.
+
+Approval is compatible with most unit test frameworks like JUnit.
+
 
 ## What can it be used for?
 
@@ -72,6 +81,8 @@ public class GildedRoseApprovalTest {
 
 The `toString()` of sword is used.
 
+#### Verify the output of a method when called with combinations of arguments
+
 ```java
 @Test
 void approvalBrieShouldImprove() throws Exception {
@@ -83,6 +94,10 @@ void approvalBrieShouldImprove() throws Exception {
 }
 ```
 
+`GildedRose.nextDay` is called 8 times, each time with an instance of `Item` constructed with a possible combination of `sellIn` and `quality`.
+
+#### Verify each file in a folder
+
 ```java
 @Test
 void approvalCopySrcFolder() throws Exception {
@@ -92,9 +107,10 @@ void approvalCopySrcFolder() throws Exception {
 }
 ```
 
+Each file in `outDir` is checked against the master directory.
 
-Examples
----
+## More Examples
+
 Approvals eats it own dogfood, so the best examples are in the source code itself.
 
 None the less,  Here's a quick look at some
