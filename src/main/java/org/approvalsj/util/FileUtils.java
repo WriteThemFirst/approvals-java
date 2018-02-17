@@ -19,15 +19,31 @@ public class FileUtils {
 
     public void writeApproved(String content) {
         Path approvedFile = approvedFile();
+        try {
+            Files.createDirectories(approvedFile.getParent());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         try (BufferedWriter writer = Files.newBufferedWriter(approvedFile)) {
-            Files.createDirectories(approvedFile.getParent());
             writer.write(content);
         } catch (IOException e) {
-            String message = format("Could not write to file %s because of %s", approvedFile.toAbsolutePath(), e.getMessage());
+            String message = format("Could not write to file %s because of %s", approvedFile.toAbsolutePath(), e);
             throw new RuntimeException(message, e);
         }
     }
+
+    public String readApproved() {
+        Path approvedFile = approvedFile();
+
+        try {
+            return new String(Files.readAllBytes(approvedFile));
+        } catch (IOException e) {
+            String message = format("Could not read from file %s because of %s", approvedFile.toAbsolutePath(), e.getMessage());
+            throw new RuntimeException(message, e);
+        }
+    }
+
 
     private Path folder() {
         String packageName = aClass.getPackage().getName();
