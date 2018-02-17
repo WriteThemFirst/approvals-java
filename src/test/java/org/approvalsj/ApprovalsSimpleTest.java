@@ -3,9 +3,6 @@ package org.approvalsj;
 import org.approvalsj.util.FileUtils;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
-import static java.nio.file.Files.delete;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -30,16 +27,14 @@ public class ApprovalsSimpleTest {
         fileUtils.removeApproved();
     }
 
-//    @Test
-//    void approvalShouldFailWhenApprovedFileDoesNotExist() throws Exception {
-//        try {
-//            delete(fileUtils.approvedFile());
-//        } catch (IOException e) {
-//            // we were cleaning just in case
-//        }
-//
-//        assertThrows(AssertionError.class, () -> approvals.verify("text"));
-//    }
+    @Test
+    void approvalShouldFailWhenApprovedFileDoesNotExist() throws Exception {
+        fileUtils.removeApproved();
+
+        AssertionError error = assertThrows(AssertionError.class, () -> approvals.verify("text"));
+        assertEquals("src\\test\\resources\\org\\approvalsj\\ApprovalsSimpleTest\\approvalShouldFailWhenApprovedFileDoesNotExist.approved does not exist yet",
+                error.getMessage());
+    }
 
 
 }
