@@ -40,8 +40,7 @@ public class FileUtils {
         try {
             return new String(Files.readAllBytes(approvedFile));
         } catch (IOException e) {
-            String message = format("Could not read from file %s because of %s", approvedFile.toAbsolutePath(), e.getMessage());
-//            throw new RuntimeException(message, e);
+            System.err.println("Could not read from " + approvedFile);
             return null;
         }
     }
@@ -62,7 +61,7 @@ public class FileUtils {
         return folder.resolve(fileName);
     }
 
-    public void removeApproved(){
+    public void removeApproved() {
         try {
             delete(approvedFile());
         } catch (IOException e) {
