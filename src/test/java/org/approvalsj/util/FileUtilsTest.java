@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FileUtilsTest {
-    FileUtils fileUtils = new FileUtils(getClass());
+    private FileUtils fileUtils = new FileUtils(getClass());
 
     @Test
     void approvedFileShouldBeExpectedPath() {
@@ -21,7 +21,7 @@ class FileUtilsTest {
     }
 
     @Test
-    void approvedFileShouldBeReadAfterWritten() throws Exception {
+    void approvedFileShouldBeReadAfterWritten() {
         //WHEN
         String content = "some content\non 2 lines";
         fileUtils.writeApproved(content);

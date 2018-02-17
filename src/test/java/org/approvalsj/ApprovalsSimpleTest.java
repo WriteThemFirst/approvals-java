@@ -6,18 +6,18 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ApprovalsSimpleTest {
-    Approvals approvals = new Approvals(getClass());
-    FileUtils fileUtils = new FileUtils(getClass());
+    private Approvals approvals = new Approvals(getClass());
+    private FileUtils fileUtils = new FileUtils(getClass());
 
     @Test
-    void approvalShouldDoNothingWhenApprovedFileExistsAndIsCorrect() throws Exception {
+    void approvalShouldDoNothingWhenApprovedFileExistsAndIsCorrect() {
         fileUtils.writeApproved("some text");
         approvals.verify("some text");
         fileUtils.removeApproved();
     }
 
     @Test
-    void approvalShouldFailWhenApprovedFileExistsAndIsDifferent() throws Exception {
+    void approvalShouldFailWhenApprovedFileExistsAndIsDifferent() {
         fileUtils.writeApproved("expected text");
 
         assertThatThrownBy(() -> approvals.verify("actual text"))
@@ -28,7 +28,7 @@ public class ApprovalsSimpleTest {
     }
 
     @Test
-    void approvalShouldFailWhenApprovedFileDoesNotExist() throws Exception {
+    void approvalShouldFailWhenApprovedFileDoesNotExist() {
         fileUtils.removeApproved();
 
         assertThatThrownBy(() -> approvals.verify("text"))
