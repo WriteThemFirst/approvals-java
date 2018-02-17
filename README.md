@@ -54,19 +54,44 @@ Link for direct download if you don't use a dependency manager:
  
 ### How to use it
 
+#### Verify a simple object
 
 ```java
 package com.examples;
 
 import static org.approvals.*;
 
-public class HelloTest {
+public class GildedRoseApprovalTest {
     @Test
-    public void approveHello() {
-       Approvals.verify("hello");
+    void approvalSwordShouldDeteriorate() throws Exception {
+        Item sword = new Item("basic sword", 10, 8);
+        Approvals.verify(GildedRose.nextDay(sword));
     }
 }
 ```
+
+The `toString()` of sword is used.
+
+```java
+@Test
+void approvalBrieShouldImprove() throws Exception {
+    Integer[] sellInDays = {-5, 0, 1, 20};
+    Integer[] qualities = {0, 10};
+
+    verifyAllCombinations((sellIn, quality) ->
+            GildedRose.nextDay(new Item(BRIE, sellIn, quality)), sellInDays, qualities);
+}
+```
+
+```java
+@Test
+void approvalCopySrcFolder() throws Exception {
+    Path outDir = Files.createTempDirectory("src");
+    FolderCopy.copyFrom(Paths.get("."), outDir);
+    Approvals.verifyEachFileInDirectory(outDir.toFile(), f -> f.getName().endsWith(".xml"));
+}
+```
+
 
 Examples
 ---
