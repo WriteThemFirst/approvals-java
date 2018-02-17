@@ -2,29 +2,20 @@ package org.approvalsj;
 
 import org.approvalsj.util.FileUtils;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import static java.lang.String.format;
 
 public class Approvals {
-    private final Class<?> testedClass;
+    private final FileUtils fileUtils;
 
     public Approvals(Class<?> testedClass) {
-        this.testedClass = testedClass;
+        fileUtils = new FileUtils(testedClass);
     }
 
     public void verify(Object actual) {
-        Path approvedFile = new FileUtils(testedClass).approvedFile();
-        try {
-            String expected = Files.newBufferedReader(approvedFile).readLine();
-            if (!expected.equals(actual.toString())) {
-                String detailMessage = format("expected: <%s> but was: <%s>", expected, actual);
-                throw new AssertionError(detailMessage);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        String expected = fileUtils.readApproved();
+        if (!expected.equals(actual.toString())) {
+            String detailMessage = format("expected: <%s> but was: <%s>", expected, actual);
+            throw new AssertionError(detailMessage);
         }
     }
 }
