@@ -1,7 +1,12 @@
 package org.approvalsj.util;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static java.lang.String.format;
 
 public class FileUtils {
     private final Class<?> aClass;
@@ -9,21 +14,34 @@ public class FileUtils {
 
     public FileUtils(Class<?> aClass) {
         this.aClass = aClass;
-        this.folder = getFolder();
+        this.folder = folder();
     }
 
-    public Path getApprovedFile(String methodName) {
-        String fileName = String.format("%s.approved", methodName);
-        return folder.resolve(fileName);
+    public void writeApproved(String content) {
+        Path approvedFile = approvedFile();
+
+        try (BufferedWriter writer = Files.newBufferedWriter(approvedFile)) {
+            Files.createDirectories(approvedFile.getParent());
+            writer.write(content);
+        } catch (IOException e) {
+            String message = format("Could not write to file %s because of %s", approvedFile.toAbsolutePath(), e.getMessage());
+            throw new RuntimeException(message, e);
+        }
     }
 
-    private Path getFolder() {
+    private Path folder() {
         String packageName = aClass.getPackage().getName();
         Path packageResourcesPath = Paths.get("src/test/resources/", packageName.split("\\."));
         return packageResourcesPath.resolve(aClass.getSimpleName());
     }
 
-    public Path getApprovedFile() {
-        return getApprovedFile(new StackUtils(aClass).methodName().get());
+    public Path approvedFile() {
+        return approvedFile(new StackUtils(aClass).methodName().get());
     }
+
+    Path approvedFile(String methodName) {
+        String fileName = format("%s.approved", methodName);
+        return folder.resolve(fileName);
+    }
+
 }

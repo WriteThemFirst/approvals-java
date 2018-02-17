@@ -16,7 +16,7 @@ public class Approvals {
     }
 
     public void verify(Object actual) {
-        Path approvedFile = new FileUtils(testedClass).getApprovedFile();
+        Path approvedFile = new FileUtils(testedClass).approvedFile();
         try {
             String expected = Files.newBufferedReader(approvedFile).readLine();
             if (!expected.equals(actual.toString())) {
