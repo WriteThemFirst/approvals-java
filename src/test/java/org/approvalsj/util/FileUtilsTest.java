@@ -2,19 +2,18 @@ package org.approvalsj.util;
 
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static java.nio.file.Files.delete;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class FileUtilsTest {
+    FileUtils fileUtils = new FileUtils(getClass());
 
     @Test
-    void approvedFileShouldBeCorrect() {
-        //GIVEN
-        FileUtils fileUtils = new FileUtils(getClass());
-
+    void approvedFileShouldBeExpectedPath() {
         //WHEN
         Path approvedFile = fileUtils.approvedFile("approvedFileShouldBeCorrect");
 
@@ -25,11 +24,8 @@ class FileUtilsTest {
 
     @Test
     void approvedFileShouldBeReadAfterWritten() throws Exception {
-        //GIVEN
-        FileUtils fileUtils = new FileUtils(getClass());
-        String content = "some content\non 2 lines";
-
         //WHEN
+        String content = "some content\non 2 lines";
         fileUtils.writeApproved(content);
 
         //THEN
@@ -37,6 +33,18 @@ class FileUtilsTest {
         assertEquals(content, actualContent);
 
         //CLEANUP
-        Files.delete(fileUtils.approvedFile());
+        fileUtils.removeApproved();
+    }
+
+    @Test
+    void readApprovedShouldBeNullWhenFileMissing() {
+        //GIVEN
+        fileUtils.removeApproved();
+
+        //WHEN
+        String read = fileUtils.readApproved();
+
+        //THEN
+        assertNull(read);
     }
 }

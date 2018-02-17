@@ -3,6 +3,8 @@ package org.approvalsj;
 import org.approvalsj.util.FileUtils;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static java.nio.file.Files.delete;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -15,7 +17,7 @@ public class ApprovalsSimpleTest {
     void approvalShouldDoNothingWhenApprovedFileExistsAndIsCorrect() throws Exception {
         fileUtils.writeApproved("some text");
         approvals.verify("some text");
-        delete(fileUtils.approvedFile());
+        fileUtils.removeApproved();
     }
 
     @Test
@@ -25,8 +27,19 @@ public class ApprovalsSimpleTest {
         AssertionError error = assertThrows(AssertionError.class, () -> approvals.verify("actual text"));
         assertEquals("expected: <expected text> but was: <actual text>", error.getMessage());
 
-        delete(fileUtils.approvedFile());
+        fileUtils.removeApproved();
     }
+
+//    @Test
+//    void approvalShouldFailWhenApprovedFileDoesNotExist() throws Exception {
+//        try {
+//            delete(fileUtils.approvedFile());
+//        } catch (IOException e) {
+//            // we were cleaning just in case
+//        }
+//
+//        assertThrows(AssertionError.class, () -> approvals.verify("text"));
+//    }
 
 
 }

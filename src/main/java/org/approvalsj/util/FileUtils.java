@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static java.lang.String.format;
+import static java.nio.file.Files.delete;
 
 public class FileUtils {
     private final Class<?> aClass;
@@ -40,7 +41,8 @@ public class FileUtils {
             return new String(Files.readAllBytes(approvedFile));
         } catch (IOException e) {
             String message = format("Could not read from file %s because of %s", approvedFile.toAbsolutePath(), e.getMessage());
-            throw new RuntimeException(message, e);
+//            throw new RuntimeException(message, e);
+            return null;
         }
     }
 
@@ -58,6 +60,14 @@ public class FileUtils {
     Path approvedFile(String methodName) {
         String fileName = format("%s.approved", methodName);
         return folder.resolve(fileName);
+    }
+
+    public void removeApproved(){
+        try {
+            delete(approvedFile());
+        } catch (IOException e) {
+            // we were cleaning just in case
+        }
     }
 
 }
