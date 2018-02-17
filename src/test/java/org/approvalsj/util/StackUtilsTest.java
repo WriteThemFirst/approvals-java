@@ -2,28 +2,28 @@ package org.approvalsj.util;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class StackUtilsTest {
     @Test
     void methodNameShouldBeEmpty() {
         StackUtils utils = new StackUtils(String.class);
-        assertEquals(Optional.empty(), utils.methodName());
+        assertThat(utils.methodName()).isEmpty();
     }
 
     @Test
     void methodNameShouldBeTheMethodName() {
         StackUtils utils = new StackUtils(getClass());
-        assertEquals(Optional.of("methodNameShouldBeTheMethodName"), utils.methodName());
+        assertThat(utils.methodName()).contains("methodNameShouldBeTheMethodName");
     }
 
     @Test
     void methodNameShouldNotBeLambda() {
         StackUtils utils = new StackUtils(getClass());
-        Stream.of("whatever").forEach(s -> assertEquals(Optional.of("methodNameShouldNotBeLambda"), utils.methodName()));
+        Stream.of("whatever").forEach(s ->
+                assertThat(utils.methodName()).contains("methodNameShouldNotBeLambda"));
 
     }
 }

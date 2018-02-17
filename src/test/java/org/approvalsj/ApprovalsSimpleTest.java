@@ -3,8 +3,7 @@ package org.approvalsj;
 import org.approvalsj.util.FileUtils;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ApprovalsSimpleTest {
     Approvals approvals = new Approvals(getClass());
@@ -21,8 +20,9 @@ public class ApprovalsSimpleTest {
     void approvalShouldFailWhenApprovedFileExistsAndIsDifferent() throws Exception {
         fileUtils.writeApproved("expected text");
 
-        AssertionError error = assertThrows(AssertionError.class, () -> approvals.verify("actual text"));
-        assertEquals("expected: <expected text> but was: <actual text>", error.getMessage());
+        assertThatThrownBy(() -> approvals.verify("actual text"))
+                .isInstanceOf(AssertionError.class)
+                .hasMessage("expected: <expected text> but was: <actual text>");
 
         fileUtils.removeApproved();
     }
@@ -31,10 +31,9 @@ public class ApprovalsSimpleTest {
     void approvalShouldFailWhenApprovedFileDoesNotExist() throws Exception {
         fileUtils.removeApproved();
 
-        AssertionError error = assertThrows(AssertionError.class, () -> approvals.verify("text"));
-        assertEquals("src\\test\\resources\\org\\approvalsj\\ApprovalsSimpleTest\\approvalShouldFailWhenApprovedFileDoesNotExist.approved does not exist yet",
-                error.getMessage());
+        assertThatThrownBy(() -> approvals.verify("text"))
+                .isInstanceOf(AssertionError.class)
+                .hasMessageContaining("approvalShouldFailWhenApprovedFileDoesNotExist.approved does not exist yet");
     }
-
 
 }

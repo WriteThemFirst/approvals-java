@@ -5,9 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static java.nio.file.Files.delete;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class FileUtilsTest {
     FileUtils fileUtils = new FileUtils(getClass());
@@ -19,7 +17,7 @@ class FileUtilsTest {
 
         //THEN
         Path expectedPath = Paths.get("src/test/resources/org/approvalsj/util/FileUtilsTest/approvedFileShouldBeCorrect.approved");
-        assertEquals(expectedPath, approvedFile);
+        assertThat(approvedFile).isEqualTo(expectedPath);
     }
 
     @Test
@@ -30,7 +28,7 @@ class FileUtilsTest {
 
         //THEN
         String actualContent = fileUtils.readApproved();
-        assertEquals(content, actualContent);
+        assertThat(actualContent).isEqualTo(content);
 
         //CLEANUP
         fileUtils.removeApproved();
@@ -45,6 +43,6 @@ class FileUtilsTest {
         String read = fileUtils.readApproved();
 
         //THEN
-        assertNull(read);
+        assertThat(read).isNull();
     }
 }
