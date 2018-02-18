@@ -56,8 +56,7 @@ public class ApprovalsSimpleTest {
 
     @Test
     void approvalShouldKeepReceivedFileWhenApprovedFileMismatch() {
-        fileUtils.removeApproved();
-        fileUtils.writeReceived("different");
+        fileUtils.writeApproved("approved");
         try {
             approvals.verify("text");
         } catch (AssertionError e) {
