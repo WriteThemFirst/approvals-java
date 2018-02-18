@@ -1,27 +1,25 @@
 package org.approvalsj;
 
-import org.approvalsj.approbation.Approver;
+import org.approvalsj.reporter.MismatchReporter;
 import org.approvalsj.util.FileUtils;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
-public class ApprobationTest {
-    private Approver approver = mock(Approver.class);
-    private Approvals approvals = new Approvals(getClass(), approver);
+public class ReporterTest {
+    private MismatchReporter mismatchReporter = mock(MismatchReporter.class);
+    private Approvals approvals = new Approvals(getClass(), mismatchReporter);
     private FileUtils fileUtils = new FileUtils(getClass());
 
     @Test
-    void approvalsShouldCallApproverWhenMismatch() {
+    void approvalsShouldCallReporterWhenMismatch() {
         fileUtils.writeApproved("some text");
         try {
-            approvals.verify("diferent text");
+            approvals.verify("different text");
         } catch (AssertionError e) {
-            verify(approver).approve(fileUtils.approvedFile(), fileUtils.receivedFile());
+            verify(mismatchReporter).reportMismatch(fileUtils.approvedFile(), fileUtils.receivedFile());
             fileUtils.removeApproved();
             fileUtils.removeReceived();
         }

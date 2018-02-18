@@ -1,4 +1,4 @@
-package org.approvalsj.approbation;
+package org.approvalsj.reporter;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -6,16 +6,16 @@ import java.nio.file.Path;
 import static java.lang.Runtime.*;
 import static java.lang.String.*;
 
-public class ExecApprover implements Approver {
+public class ExecReporter implements MismatchReporter {
     private final String command;
     final String programFiles = System.getenv("ProgramFiles");
 
-    public ExecApprover(String command) {
+    public ExecReporter(String command) {
         this.command = command;
     }
 
     @Override
-    public void approve(Path approved, Path received) {
+    public void reportMismatch(Path approved, Path received) {
         String cmdLine = command
                 .replace("%programFiles%", programFiles.toString())
                 .replace("%approved%", approved.toString())
