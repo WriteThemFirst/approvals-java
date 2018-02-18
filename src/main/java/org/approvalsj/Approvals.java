@@ -12,12 +12,14 @@ public class Approvals {
     }
 
     public void verify(Object actual) {
-        String expected = fileUtils.readApproved();
-        if (expected == null) {
-            throw new AssertionError(fileUtils.approvedFile()+" does not exist yet");
-        }
-        if (!expected.equals(actual.toString())) {
-            String detailMessage = format("expected: <%s> but was: <%s>", expected, actual);
+        String approved = fileUtils.readApproved();
+        if (approved == null) {
+            fileUtils.writeReceived(actual.toString());
+            throw new AssertionError(fileUtils.approvedFile() + " does not exist yet");
+        } else if (approved.equals(actual.toString())) {
+            fileUtils.removeReceived();
+        } else {
+            String detailMessage = format("expected: <%s> but was: <%s>", approved, actual);
             throw new AssertionError(detailMessage);
         }
     }
