@@ -62,7 +62,7 @@ public class FileUtils {
         return folder.resolve(fileName);
     }
 
-    private String silentRead(Path file) {
+    public static String silentRead(Path file) {
         try {
             return new String(Files.readAllBytes(file));
         } catch (IOException e) {
@@ -71,7 +71,7 @@ public class FileUtils {
         }
     }
 
-    private void silentRemove(Path path) {
+    public static void silentRemove(Path path) {
         try {
             delete(path);
         } catch (IOException e) {

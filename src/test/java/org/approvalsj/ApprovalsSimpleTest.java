@@ -11,7 +11,7 @@ public class ApprovalsSimpleTest {
     private FileUtils fileUtils = new FileUtils(getClass());
 
     @Test
-    void approvalShouldDoNothingWhenApprovedFileExistsAndIsCorrect() {
+    void approvalShouldDoNothingWhenApprovedFileExistsAndIsCorrect() throws Throwable {
         fileUtils.writeApproved("some text");
         approvals.verify("some text");
         fileUtils.removeApproved();
@@ -42,7 +42,7 @@ public class ApprovalsSimpleTest {
 
 
     @Test
-    void approvalShouldKeepReceivedFileWhenApprovedFileDoesNotExist() {
+    void approvalShouldKeepReceivedFileWhenApprovedFileDoesNotExist() throws Throwable {
         fileUtils.removeApproved();
         fileUtils.removeReceived();
         try {
@@ -56,7 +56,7 @@ public class ApprovalsSimpleTest {
     }
 
     @Test
-    void approvalShouldKeepReceivedFileWhenApprovedFileMismatch() {
+    void approvalShouldKeepReceivedFileWhenApprovedFileMismatch() throws Throwable {
         fileUtils.writeApproved("approved");
         try {
             approvals.verify("text");
@@ -69,7 +69,7 @@ public class ApprovalsSimpleTest {
     }
 
     @Test
-    void approvalShouldRemoveReceivedFileWhenApprovedFileMatch() {
+    void approvalShouldRemoveReceivedFileWhenApprovedFileMatch() throws Throwable {
         fileUtils.writeReceived("last content");
         fileUtils.writeApproved("same");
         approvals.verify("same");

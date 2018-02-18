@@ -4,9 +4,8 @@ import org.approvalsj.reporter.MismatchReporter;
 import org.approvalsj.util.FileUtils;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class ReporterTest {
     private MismatchReporter mismatchReporter = mock(MismatchReporter.class);
@@ -14,7 +13,7 @@ public class ReporterTest {
     private FileUtils fileUtils = new FileUtils(getClass());
 
     @Test
-    void approvalsShouldCallReporterWhenMismatch() {
+    void approvalsShouldCallReporterWhenMismatch() throws Throwable {
         fileUtils.writeApproved("some text");
         try {
             approvals.verify("different text");
