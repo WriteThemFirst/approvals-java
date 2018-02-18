@@ -8,6 +8,7 @@ import static java.lang.String.*;
 
 public class ExecApprover implements Approver {
     private final String command;
+    final String programFiles = System.getenv("ProgramFiles");
 
     public ExecApprover(String command) {
         this.command = command;
@@ -15,7 +16,10 @@ public class ExecApprover implements Approver {
 
     @Override
     public void approve(Path approved, Path received) {
-        String cmdLine = format(command, approved, received);
+        String cmdLine = command
+                .replace("%programFiles%", programFiles.toString())
+                .replace("%approved%", approved.toString())
+                .replace("%received%", received.toString());
         try {
             getRuntime().exec(cmdLine);
         } catch (IOException e) {
