@@ -2,6 +2,7 @@ target/
 *.class
 
 *~
+*.sw?
 *.orig
 
 #Eclipse
