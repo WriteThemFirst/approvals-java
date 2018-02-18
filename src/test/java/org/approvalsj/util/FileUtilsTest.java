@@ -35,6 +35,20 @@ class FileUtilsTest {
     }
 
     @Test
+    void receivedFileShouldBeReadAfterWritten() {
+        //WHEN
+        String content = "some content\non 2 lines";
+        fileUtils.writeReceived(content);
+
+        //THEN
+        String actualContent = fileUtils.readReceived();
+        assertThat(actualContent).isEqualTo(content);
+
+        //CLEANUP
+        fileUtils.removeReceived();
+    }
+
+    @Test
     void readApprovedShouldBeNullWhenFileMissing() {
         //GIVEN
         fileUtils.removeApproved();

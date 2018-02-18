@@ -1,8 +1,6 @@
 package org.approvalsj;
-
 import org.approvalsj.util.FileUtils;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ApprovalsSimpleTest {

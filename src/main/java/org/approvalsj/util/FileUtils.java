@@ -20,40 +20,41 @@ public class FileUtils {
 
     public void writeApproved(String content) {
         Path approvedFile = approvedFile();
-        try {
-            Files.createDirectories(approvedFile.getParent());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        try (BufferedWriter writer = Files.newBufferedWriter(approvedFile)) {
-            writer.write(content);
-        } catch (IOException e) {
-            String message = format("Could not write to file %s because of %s", approvedFile.toAbsolutePath(), e);
-            throw new RuntimeException(message, e);
-        }
+        write(content, approvedFile);
     }
 
     public String readApproved() {
-        Path approvedFile = approvedFile();
-
-        try {
-            return new String(Files.readAllBytes(approvedFile));
-        } catch (IOException e) {
-            System.err.println("Could not read from " + approvedFile);
-            return null;
-        }
+        return silentRead(approvedFile());
     }
 
+    public void removeApproved() {
+        silentRemove(approvedFile());
+    }
 
-    private Path folder() {
-        String packageName = aClass.getPackage().getName();
-        Path packageResourcesPath = Paths.get("src/test/resources/", packageName.split("\\."));
-        return packageResourcesPath.resolve(aClass.getSimpleName());
+    public void writeReceived(String content) {
+        Path receivedFile = receivedFile();
+        write(content, receivedFile);
+    }
+
+    public String readReceived() {
+        return silentRead(receivedFile());
+    }
+
+    public void removeReceived() {
+        silentRemove(receivedFile());
     }
 
     public Path approvedFile() {
         return approvedFile(new StackUtils(aClass).methodName().get());
+    }
+
+    public Path receivedFile() {
+        return receivedFile(new StackUtils(aClass).methodName().get());
+    }
+
+    Path receivedFile(String methodName) {
+        String fileName = format("%s.received", methodName);
+        return folder.resolve(fileName);
     }
 
     Path approvedFile(String methodName) {
@@ -61,12 +62,40 @@ public class FileUtils {
         return folder.resolve(fileName);
     }
 
-    public void removeApproved() {
+    private String silentRead(Path file) {
         try {
-            delete(approvedFile());
+            return new String(Files.readAllBytes(file));
+        } catch (IOException e) {
+            System.err.println("Could not read from " + file);
+            return null;
+        }
+    }
+
+    private void silentRemove(Path path) {
+        try {
+            delete(path);
         } catch (IOException e) {
             // we were cleaning just in case
         }
     }
 
+    private Path folder() {
+        String packageName = aClass.getPackage().getName();
+        Path packageResourcesPath = Paths.get("src/test/resources/", packageName.split("\\."));
+        return packageResourcesPath.resolve(aClass.getSimpleName());
+    }
+
+    private void write(String content, Path file) {
+        try {
+            Files.createDirectories(file.getParent());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try (BufferedWriter writer = Files.newBufferedWriter(file)) {
+            writer.write(content);
+        } catch (IOException e) {
+            String message = format("Could not write to file %s because of %s", file.toAbsolutePath(), e);
+            throw new RuntimeException(message, e);
+        }
+    }
 }
