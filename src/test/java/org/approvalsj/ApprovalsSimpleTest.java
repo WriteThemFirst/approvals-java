@@ -26,6 +26,7 @@ public class ApprovalsSimpleTest {
                 .hasMessage("expected: <expected text> but was: <actual text>");
 
         fileUtils.removeApproved();
+        fileUtils.removeReceived();
     }
 
     @Test
