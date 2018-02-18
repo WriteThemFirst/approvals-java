@@ -1,13 +1,12 @@
 package org.demo.simple;
 
 import org.approvalsj.Approvals;
-import org.approvalsj.approbation.ExecApprover;
 import org.junit.jupiter.api.Test;
 
+import static org.approvalsj.approbation.Approver.GvimApprover;
+
 public class ApproveString {
-    Approvals approvals = new Approvals(
-            getClass(),
-            new ExecApprover("cmd /c gvimdiff \"%s\" \"%s\""));
+    Approvals approvals = new Approvals(getClass(), GvimApprover);
 
 
     @Test
