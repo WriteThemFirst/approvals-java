@@ -4,10 +4,10 @@ import org.approvalsj.Approvals;
 import org.junit.jupiter.api.Test;
 
 public class ApproveString {
+    Approvals approvals = new Approvals(getClass());
 
     @Test
     void verifySimpleString() {
-        Approvals approvals = new Approvals(getClass());
         approvals.verify("my string");
     }
 }

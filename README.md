@@ -68,13 +68,15 @@ Link for direct download if you don't use a dependency manager:
 ```java
 package com.examples;
 
-import static org.approvals.*;
+import org.approvalsj.Approvals;
 
 public class GildedRoseApprovalTest {
+    Approvals approvals = new Approvals(getClass());
+
     @Test
-    void approvalSwordShouldDeteriorate() throws Exception {
+    void approvalSwordShouldDeteriorate() {
         Item sword = new Item("basic sword", 10, 8);
-        Approvals.verify(GildedRose.nextDay(sword));
+        approvals.verify(GildedRose.nextDay(sword));
     }
 }
 ```
@@ -86,10 +88,12 @@ The `toString()` of sword is used.
 ```java
 @Test
 void approvalBrieShouldImprove() throws Exception {
+    Approvals approvals = new Approvals(getClass());
+
     Integer[] sellInDays = {-5, 0, 1, 20};
     Integer[] qualities = {0, 10};
 
-    verifyAllCombinations((sellIn, quality) ->
+    approvals.verifyAllCombinations((sellIn, quality) ->
             GildedRose.nextDay(new Item(BRIE, sellIn, quality)), sellInDays, qualities);
 }
 ```
@@ -101,9 +105,11 @@ void approvalBrieShouldImprove() throws Exception {
 ```java
 @Test
 void approvalCopySrcFolder() throws Exception {
+    Approvals approvals = new Approvals(getClass());
+    
     Path outDir = Files.createTempDirectory("src");
     FolderCopy.copyFrom(Paths.get("."), outDir);
-    Approvals.verifyEachFileInDirectory(outDir.toFile(), f -> f.getName().endsWith(".xml"));
+    approvals.verifyEachFileInDirectory(outDir.toFile(), f -> f.getName().endsWith(".xml"));
 }
 ```
 
