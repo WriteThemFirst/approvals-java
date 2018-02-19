@@ -15,25 +15,25 @@ public class ReporterTest {
     @Test
     void approvalsShouldCallReporterWhenMismatch() throws Throwable {
         fileUtils.writeApproved("some text");
-        try {
-            approvals.verify("different text");
-        } catch (AssertionError e) {
-            verify(reporter).mismatch(fileUtils.approvedFile(), fileUtils.receivedFile());
-            fileUtils.removeApproved();
-            fileUtils.removeReceived();
-        }
+
+        approvals.verify("different text");
+
+        verify(reporter).mismatch(fileUtils.approvedFile(), fileUtils.receivedFile());
+
+        fileUtils.removeApproved();
+        fileUtils.removeReceived();
     }
 
-   @Test
+    @Test
     void approvalsShouldCallReporterWhenNoApprovedFile() throws Throwable {
         fileUtils.removeApproved();
-        try {
-            approvals.verify("text");
-        } catch (AssertionError e) {
-            verify(reporter).missing(fileUtils.approvedFile(), fileUtils.receivedFile());
-            fileUtils.removeApproved();
-            fileUtils.removeReceived();
-        }
+
+        approvals.verify("text");
+
+        verify(reporter).missing(fileUtils.approvedFile(), fileUtils.receivedFile());
+
+        fileUtils.removeApproved();
+        fileUtils.removeReceived();
     }
 
 }
