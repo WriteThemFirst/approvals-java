@@ -6,10 +6,10 @@ import java.nio.file.Path;
 
 import static org.approvalsj.util.FileUtils.silentRead;
 
-public class JUnit4Reporter implements MismatchReporter {
+public class JUnit4Reporter implements Reporter {
 
     @Override
-    public void reportMismatch(Path approved, Path received) throws Throwable {
+    public void mismatch(Path approved, Path received) throws Throwable {
         try {
             Class<?> testCaseClass = Class.forName("org.junit.jupiter.api.Assertions");
             Method assertEquals = testCaseClass.getMethod("assertEquals", Object.class, Object.class);

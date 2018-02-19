@@ -7,10 +7,10 @@ import java.nio.file.Path;
 import static org.approvalsj.util.FileUtils.silentRead;
 
 //TODO : needs to be tested
-public class JUnit3Reporter implements MismatchReporter {
+public class JUnit3Reporter implements Reporter {
 
     @Override
-    public void reportMismatch(Path approved, Path received) throws Throwable {
+    public void mismatch(Path approved, Path received) throws Throwable {
         try {
             Class<?> testCaseClass = Class.forName("junit.framework.TestCase");
             Method assertEquals = testCaseClass.getMethod("assertEquals", String.class, String.class);

@@ -1,33 +1,31 @@
 package org.approvalsj;
 
-import org.approvalsj.reporter.MismatchReporter;
+import org.approvalsj.reporter.Reporter;
 import org.approvalsj.util.FileUtils;
-
-import java.util.Optional;
 
 import static java.lang.String.format;
 
 public class Approvals {
     private final FileUtils fileUtils;
-    private final MismatchReporter[] mismatchReporters;
+    private final Reporter[] reporters;
 
-    public Approvals(Class<?> testedClass, MismatchReporter... mismatchReporters) {
+    public Approvals(Class<?> testedClass, Reporter... reporters) {
         fileUtils = new FileUtils(testedClass);
-        this.mismatchReporters = mismatchReporters;
+        this.reporters = reporters;
     }
 
     public void verify(Object actual) throws Throwable {
         String approved = fileUtils.readApproved();
         fileUtils.writeReceived(actual.toString());
         if (approved == null) {
-            for (MismatchReporter reporter : mismatchReporters) {
-                reporter.reportMissing(fileUtils.approvedFile(), fileUtils.receivedFile());
+            for (Reporter reporter : reporters) {
+                reporter.missing(fileUtils.approvedFile(), fileUtils.receivedFile());
             }
             throw new AssertionError(fileUtils.approvedFile() + " does not exist yet");
         } else if (!approved.equals(actual.toString())) {
             String detailMessage = format("expected: <%s> but was: <%s>", approved, actual);
-            for (MismatchReporter reporter : mismatchReporters) {
-                reporter.reportMismatch(fileUtils.approvedFile(), fileUtils.receivedFile());
+            for (Reporter reporter : reporters) {
+                reporter.mismatch(fileUtils.approvedFile(), fileUtils.receivedFile());
             }
             throw new AssertionError(detailMessage);
         } else {

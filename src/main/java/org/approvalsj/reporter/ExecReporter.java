@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import static java.lang.Runtime.*;
 import static java.lang.String.*;
 
-public class ExecReporter implements MismatchReporter {
+public class ExecReporter implements Reporter {
     private final String command;
     final String programFiles = System.getenv("ProgramFiles");
 
@@ -15,7 +15,7 @@ public class ExecReporter implements MismatchReporter {
     }
 
     @Override
-    public void reportMismatch(Path approved, Path received) {
+    public void mismatch(Path approved, Path received) {
         String cmdLine = command
                 .replace("%programFiles%", programFiles.toString())
                 .replace("%approved%", approved.toString())
