@@ -175,6 +175,7 @@ The suggested fix is to add `*.approved binary` to your `.gitattributes`
 
 ### Contributing
 
-TODO
+- :sparkles: small commits with messages using [gitmojis](https://gitmoji.carloscuesta.me/) 
+([IDEA plugin](https://plugins.jetbrains.com/plugin/9174-emoji-support-plugin))
 
 
