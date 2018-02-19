@@ -15,6 +15,11 @@ public class ExecReporter implements Reporter {
     }
 
     @Override
+    public void missing(Path approved, Path received) {
+        mismatch(approved, received);
+    }
+
+    @Override
     public void mismatch(Path approved, Path received) {
         String cmdLine = command
                 .replace("%programFiles%", programFiles.toString())

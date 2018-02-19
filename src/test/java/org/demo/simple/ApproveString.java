@@ -9,7 +9,6 @@ import static org.approvalsj.reporter.Windows.KDIFF;
 public class ApproveString {
     Approvals approvals = new Approvals(getClass(), KDIFF, new JUnit4Reporter());
 
-
     @Test
     void verifySimpleString() throws Throwable {
         approvals.verify("my string");
