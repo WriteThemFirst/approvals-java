@@ -122,44 +122,59 @@ Approvals eats it own dogfood, so the best examples are in the source code itsel
 None the less,  Here's a quick look at some
 [Sample Code](https://github.com/approvals/ApprovalTests.Java/blob/master/java/org/approvaltests/tests/demos/SampleArrayTest.java)
 
-	public class SampleArrayTest extends TestCase
-	{
-		public void testList() throws Exception
-		{
-			String[] names = {"Llewellyn", "James", "Dan", "Jason", "Katrina"};
-			Arrays.sort(names);
-			Approvals.verifyAll("", names);
-		}
-	}
+```java
+public class SampleArrayTest extends TestCase {
+    public void testList() {
+        String[] names = {"Llewellyn", "James", "Dan", "Jason", "Katrina"};
+        Arrays.sort(names);
+        Approvals.verifyAll(names);
+    }
+}
+```
 
 Will Produce a File
 
-    SampleTest.TestList.received.txt
+    SampleTest.TestList.received
     [0] = Dan
     [1] = James
     [2] = Jason
     [3] = Katrina
     [4] = Llewellyn
 
-Simply rename this to SampleTest.testList.approved.txt and the test will now pass.
-
-Approved File Artifacts
----
-
-The `*.approved.*` files must be checked into source your source control. This can be an issue with git as it will change the line endings.
-The suggested fix is to add
-`*.approved.* binary` to your `.gitattributes`
+Simply rename this to `SampleTest.testList.approved` and the test will now pass.
 
 ## More Info
 
-- Approvals is inspired by [ApprovalTests](http://approvaltests.sourceforge.net/)
-- [Getting Started Doc](https://github.com/approvals/ApprovalTests.Java/blob/master/build/resources/approval_tests/documentation/ApprovalTests%20-%20GettingStarted.md)
+### ApprovalTests initial project
+
+Approvals is inspired by [ApprovalTests](http://approvaltests.sourceforge.net/)
+
+We liked the idea of approval testing but not so much the Java implementation ([Github](https://github.com/approvals/ApprovalTests.Java))
+- not built with maven
+- not published on a repository like Maven Central (you have to download the zip and add the jar manually to your project)
+- not actively maintained (Pull Requests are not actively merged)
+- code style not up to Java standards (developer is mainly working with .Net)
+
+So we decided to implement quickly a subset of the initial features and deploy the dependency on Maven Central 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.vavr/vavr/badge.png)](https://maven-badges.herokuapp.com/maven-central/io.vavr/vavr)
 
 
-## LICENSE
+### Documentation
+
+[Getting Started Doc](https://github.com/approvals/ApprovalTests.Java/blob/master/build/resources/approval_tests/documentation/ApprovalTests%20-%20GettingStarted.md)
+
+### Approved Files and Git
+
+The `*.approved` files must be checked into source your source control. This can be an issue with git as it will change the line endings.
+The suggested fix is to add `*.approved binary` to your `.gitattributes`
+
+
+### LICENSE
 [Apache 2.0 License](https://github.com/SignalR/SignalR/blob/master/LICENSE.md)
 
 
-## Questions?
+### Contributing
+
+TODO
 
 
