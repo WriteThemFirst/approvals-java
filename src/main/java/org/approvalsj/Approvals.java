@@ -20,6 +20,9 @@ public class Approvals {
         String approved = fileUtils.readApproved();
         fileUtils.writeReceived(actual.toString());
         if (approved == null) {
+            for (MismatchReporter reporter : mismatchReporters) {
+                reporter.reportMissing(fileUtils.approvedFile(), fileUtils.receivedFile());
+            }
             throw new AssertionError(fileUtils.approvedFile() + " does not exist yet");
         } else if (!approved.equals(actual.toString())) {
             String detailMessage = format("expected: <%s> but was: <%s>", approved, actual);

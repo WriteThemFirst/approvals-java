@@ -24,4 +24,16 @@ public class ReporterTest {
         }
     }
 
+   @Test
+    void approvalsShouldCallReporterWhenNoApprovedFile() throws Throwable {
+        fileUtils.removeApproved();
+        try {
+            approvals.verify("text");
+        } catch (AssertionError e) {
+            verify(mismatchReporter).reportMissing(fileUtils.approvedFile(), fileUtils.receivedFile());
+            fileUtils.removeApproved();
+            fileUtils.removeReceived();
+        }
+    }
+
 }
