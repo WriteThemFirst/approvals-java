@@ -1,4 +1,4 @@
-package com.github.writethemfirst.approvals.reporter.command;
+package com.github.writethemfirst.approvals.reporters.commands;
 
 import org.junit.jupiter.api.Test;
 

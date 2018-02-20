@@ -3,7 +3,6 @@ package com.github.writethemfirst.approvals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import com.github.writethemfirst.approvals.reporter.Reporter;
 import com.github.writethemfirst.approvals.util.TestClassCompanion;
 import org.junit.jupiter.api.Test;
 

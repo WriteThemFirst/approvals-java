@@ -1,4 +1,4 @@
-package com.github.writethemfirst.approvals.reporter;
+package com.github.writethemfirst.approvals.reporters;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

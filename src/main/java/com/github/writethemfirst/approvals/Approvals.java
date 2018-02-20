@@ -1,7 +1,6 @@
 package com.github.writethemfirst.approvals;
 
-import com.github.writethemfirst.approvals.reporter.Reporter;
-import com.github.writethemfirst.approvals.reporter.ThrowsReporter;
+import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.util.TestClassCompanion;
 
 public class Approvals {

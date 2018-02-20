@@ -1,4 +1,6 @@
-package com.github.writethemfirst.approvals.reporter;
+package com.github.writethemfirst.approvals.reporters;
+
+import com.github.writethemfirst.approvals.Reporter;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -12,11 +14,11 @@ public class ExecReporter implements Reporter {
     private final String[] command;
     private final String programFiles = System.getenv("ProgramFiles");
 
-    ExecReporter(String command) {
+    public ExecReporter(String command) {
         this.command = command.split(" ");
     }
 
-    ExecReporter(String... command) {
+    public ExecReporter(String... command) {
         this.command = command;
     }
 

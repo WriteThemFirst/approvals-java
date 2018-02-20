@@ -1,4 +1,7 @@
-package com.github.writethemfirst.approvals.reporter;
+package com.github.writethemfirst.approvals.reporters.softwares;
+
+import com.github.writethemfirst.approvals.Reporter;
+import com.github.writethemfirst.approvals.reporters.ExecReporter;
 
 public interface Windows {
 

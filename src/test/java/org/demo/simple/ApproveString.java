@@ -1,9 +1,9 @@
 package org.demo.simple;
 
-import static com.github.writethemfirst.approvals.reporter.Windows.IDEA;
+import static com.github.writethemfirst.approvals.reporters.softwares.Windows.IDEA;
 
 import com.github.writethemfirst.approvals.Approvals;
-import com.github.writethemfirst.approvals.reporter.JUnit5Reporter;
+import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
 import org.junit.jupiter.api.Test;
 
 

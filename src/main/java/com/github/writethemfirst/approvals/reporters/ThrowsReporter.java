@@ -1,4 +1,6 @@
-package com.github.writethemfirst.approvals.reporter;
+package com.github.writethemfirst.approvals.reporters;
+
+import com.github.writethemfirst.approvals.Reporter;
 
 import static com.github.writethemfirst.approvals.util.FileUtils.silentRead;
 import static java.lang.String.format;
