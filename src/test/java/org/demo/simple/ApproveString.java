@@ -1,16 +1,19 @@
 package org.demo.simple;
 
-import org.approvalsj.Approvals;
-import org.approvalsj.reporter.JUnit5Reporter;
+import static com.github.writethemfirst.approvals.reporter.Windows.IDEA;
+
+import com.github.writethemfirst.approvals.Approvals;
+import com.github.writethemfirst.approvals.reporter.JUnit5Reporter;
 import org.junit.jupiter.api.Test;
 
-import static org.approvalsj.reporter.Windows.IDEA;
 
 class ApproveString {
     private Approvals approvals = new Approvals(getClass(), IDEA, new JUnit5Reporter());
 
+
     @Test
-    void verifySimpleString() throws Throwable {
+    void verifySimpleString()
+            throws Throwable {
         approvals.verify("my string");
     }
 }

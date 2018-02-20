@@ -1,10 +1,10 @@
-package org.approvalsj.util;
+package com.github.writethemfirst.approvals.util;
 
+import static com.github.writethemfirst.approvals.util.FileUtils.silentRead;
+import static com.github.writethemfirst.approvals.util.FileUtils.silentRemove;
 import static java.lang.String.format;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.newBufferedWriter;
-import static org.approvalsj.util.FileUtils.silentRead;
-import static org.approvalsj.util.FileUtils.silentRemove;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -16,6 +16,7 @@ import java.util.Optional;
 public class TestClassCompanion {
     private final Class<?> testClass;
     private final Path folder;
+
 
     public TestClassCompanion(Class<?> testClass) {
         this.testClass = testClass;

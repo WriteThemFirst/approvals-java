@@ -1,4 +1,4 @@
-package org.approvalsj.reporter;
+package com.github.writethemfirst.approvals.reporter;
 
 import java.nio.file.Path;
 

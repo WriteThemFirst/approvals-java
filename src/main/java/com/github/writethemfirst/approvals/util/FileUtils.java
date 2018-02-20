@@ -1,4 +1,4 @@
-package org.approvalsj.util;
+package com.github.writethemfirst.approvals.util;
 
 import static java.nio.file.Files.delete;
 

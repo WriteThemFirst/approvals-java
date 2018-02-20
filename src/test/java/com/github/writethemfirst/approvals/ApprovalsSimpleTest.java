@@ -1,21 +1,24 @@
-package org.approvalsj;
-
-import org.approvalsj.util.TestClassCompanion;
-import org.junit.jupiter.api.Test;
+package com.github.writethemfirst.approvals;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import com.github.writethemfirst.approvals.util.TestClassCompanion;
+import org.junit.jupiter.api.Test;
 
 public class ApprovalsSimpleTest {
     private Approvals approvals = new Approvals(getClass());
     private TestClassCompanion testClassCompanion = new TestClassCompanion(getClass());
 
+
     @Test
-    void approvalShouldDoNothingWhenApprovedFileExistsAndIsCorrect() throws Throwable {
+    void approvalShouldDoNothingWhenApprovedFileExistsAndIsCorrect()
+            throws Throwable {
         testClassCompanion.writeApproved("some text");
         approvals.verify("some text");
         testClassCompanion.removeApproved();
     }
+
 
     @Test
     void approvalShouldFailWhenApprovedFileExistsAndIsDifferent() {
@@ -28,6 +31,7 @@ public class ApprovalsSimpleTest {
         testClassCompanion.removeApproved();
         testClassCompanion.removeReceived();
     }
+
 
     @Test
     void approvalShouldFailWhenApprovedFileDoesNotExist() {
@@ -42,12 +46,13 @@ public class ApprovalsSimpleTest {
 
 
     @Test
-    void approvalShouldKeepReceivedFileWhenApprovedFileDoesNotExist() throws Throwable {
+    void approvalShouldKeepReceivedFileWhenApprovedFileDoesNotExist()
+            throws Throwable {
         testClassCompanion.removeApproved();
         testClassCompanion.removeReceived();
         try {
             approvals.verify("text");
-        } catch (AssertionError e) {
+        } catch(AssertionError e) {
             String received = testClassCompanion.readReceived();
             assertThat(received).isEqualTo("text");
         }
@@ -55,12 +60,14 @@ public class ApprovalsSimpleTest {
         testClassCompanion.removeApproved();
     }
 
+
     @Test
-    void approvalShouldKeepReceivedFileWhenApprovedFileMismatch() throws Throwable {
+    void approvalShouldKeepReceivedFileWhenApprovedFileMismatch()
+            throws Throwable {
         testClassCompanion.writeApproved("approved");
         try {
             approvals.verify("text");
-        } catch (AssertionError e) {
+        } catch(AssertionError e) {
             String received = testClassCompanion.readReceived();
             assertThat(received).isEqualTo("text");
         }
@@ -68,8 +75,10 @@ public class ApprovalsSimpleTest {
         testClassCompanion.removeApproved();
     }
 
+
     @Test
-    void approvalShouldRemoveReceivedFileWhenApprovedFileMatch() throws Throwable {
+    void approvalShouldRemoveReceivedFileWhenApprovedFileMatch()
+            throws Throwable {
         testClassCompanion.writeReceived("last content");
         testClassCompanion.writeApproved("same");
 

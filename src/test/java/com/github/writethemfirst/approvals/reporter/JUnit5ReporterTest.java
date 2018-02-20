@@ -1,10 +1,10 @@
-package org.approvalsj.reporter;
-
-import org.approvalsj.Approvals;
-import org.approvalsj.util.TestClassCompanion;
-import org.junit.jupiter.api.Test;
+package com.github.writethemfirst.approvals.reporter;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import com.github.writethemfirst.approvals.Approvals;
+import com.github.writethemfirst.approvals.util.TestClassCompanion;
+import org.junit.jupiter.api.Test;
 
 class JUnit5ReporterTest {
     private Approvals approvals = new Approvals(getClass(), new JUnit5Reporter());
@@ -23,6 +23,7 @@ class JUnit5ReporterTest {
         testClassCompanion.removeReceived();
 
     }
+
 
     @Test
     void shouldThrowWhenMissing() {

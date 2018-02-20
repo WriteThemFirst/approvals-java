@@ -1,19 +1,21 @@
-package org.approvalsj;
-
-import org.approvalsj.reporter.Reporter;
-import org.approvalsj.util.TestClassCompanion;
-import org.junit.jupiter.api.Test;
+package com.github.writethemfirst.approvals;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+
+import com.github.writethemfirst.approvals.reporter.Reporter;
+import com.github.writethemfirst.approvals.util.TestClassCompanion;
+import org.junit.jupiter.api.Test;
 
 public class ReporterTest {
     private Reporter reporter = mock(Reporter.class);
     private Approvals approvals = new Approvals(getClass(), reporter);
     private TestClassCompanion testClassCompanion = new TestClassCompanion(getClass());
 
+
     @Test
-    void approvalsShouldCallReporterWhenMismatch() throws Throwable {
+    void approvalsShouldCallReporterWhenMismatch()
+            throws Throwable {
         testClassCompanion.writeApproved("some text");
 
         approvals.verify("different text");
@@ -24,8 +26,10 @@ public class ReporterTest {
         testClassCompanion.removeReceived();
     }
 
+
     @Test
-    void approvalsShouldCallReporterWhenNoApprovedFile() throws Throwable {
+    void approvalsShouldCallReporterWhenNoApprovedFile()
+            throws Throwable {
         testClassCompanion.removeApproved();
 
         approvals.verify("text");

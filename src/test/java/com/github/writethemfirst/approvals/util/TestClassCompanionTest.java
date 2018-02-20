@@ -1,4 +1,4 @@
-package org.approvalsj.util;
+package com.github.writethemfirst.approvals.util;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ class TestClassCompanionTest {
 
         //THEN
         Path expectedPath = Paths.get(
-                "src/test/resources/org/approvalsj/util/TestClassCompanionTest/approvedFileShouldBeCorrect.approved");
+                "src/test/resources/com/github/writethemfirst/approvals/util/TestClassCompanionTest/approvedFileShouldBeCorrect.approved");
         assertThat(approvedFile).isEqualTo(expectedPath);
     }
 

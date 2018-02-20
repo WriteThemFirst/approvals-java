@@ -1,12 +1,13 @@
-package org.approvalsj;
+package com.github.writethemfirst.approvals;
 
-import org.approvalsj.reporter.Reporter;
-import org.approvalsj.reporter.ThrowsReporter;
-import org.approvalsj.util.TestClassCompanion;
+import com.github.writethemfirst.approvals.reporter.Reporter;
+import com.github.writethemfirst.approvals.reporter.ThrowsReporter;
+import com.github.writethemfirst.approvals.util.TestClassCompanion;
 
 public class Approvals {
     private final TestClassCompanion testClassCompanion;
     private final Reporter[] reporters;
+
 
     public Approvals(Class<?> testedClass, Reporter... reporters) {
         testClassCompanion = new TestClassCompanion(testedClass);
@@ -15,15 +16,18 @@ public class Approvals {
                 : reporters;
     }
 
-    public void verify(Object actual) throws Throwable {
-        if (matchesApprovedFile(actual)) {
+
+    public void verify(Object actual)
+            throws Throwable {
+        if(matchesApprovedFile(actual)) {
             testClassCompanion.removeReceived();
         } else {
-            for (Reporter reporter : reporters) {
+            for(Reporter reporter : reporters) {
                 reporter.mismatch(testClassCompanion.approvedFile(), testClassCompanion.receivedFile());
             }
         }
     }
+
 
     private boolean matchesApprovedFile(Object actual) {
         String approved = testClassCompanion.readApproved();
