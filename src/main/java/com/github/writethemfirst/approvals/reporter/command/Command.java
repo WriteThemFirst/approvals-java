@@ -1,4 +1,4 @@
-package org.approvalsj.reporter.command;
+package com.github.writethemfirst.approvals.reporter.command;
 
 import java.io.IOException;
 import java.nio.file.Path;
