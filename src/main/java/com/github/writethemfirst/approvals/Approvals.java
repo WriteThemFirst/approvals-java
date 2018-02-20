@@ -2,34 +2,38 @@ package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class Approvals {
+
     private final ApprovalsFiles approvalsFiles;
-    private final Reporter[] reporters;
+    private final List<Reporter> reporters;
 
 
-    public Approvals(Class<?> testedClass, Reporter... reporters) {
-        approvalsFiles = new ApprovalsFiles(testedClass);
+    public Approvals(final Class<?> clazz, final Reporter... reporters) {
+        approvalsFiles = new ApprovalsFiles(clazz);
         this.reporters = reporters.length == 0
-                ? new Reporter[]{new ThrowsReporter()}
-                : reporters;
+            ? Collections.singletonList(new ThrowsReporter())
+            : Arrays.asList(reporters);
     }
 
 
-    public void verify(Object actual)
-            throws Throwable {
-        if(matchesApprovedFile(actual)) {
+    public void verify(final Object actual) throws Throwable {
+        if (matchesApprovedFile(actual)) {
             approvalsFiles.removeReceived();
         } else {
-            for(Reporter reporter : reporters) {
+            for (final Reporter reporter : reporters) {
                 reporter.mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
             }
         }
     }
 
 
-    private boolean matchesApprovedFile(Object actual) {
-        String approved = approvalsFiles.readApproved();
+    private boolean matchesApprovedFile(final Object actual) {
+        final String approvedContent = approvalsFiles.readApproved();
         approvalsFiles.writeReceived(actual.toString());
-        return null != approved && approved.equals(actual.toString());
+        return approvedContent != null && approvedContent.equals(actual.toString());
     }
 }
