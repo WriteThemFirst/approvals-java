@@ -12,5 +12,8 @@ public interface Windows {
      */
     Reporter KDIFF = new ExecReporter("%programFiles%\\KDiff3\\kdiff3.exe %approved% %received% -o %approved%");
 
+    //TODO: make it aware of other versions of IDEA
+    Reporter IDEA = new ExecReporter("%programFiles%\\JetBrains\\IntelliJ IDEA 2017.3\\bin\\idea64.exe", "merge", "%approved%", "%received%", "%approved%");
+
 
 }
