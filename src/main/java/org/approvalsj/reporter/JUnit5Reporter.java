@@ -1,11 +1,11 @@
 package org.approvalsj.reporter;
 
+import static org.approvalsj.util.FileUtils.silentRead;
+import static java.lang.String.format;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
-
-import static java.lang.String.format;
-import static org.approvalsj.util.TestClassCompanion.silentRead;
 
 public class JUnit5Reporter
         implements Reporter {
