@@ -1,25 +1,30 @@
 package com.github.writethemfirst.approvals.reporter.command;
 
+import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.util.Optional;
+
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.createFile;
 import static java.nio.file.Paths.get;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.Files.newTemporaryFolder;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Optional;
-import org.junit.jupiter.api.Test;
-
 class CommandTest {
+
+    private final String OS_SEPARATOR = FileSystems.getDefault().getSeparator();
 
     @Test
     void shouldLocateIntelliJ()
             throws Exception {
+
         File temp = touchIdeaExe();
-        Optional<String> command = new Command(temp + "\\JetBrains", "idea64.exe").command();
-        assertThat(command).hasValueSatisfying(v -> v.endsWith("JetBrains\\IntelliJ IDEA 2017.1.2\\bin\\idea64.exe"));
+        Optional<String> command = new Command(temp + OS_SEPARATOR + "JetBrains", "idea64.exe").command();
+        assertThat(command).hasValueSatisfying(v -> v.endsWith("JetBrains" + OS_SEPARATOR + "IntelliJ IDEA 2017.1.2" + OS_SEPARATOR + "bin" + OS_SEPARATOR + "idea64.exe"));
     }
 
 
