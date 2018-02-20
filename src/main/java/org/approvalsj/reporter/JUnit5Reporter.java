@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import java.nio.file.Path;
 
 import static java.lang.String.format;
-import static org.approvalsj.util.FileUtils.silentRead;
+import static org.approvalsj.util.TestClassCompanion.silentRead;
 
 public class JUnit5Reporter
         implements Reporter {
