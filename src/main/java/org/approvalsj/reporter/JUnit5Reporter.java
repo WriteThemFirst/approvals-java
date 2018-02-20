@@ -7,7 +7,8 @@ import java.nio.file.Path;
 import static java.lang.String.format;
 import static org.approvalsj.util.FileUtils.silentRead;
 
-public class JUnit4Reporter implements Reporter {
+public class JUnit5Reporter
+        implements Reporter {
 
     @Override
     public void mismatch(Path approved, Path received) throws Throwable {

@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class JUnit4ReporterTest {
-    private Approvals approvals = new Approvals(getClass(), new JUnit4Reporter());
+class JUnit5ReporterTest {
+    private Approvals approvals = new Approvals(getClass(), new JUnit5Reporter());
     private FileUtils fileUtils = new FileUtils(getClass());
 
 
