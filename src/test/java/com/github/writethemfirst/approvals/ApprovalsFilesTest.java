@@ -1,6 +1,8 @@
-package com.github.writethemfirst.approvals.util;
+package com.github.writethemfirst.approvals;
 
 import java.util.stream.Stream;
+
+import com.github.writethemfirst.approvals.ApprovalsFiles;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
@@ -8,8 +10,8 @@ import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TestClassCompanionTest {
-    private TestClassCompanion companion = new TestClassCompanion(getClass());
+class ApprovalsFilesTest {
+    private ApprovalsFiles companion = new ApprovalsFiles(getClass());
 
 
     @Test
@@ -19,7 +21,7 @@ class TestClassCompanionTest {
 
         //THEN
         Path expectedPath = Paths.get(
-                "src/test/resources/com/github/writethemfirst/approvals/util/TestClassCompanionTest/approvedFileShouldBeCorrect.approved");
+                "src/test/resources/com/github/writethemfirst/approvals/ApprovalsFilesTest/approvedFileShouldBeCorrect.approved");
         assertThat(approvedFile).isEqualTo(expectedPath);
     }
 
@@ -69,7 +71,7 @@ class TestClassCompanionTest {
 
     @Test
     void methodNameShouldBeEmpty() {
-        final TestClassCompanion stringCompanion = new TestClassCompanion(String.class);
+        final ApprovalsFiles stringCompanion = new ApprovalsFiles(String.class);
         assertThat(stringCompanion.methodName()).isEmpty();
     }
 

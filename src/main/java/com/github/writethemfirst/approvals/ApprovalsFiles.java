@@ -1,10 +1,4 @@
-package com.github.writethemfirst.approvals.util;
-
-import static com.github.writethemfirst.approvals.util.FileUtils.silentRead;
-import static com.github.writethemfirst.approvals.util.FileUtils.silentRemove;
-import static java.lang.String.format;
-import static java.nio.file.Files.createDirectories;
-import static java.nio.file.Files.newBufferedWriter;
+package com.github.writethemfirst.approvals;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -13,12 +7,18 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class TestClassCompanion {
+import static com.github.writethemfirst.approvals.util.FileUtils.silentRead;
+import static com.github.writethemfirst.approvals.util.FileUtils.silentRemove;
+import static java.lang.String.format;
+import static java.nio.file.Files.createDirectories;
+import static java.nio.file.Files.newBufferedWriter;
+
+public class ApprovalsFiles {
     private final Class<?> testClass;
     private final Path folder;
 
 
-    public TestClassCompanion(Class<?> testClass) {
+    public ApprovalsFiles(Class<?> testClass) {
         this.testClass = testClass;
         this.folder = folderForClass();
     }
@@ -85,19 +85,19 @@ public class TestClassCompanion {
      */
     public Optional<String> methodName() {
         return Arrays.stream(Thread.currentThread()
-                                   .getStackTrace())
-                     .filter(e -> e.getClassName()
-                                   .equals(testClass.getName()))
-                     .filter(e -> !e.getMethodName()
-                                    .startsWith("lambda$"))
-                     .map(e -> e.getMethodName())
-                     .findFirst();
+            .getStackTrace())
+            .filter(e -> e.getClassName()
+                .equals(testClass.getName()))
+            .filter(e -> !e.getMethodName()
+                .startsWith("lambda$"))
+            .map(e -> e.getMethodName())
+            .findFirst();
     }
 
 
     private Path folderForClass() {
         String packageName = testClass.getPackage()
-                                      .getName();
+            .getName();
         Path packageResourcesPath = Paths.get("src/test/resources/", packageName.split("\\."));
         return packageResourcesPath.resolve(testClass.getSimpleName());
     }
@@ -106,12 +106,12 @@ public class TestClassCompanion {
     private void write(String content, Path file) {
         try {
             createDirectories(file.getParent());
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        try(BufferedWriter writer = newBufferedWriter(file)) {
+        try (BufferedWriter writer = newBufferedWriter(file)) {
             writer.write(content);
-        } catch(IOException e) {
+        } catch (IOException e) {
             String message = format("Could not write to file %s because of %s", file.toAbsolutePath(), e);
             throw new RuntimeException(message, e);
         }

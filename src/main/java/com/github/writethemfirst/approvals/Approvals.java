@@ -1,15 +1,14 @@
 package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
-import com.github.writethemfirst.approvals.util.TestClassCompanion;
 
 public class Approvals {
-    private final TestClassCompanion testClassCompanion;
+    private final ApprovalsFiles approvalsFiles;
     private final Reporter[] reporters;
 
 
     public Approvals(Class<?> testedClass, Reporter... reporters) {
-        testClassCompanion = new TestClassCompanion(testedClass);
+        approvalsFiles = new ApprovalsFiles(testedClass);
         this.reporters = reporters.length == 0
                 ? new Reporter[]{new ThrowsReporter()}
                 : reporters;
@@ -19,18 +18,18 @@ public class Approvals {
     public void verify(Object actual)
             throws Throwable {
         if(matchesApprovedFile(actual)) {
-            testClassCompanion.removeReceived();
+            approvalsFiles.removeReceived();
         } else {
             for(Reporter reporter : reporters) {
-                reporter.mismatch(testClassCompanion.approvedFile(), testClassCompanion.receivedFile());
+                reporter.mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
             }
         }
     }
 
 
     private boolean matchesApprovedFile(Object actual) {
-        String approved = testClassCompanion.readApproved();
-        testClassCompanion.writeReceived(actual.toString());
+        String approved = approvalsFiles.readApproved();
+        approvalsFiles.writeReceived(actual.toString());
         return null != approved && approved.equals(actual.toString());
     }
 }

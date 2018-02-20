@@ -3,37 +3,37 @@ package com.github.writethemfirst.approvals.reporters;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.writethemfirst.approvals.Approvals;
-import com.github.writethemfirst.approvals.util.TestClassCompanion;
+import com.github.writethemfirst.approvals.ApprovalsFiles;
 import org.junit.jupiter.api.Test;
 
 class JUnit5ReporterTest {
     private Approvals approvals = new Approvals(getClass(), new JUnit5Reporter());
-    private TestClassCompanion testClassCompanion = new TestClassCompanion(getClass());
+    private ApprovalsFiles approvalsFiles = new ApprovalsFiles(getClass());
 
 
     @Test
     void shouldThrowWhenMismatch() {
-        testClassCompanion.writeApproved("some text");
+        approvalsFiles.writeApproved("some text");
 
         assertThatThrownBy(() -> approvals.verify("other text"))
                 .isInstanceOf(AssertionError.class)
                 .hasMessageContaining("expected: <some text> but was: <other text>");
 
-        testClassCompanion.removeApproved();
-        testClassCompanion.removeReceived();
+        approvalsFiles.removeApproved();
+        approvalsFiles.removeReceived();
 
     }
 
 
     @Test
     void shouldThrowWhenMissing() {
-        testClassCompanion.removeApproved();
+        approvalsFiles.removeApproved();
 
         assertThatThrownBy(() -> approvals.verify("text"))
                 .isInstanceOf(AssertionError.class)
                 .hasMessageContaining("expected: <> but was: <text>");
 
-        testClassCompanion.removeReceived();
+        approvalsFiles.removeReceived();
 
     }
 }

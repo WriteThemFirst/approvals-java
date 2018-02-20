@@ -3,91 +3,90 @@ package com.github.writethemfirst.approvals;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.github.writethemfirst.approvals.util.TestClassCompanion;
 import org.junit.jupiter.api.Test;
 
 public class ApprovalsSimpleTest {
     private Approvals approvals = new Approvals(getClass());
-    private TestClassCompanion testClassCompanion = new TestClassCompanion(getClass());
+    private ApprovalsFiles approvalsFiles = new ApprovalsFiles(getClass());
 
 
     @Test
     void approvalShouldDoNothingWhenApprovedFileExistsAndIsCorrect()
             throws Throwable {
-        testClassCompanion.writeApproved("some text");
+        approvalsFiles.writeApproved("some text");
         approvals.verify("some text");
-        testClassCompanion.removeApproved();
+        approvalsFiles.removeApproved();
     }
 
 
     @Test
     void approvalShouldFailWhenApprovedFileExistsAndIsDifferent() {
-        testClassCompanion.writeApproved("expected text");
+        approvalsFiles.writeApproved("expected text");
 
         assertThatThrownBy(() -> approvals.verify("actual text"))
                 .isInstanceOf(AssertionError.class)
                 .hasMessage("expected: <expected text> but was: <actual text>");
 
-        testClassCompanion.removeApproved();
-        testClassCompanion.removeReceived();
+        approvalsFiles.removeApproved();
+        approvalsFiles.removeReceived();
     }
 
 
     @Test
     void approvalShouldFailWhenApprovedFileDoesNotExist() {
-        testClassCompanion.removeApproved();
+        approvalsFiles.removeApproved();
 
         assertThatThrownBy(() -> approvals.verify("text"))
                 .isInstanceOf(AssertionError.class)
                 .hasMessageContaining("expected: <> but was: <text>");
 
-        testClassCompanion.removeReceived();
+        approvalsFiles.removeReceived();
     }
 
 
     @Test
     void approvalShouldKeepReceivedFileWhenApprovedFileDoesNotExist()
             throws Throwable {
-        testClassCompanion.removeApproved();
-        testClassCompanion.removeReceived();
+        approvalsFiles.removeApproved();
+        approvalsFiles.removeReceived();
         try {
             approvals.verify("text");
         } catch(AssertionError e) {
-            String received = testClassCompanion.readReceived();
+            String received = approvalsFiles.readReceived();
             assertThat(received).isEqualTo("text");
         }
-        testClassCompanion.removeReceived();
-        testClassCompanion.removeApproved();
+        approvalsFiles.removeReceived();
+        approvalsFiles.removeApproved();
     }
 
 
     @Test
     void approvalShouldKeepReceivedFileWhenApprovedFileMismatch()
             throws Throwable {
-        testClassCompanion.writeApproved("approved");
+        approvalsFiles.writeApproved("approved");
         try {
             approvals.verify("text");
         } catch(AssertionError e) {
-            String received = testClassCompanion.readReceived();
+            String received = approvalsFiles.readReceived();
             assertThat(received).isEqualTo("text");
         }
-        testClassCompanion.removeReceived();
-        testClassCompanion.removeApproved();
+        approvalsFiles.removeReceived();
+        approvalsFiles.removeApproved();
     }
 
 
     @Test
     void approvalShouldRemoveReceivedFileWhenApprovedFileMatch()
             throws Throwable {
-        testClassCompanion.writeReceived("last content");
-        testClassCompanion.writeApproved("same");
+        approvalsFiles.writeReceived("last content");
+        approvalsFiles.writeApproved("same");
 
         approvals.verify("same");
 
-        String received = testClassCompanion.readReceived();
+        String received = approvalsFiles.readReceived();
         assertThat(received).isEqualTo("");
 
-        testClassCompanion.removeApproved();
+        approvalsFiles.removeApproved();
     }
 
 }

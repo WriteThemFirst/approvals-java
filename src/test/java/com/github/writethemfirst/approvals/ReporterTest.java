@@ -3,40 +3,39 @@ package com.github.writethemfirst.approvals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import com.github.writethemfirst.approvals.util.TestClassCompanion;
 import org.junit.jupiter.api.Test;
 
 public class ReporterTest {
     private Reporter reporter = mock(Reporter.class);
     private Approvals approvals = new Approvals(getClass(), reporter);
-    private TestClassCompanion testClassCompanion = new TestClassCompanion(getClass());
+    private ApprovalsFiles approvalsFiles = new ApprovalsFiles(getClass());
 
 
     @Test
     void approvalsShouldCallReporterWhenMismatch()
             throws Throwable {
-        testClassCompanion.writeApproved("some text");
+        approvalsFiles.writeApproved("some text");
 
         approvals.verify("different text");
 
-        verify(reporter).mismatch(testClassCompanion.approvedFile(), testClassCompanion.receivedFile());
+        verify(reporter).mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
 
-        testClassCompanion.removeApproved();
-        testClassCompanion.removeReceived();
+        approvalsFiles.removeApproved();
+        approvalsFiles.removeReceived();
     }
 
 
     @Test
     void approvalsShouldCallReporterWhenNoApprovedFile()
             throws Throwable {
-        testClassCompanion.removeApproved();
+        approvalsFiles.removeApproved();
 
         approvals.verify("text");
 
-        verify(reporter).mismatch(testClassCompanion.approvedFile(), testClassCompanion.receivedFile());
+        verify(reporter).mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
 
-        testClassCompanion.removeApproved();
-        testClassCompanion.removeReceived();
+        approvalsFiles.removeApproved();
+        approvalsFiles.removeReceived();
     }
 
 }
