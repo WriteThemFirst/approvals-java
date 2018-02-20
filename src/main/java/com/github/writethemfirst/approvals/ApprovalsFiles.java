@@ -7,8 +7,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static com.github.writethemfirst.approvals.util.FileUtils.silentRead;
-import static com.github.writethemfirst.approvals.util.FileUtils.silentRemove;
+import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
+import static com.github.writethemfirst.approvals.utils.FileUtils.silentRemove;
 import static java.lang.String.format;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.newBufferedWriter;
