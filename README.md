@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/WriteThemFirst/approvals-java.svg?branch=master)](https://travis-ci.org/WriteThemFirst/approvals-java)
+
 **This is a WIP**, we are trying the [RDD](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) approach !
 
 
@@ -5,8 +7,6 @@
 
 [![codecov.io](http://codecov.io/github/ReactiveX/RxJava/coverage.svg?branch=2.x)](https://codecov.io/gh/ReactiveX/RxJava/branch/2.x)
 
-
-[![Build Status](https://travis-ci.org/vavr-io/vavr.png)](https://travis-ci.org/vavr-io/vavr)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
