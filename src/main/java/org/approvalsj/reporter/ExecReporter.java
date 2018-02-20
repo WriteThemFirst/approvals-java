@@ -22,7 +22,7 @@ public class ExecReporter implements Reporter {
     @Override
     public void mismatch(Path approved, Path received) {
         String cmdLine = command
-                .replace("%programFiles%", programFiles.toString())
+                .replace("%programFiles%", programFiles == null ? "" : programFiles.toString())
                 .replace("%approved%", approved.toString())
                 .replace("%received%", received.toString());
         try {
