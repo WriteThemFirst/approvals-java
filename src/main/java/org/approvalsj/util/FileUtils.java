@@ -12,7 +12,7 @@ public class FileUtils {
             return new String(Files.readAllBytes(file));
         } catch (IOException e) {
             System.err.println("Could not read from " + file);
-            return null;
+            return "";
         }
     }
 

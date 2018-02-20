@@ -30,7 +30,7 @@ public class ReporterTest {
 
         approvals.verify("text");
 
-        verify(reporter).missing(testClassCompanion.approvedFile(), testClassCompanion.receivedFile());
+        verify(reporter).mismatch(testClassCompanion.approvedFile(), testClassCompanion.receivedFile());
 
         testClassCompanion.removeApproved();
         testClassCompanion.removeReceived();

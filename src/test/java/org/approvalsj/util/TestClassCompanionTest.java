@@ -55,7 +55,7 @@ class TestClassCompanionTest {
 
 
     @Test
-    void readApprovedShouldBeNullWhenFileMissing() {
+    void readApprovedShouldBeEmptyWhenFileMissing() {
         //GIVEN
         companion.removeApproved();
 
@@ -63,7 +63,7 @@ class TestClassCompanionTest {
         String read = companion.readApproved();
 
         //THEN
-        assertThat(read).isNull();
+        assertThat(read).isEqualTo("");
     }
 
 

@@ -16,18 +16,18 @@ public class Approvals {
     }
 
     public void verify(Object actual) throws Throwable {
-        String approved = testClassCompanion.readApproved();
-        testClassCompanion.writeReceived(actual.toString());
-        if (approved == null) {
-            for (Reporter reporter : reporters) {
-                reporter.missing(testClassCompanion.approvedFile(), testClassCompanion.receivedFile());
-            }
-        } else if (!approved.equals(actual.toString())) {
+        if (matchesApprovedFile(actual)) {
+            testClassCompanion.removeReceived();
+        } else {
             for (Reporter reporter : reporters) {
                 reporter.mismatch(testClassCompanion.approvedFile(), testClassCompanion.receivedFile());
             }
-        } else {
-            testClassCompanion.removeReceived();
         }
+    }
+
+    private boolean matchesApprovedFile(Object actual) {
+        String approved = testClassCompanion.readApproved();
+        testClassCompanion.writeReceived(actual.toString());
+        return null != approved && approved.equals(actual.toString());
     }
 }

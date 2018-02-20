@@ -16,13 +16,8 @@ public class ExecReporter implements Reporter {
         this.command = command.split(" ");
     }
 
-    public ExecReporter(String... command) {
+    ExecReporter(String... command) {
         this.command = command;
-    }
-
-    @Override
-    public void missing(Path approved, Path received) {
-        mismatch(approved, received);
     }
 
     @Override

@@ -13,9 +13,4 @@ public class ThrowsReporter implements Reporter {
         String detailMessage = format("expected: <%s> but was: <%s>", approved, actual);
         throw new AssertionError(detailMessage);
     }
-
-    @Override
-    public void missing(Path approved, Path received) throws Throwable {
-        throw new AssertionError(approved + " does not exist yet");
-    }
 }

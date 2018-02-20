@@ -35,7 +35,7 @@ public class ApprovalsSimpleTest {
 
         assertThatThrownBy(() -> approvals.verify("text"))
                 .isInstanceOf(AssertionError.class)
-                .hasMessageContaining("approvalShouldFailWhenApprovedFileDoesNotExist.approved does not exist yet");
+                .hasMessageContaining("expected: <> but was: <text>");
 
         testClassCompanion.removeReceived();
     }
@@ -72,9 +72,12 @@ public class ApprovalsSimpleTest {
     void approvalShouldRemoveReceivedFileWhenApprovedFileMatch() throws Throwable {
         testClassCompanion.writeReceived("last content");
         testClassCompanion.writeApproved("same");
+
         approvals.verify("same");
+
         String received = testClassCompanion.readReceived();
-        assertThat(received).isNull();
+        assertThat(received).isEqualTo("");
+
         testClassCompanion.removeApproved();
     }
 

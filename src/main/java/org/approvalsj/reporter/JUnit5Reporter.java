@@ -21,15 +21,4 @@ public class JUnit5Reporter
         }
     }
 
-    @Override
-    public void missing(Path approved, Path received) throws Throwable {
-        try {
-            Class<?> testCaseClass = Class.forName("org.junit.jupiter.api.Assertions");
-            Method assertEquals = testCaseClass.getMethod("assertEquals", Object.class, Object.class, String.class);
-            String message = format("approved file %s does not exist, rename %s to approve", approved, received);
-            assertEquals.invoke(null, "", silentRead(received), message);
-        } catch (InvocationTargetException e) {
-            throw e.getCause();
-        }
-    }
 }
