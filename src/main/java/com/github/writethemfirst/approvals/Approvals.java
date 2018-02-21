@@ -81,9 +81,17 @@ public class Approvals {
     }
 
 
-    private boolean matchesApprovedFile(final Object actual) {
+    /**
+     * Compares the *Program Under Tests*' output to the content of the *approved* file and checks for any differences.
+     *
+     * @param output Any object representing the output of *Program  Under Tests*. A `String` representation of that
+     *               object will be computed using `toString()` and will be used for the comparison with the *approved*
+     *               file's content.
+     * @return true if the provided output perfectly matches with the existing *approved* file
+     */
+    private boolean matchesApprovedFile(final Object output) {
         final String approvedContent = approvalsFiles.readApproved();
-        approvalsFiles.writeReceived(actual.toString());
-        return approvedContent != null && approvedContent.equals(actual.toString());
+        approvalsFiles.writeReceived(output.toString());
+        return approvedContent != null && approvedContent.equals(output.toString());
     }
 }
