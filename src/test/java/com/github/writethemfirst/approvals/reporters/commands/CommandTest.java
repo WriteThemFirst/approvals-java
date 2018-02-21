@@ -3,11 +3,11 @@ package com.github.writethemfirst.approvals.reporters.commands;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.createFile;
 import static java.nio.file.Paths.get;
@@ -19,17 +19,17 @@ class CommandTest {
     private final String OS_SEPARATOR = FileSystems.getDefault().getSeparator();
 
     @Test
-    void shouldLocateIntelliJ()
-            throws Exception {
-
+    void shouldLocateIntelliJ() throws Exception {
         File temp = touchIdeaExe();
-        Optional<String> command = new Command(temp + OS_SEPARATOR + "JetBrains", "idea64.exe").command();
-        assertThat(command).hasValueSatisfying(v -> v.endsWith("JetBrains" + OS_SEPARATOR + "IntelliJ IDEA 2017.1.2" + OS_SEPARATOR + "bin" + OS_SEPARATOR + "idea64.exe"));
+        Command command = new Command(
+            temp + OS_SEPARATOR + "JetBrains",
+            "idea64.exe");
+        Optional<String> pathToExe = command.pathToExe();
+        String expectedPath = format("JetBrains%sIntelliJ IDEA 2017.1.2%sbin%sidea64.exe", OS_SEPARATOR, OS_SEPARATOR, OS_SEPARATOR);
+        assertThat(pathToExe).get().toString().endsWith(expectedPath);
     }
 
-
-    private File touchIdeaExe()
-            throws IOException {
+    private File touchIdeaExe() throws Exception {
         File temp = newTemporaryFolder();
         Path ideaFolder = createDirectories(get(temp.toString(), "JetBrains", "IntelliJ IDEA 2017.1.2", "bin"));
         Path ideaExe = ideaFolder.resolve("idea64.exe");
@@ -37,13 +37,10 @@ class CommandTest {
         return temp;
     }
 
-
     @Test
-    void shouldNotLocateIntelliJ()
-            throws Exception {
+    void shouldNotLocateIntelliJ() {
         File temp = newTemporaryFolder();
-        Optional<String> command = new Command(temp.toString(), "idea64.exe").command();
+        Optional<String> command = new Command(temp.toString(), "idea64.exe").pathToExe();
         assertThat(command).isEmpty();
     }
-
 }
