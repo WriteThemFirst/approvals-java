@@ -2,7 +2,7 @@ package com.github.writethemfirst.approvals;
 
 import java.util.stream.Stream;
 
-import com.github.writethemfirst.approvals.ApprovalsFiles;
+import com.github.writethemfirst.approvals.utils.StackUtils;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
@@ -90,7 +90,7 @@ class ApprovalsFilesTest {
 
     @Test
     void guessedClassShouldBeTestClass() {
-        Class<?> guessed = Approvals.guessClass();
+        Class<?> guessed = StackUtils.guessClass(StackUtils.class);
         assertThat(guessed).isEqualTo(getClass());
     }
 }

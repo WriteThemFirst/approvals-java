@@ -1,12 +1,13 @@
 package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
+import com.github.writethemfirst.approvals.utils.StackUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static java.lang.Thread.currentThread;
+import static com.github.writethemfirst.approvals.utils.StackUtils.guessClass;
 import static java.util.Arrays.stream;
 
 /**
@@ -51,7 +52,7 @@ public class Approvals {
      * @see Reporter
      */
     public Approvals(final Reporter... reporters) {
-        this(guessClass(), reporters);
+        this(guessClass(Approvals.class), reporters);
     }
 
     /**
@@ -109,25 +110,4 @@ public class Approvals {
         return approvedContent != null && approvedContent.equals(output.toString());
     }
 
-    static Class<?> guessClass() {
-        try {
-            //can be rewritten with dropWhile in Java 9
-            String ourClass = Approvals.class.getName();
-            String className = null;
-            boolean inApprovals = false;
-            for (StackTraceElement element : currentThread().getStackTrace()) {
-                String elementClass = element.getClassName();
-                if (inApprovals && !elementClass.equals(ourClass)) {
-                    className = elementClass;
-                    break;
-                }
-                if (elementClass.equals(ourClass)) {
-                    inApprovals = true;
-                }
-            }
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("bug", e);
-        }
-    }
 }
