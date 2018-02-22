@@ -87,4 +87,10 @@ class ApprovalsFilesTest {
         Stream.of("whatever")
               .forEach(s -> assertThat(companion.methodName()).contains("methodNameShouldNotBeLambda"));
     }
+
+    @Test
+    void guessedClassShouldBeTestClass() {
+        Class<?> guessed = Approvals.guessClass();
+        assertThat(guessed).isEqualTo(getClass());
+    }
 }

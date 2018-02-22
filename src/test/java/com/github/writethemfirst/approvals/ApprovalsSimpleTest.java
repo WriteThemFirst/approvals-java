@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 
 public class ApprovalsSimpleTest {
-    private Approvals approvals = new Approvals(getClass());
+    private Approvals approvals = new Approvals();
     private ApprovalsFiles approvalsFiles = new ApprovalsFiles(getClass());
 
 

@@ -10,8 +10,11 @@ import java.util.Optional;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRemove;
 import static java.lang.String.format;
+import static java.lang.Thread.currentThread;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.newBufferedWriter;
+import static java.nio.file.Paths.get;
+import static java.util.Arrays.stream;
 
 /**
  * # ApprovalsFiles
@@ -124,7 +127,7 @@ public class ApprovalsFiles {
      * @return a method name, or empty if none was found
      */
     public Optional<String> methodName() {
-        return Arrays.stream(Thread.currentThread()
+        return stream(currentThread()
             .getStackTrace())
             .filter(e -> e.getClassName()
                 .equals(testClass.getName()))
@@ -138,7 +141,7 @@ public class ApprovalsFiles {
     private Path folderForClass() {
         String packageName = testClass.getPackage()
             .getName();
-        Path packageResourcesPath = Paths.get("src/test/resources/", packageName.split("\\."));
+        Path packageResourcesPath = get("src/test/resources/", packageName.split("\\."));
         return packageResourcesPath.resolve(testClass.getSimpleName());
     }
 

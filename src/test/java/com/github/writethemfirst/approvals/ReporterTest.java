@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Test;
 
 public class ReporterTest {
     private Reporter reporter = mock(Reporter.class);
-    private Approvals approvals = new Approvals(getClass(), reporter);
+    private Approvals approvals = new Approvals(reporter);
     private ApprovalsFiles approvalsFiles = new ApprovalsFiles(getClass());
 
 
     @Test
     void approvalsShouldCallReporterWhenMismatch()
-            throws Throwable {
+        throws Throwable {
         approvalsFiles.writeApproved("some text");
 
         approvals.verify("different text");
@@ -27,7 +27,7 @@ public class ReporterTest {
 
     @Test
     void approvalsShouldCallReporterWhenNoApprovedFile()
-            throws Throwable {
+        throws Throwable {
         approvalsFiles.removeApproved();
 
         approvals.verify("text");

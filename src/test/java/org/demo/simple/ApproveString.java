@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test;
 
 
 class ApproveString {
-    private Approvals approvals = new Approvals(getClass(), IDEA, new JUnit5Reporter());
+    private Approvals approvals = new Approvals(IDEA, new JUnit5Reporter());
 
 
     @Test
     void verifySimpleString()
-            throws Throwable {
+        throws Throwable {
         approvals.verify("my string");
     }
 }
