@@ -160,6 +160,8 @@ So we decided to implement quickly a subset of the initial features and deploy t
 
 [Getting Started Doc](https://github.com/approvals/ApprovalTests.Java/blob/master/build/resources/approval_tests/documentation/ApprovalTests%20-%20GettingStarted.md)
 
+[Javadoc](https://projects.raffael.ch/markdown-doclet/)
+
 ### Approved Files and Git
 
 The `*.approved` files must be checked into source your source control. This can be an issue with git as it will change the line endings.
@@ -174,5 +176,8 @@ The suggested fix is to add `*.approved binary` to your `.gitattributes`
 
 - :sparkles: small commits with messages using [gitmojis](https://gitmoji.carloscuesta.me/) 
 ([IDEA plugin](https://plugins.jetbrains.com/plugin/9174-emoji-support-plugin))
-
+- :memo: Javadoc is written in Markdown, and processed with [Pegdown Doclet](https://github.com/jamesots/pegdown-doclet)
+ [Pegdown plugin](https://plugins.jetbrains.com/plugin/7253-pegdown-doclet-for-idea) 
+will make it look nicer in IDEA. 
+Activate it in the settings after restart of IDEA. 
 
