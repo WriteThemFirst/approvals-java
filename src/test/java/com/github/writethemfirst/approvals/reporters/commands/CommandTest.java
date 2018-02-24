@@ -13,6 +13,8 @@ import static java.nio.file.Files.createFile;
 import static java.nio.file.Paths.get;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.Files.newTemporaryFolder;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
 
 class CommandTest {
     private final String OS_SEPARATOR = FileSystems.getDefault().getSeparator();
@@ -21,15 +23,21 @@ class CommandTest {
     private String IDEA_73 = "IntelliJ IDEA 2017.3";
 
     @Test
-    void shouldLocateIntelliJ() throws Exception {
+    void shouldExecuteIntelliJ() throws Exception {
         File temp = newTemporaryFolder();
-        touchIdeaExe(IDEA_712, temp);
+        touchIdeaExe(IDEA_8, temp);
+        Runtime runtime = mock(Runtime.class);
+
+
         Command command = new Command(
             temp + OS_SEPARATOR + "JetBrains",
-            "idea64.exe");
-        Optional<String> pathToExe = command.pathToExe();
-        String expectedPath = "JetBrains" + OS_SEPARATOR + IDEA_712 + OS_SEPARATOR + "bin" + OS_SEPARATOR + "idea64.exe";
-        assertThat(pathToExe).get().toString().endsWith(expectedPath);
+            "idea64.exe",
+            runtime);
+
+        command.execute("merge", "toto.approved", "toto.received", "toto.approved");
+
+        String executable = temp + OS_SEPARATOR + "JetBrains" + OS_SEPARATOR + IDEA_8 + OS_SEPARATOR + "bin" + OS_SEPARATOR + "idea64.exe";
+        then(runtime).should().exec(new String[]{executable, "merge", "toto.approved", "toto.received", "toto.approved"});
     }
 
     @Test
