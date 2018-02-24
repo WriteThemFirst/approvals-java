@@ -24,6 +24,11 @@ public class Command {
         this.executable = executable;
     }
 
+    // TODO: cache the path
+    // TODO: method to check if available
+    // TODO: callable with args
+    // TODO: programfiles aware
+
     /**
      * Finds the latest version of an installed software.
      *

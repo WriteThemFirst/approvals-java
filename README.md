@@ -181,3 +181,8 @@ The suggested fix is to add `*.approved binary` to your `.gitattributes`
 will make it look nicer in IDEA. 
 Activate it in the settings after restart of IDEA. 
 
+#### Mutation tests
+
+You can check the test coverage with PIT by running: 
+
+    mvn clean test pitest:mutationCoverage
