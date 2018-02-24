@@ -1,6 +1,7 @@
 package com.github.writethemfirst.approvals.reporters.commands;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
@@ -9,11 +10,9 @@ import java.util.stream.Stream;
 import static java.lang.Runtime.getRuntime;
 import static java.lang.System.getenv;
 import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
-import static java.nio.file.Files.find;
 import static java.nio.file.Paths.get;
 import static java.util.Arrays.stream;
 import static java.util.Comparator.naturalOrder;
-import static java.util.Optional.empty;
 import static java.util.stream.Stream.concat;
 import static java.util.stream.Stream.of;
 
@@ -23,6 +22,7 @@ import static java.util.stream.Stream.of;
 public class Command {
     private static final int MAX_FOLDERS_DEPTH = 5;
     static String WINDOWS_ENV_PROGRAM_FILES = "ProgramFiles";
+    static String WINDOWS_ENV_PROGRAM_FILES_X86 = "ProgramFiles(x86)";
     public static final String PROGRAM_FILES_KEY = "%programFiles%";
 
     private final Runtime runtime;
@@ -31,10 +31,12 @@ public class Command {
     private final String path;
     private final String executable;
     private Optional<String> cachedLatestPath;
+    private final String programFilesFolder;
+    private final String programFilesX86Folder;
 
     /**
-     * Represents the latest version of the executable found by scanning subfolders of path. The path will
-     * have %programFiles% replaced by the actual value in the environment variable `ProgramFiles`.
+     * Represents the latest version of the executable found by scanning subfolders of path. The path will have
+     * %programFiles% replaced by the actual value in the environment variable `ProgramFiles`.
      */
     public Command(String path, String executable) {
         this(path, executable, getRuntime(), getenv());
@@ -48,6 +50,9 @@ public class Command {
         this.executable = executable;
         this.runtime = runtime;
         this.env = env;
+        programFilesFolder = env.get(WINDOWS_ENV_PROGRAM_FILES);
+        programFilesX86Folder = env.get(WINDOWS_ENV_PROGRAM_FILES_X86);
+
     }
 
     /**
@@ -81,21 +86,46 @@ public class Command {
     }
 
     private Optional<String> searchForExe() {
+        Stream<Path> programFilesFolders = concat(replaced(programFilesFolder), replaced(programFilesX86Folder));
+        Stream<Path> possiblePaths = concat(programFilesFolders, notReplaced());
+        return possiblePaths
+            .flatMap(this::matchingCommandInPath)
+            .map(Path::toString)
+            .max(naturalOrder());
+    }
+
+    private Stream<Path> matchingCommandInPath(Path possiblePath) {
         try {
-            return matchingCommands()
-                .map(Path::toString)
-                .max(naturalOrder());
+            return Files.find(
+                possiblePath,
+                MAX_FOLDERS_DEPTH,
+                (p, a) -> p.endsWith(executable),
+                FOLLOW_LINKS);
         } catch (IOException e) {
             System.err.println(e);
-            return empty();
+            return Stream.empty();
         }
     }
 
-    private Stream<Path> matchingCommands() throws IOException {
-        return find(
-            get(path.replace(PROGRAM_FILES_KEY, env.get(WINDOWS_ENV_PROGRAM_FILES))),
-            MAX_FOLDERS_DEPTH,
-            (p, a) -> p.endsWith(executable),
-            FOLLOW_LINKS);
+    private Stream<Path> replaced(String folder) {
+        if (folder == null) {
+            return Stream.empty();
+        } else {
+            Path path = get(this.path.replace(PROGRAM_FILES_KEY, folder));
+            return path.toFile().isDirectory()
+                ? of(path)
+                : Stream.empty();
+        }
+    }
+
+    private Stream<Path> notReplaced() {
+        if (path.contains(PROGRAM_FILES_KEY)) {
+            return Stream.empty();
+        } else {
+            Path pat = get(path);
+            return pat.toFile().isDirectory()
+                ? of(pat)
+                : Stream.empty();
+        }
     }
 }

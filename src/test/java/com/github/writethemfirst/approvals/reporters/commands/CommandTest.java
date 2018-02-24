@@ -1,18 +1,14 @@
 package com.github.writethemfirst.approvals.reporters.commands;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.io.File;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.github.writethemfirst.approvals.reporters.commands.Command.PROGRAM_FILES_KEY;
-import static com.github.writethemfirst.approvals.reporters.commands.Command.WINDOWS_ENV_PROGRAM_FILES;
-import static java.lang.String.format;
+import static com.github.writethemfirst.approvals.reporters.commands.Command.*;
 import static java.lang.System.getenv;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.createFile;
@@ -81,7 +77,22 @@ class CommandTest {
         boolean available = command.available();
 
         assertThat(available).isTrue();
+    }
 
+    @Test
+    void shouldLocateExeInProgramFilesX86() throws Exception {
+        //Temp folder and environment variables
+        //Can be mocked more neatly with https://github.com/glytching/junit-extensions
+        File temp = newTemporaryFolder();
+        touchIdeaExe(IDEA_8, temp);
+        Map<String, String> mockedEnv = mock(Map.class);
+        when(mockedEnv.get(WINDOWS_ENV_PROGRAM_FILES_X86)).thenReturn(temp.getAbsolutePath());
+
+        Command command = new Command(PROGRAM_FILES_KEY, "idea64.exe", mock(Runtime.class), mockedEnv);
+
+        boolean available = command.available();
+
+        assertThat(available).isTrue();
     }
 
     private void touchIdeaExe(String version, File temp) throws Exception {
