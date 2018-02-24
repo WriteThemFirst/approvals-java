@@ -36,7 +36,7 @@ public class Command {
      * Represents the latest version of the executable found by scanning subfolders of path. The path will
      * have %programFiles% replaced by the actual value in the environment variable `ProgramFiles`.
      */
-    Command(String path, String executable) {
+    public Command(String path, String executable) {
         this(path, executable, getRuntime(), getenv());
     }
 
