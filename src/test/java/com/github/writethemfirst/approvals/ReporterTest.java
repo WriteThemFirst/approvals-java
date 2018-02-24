@@ -1,9 +1,10 @@
 package com.github.writethemfirst.approvals;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 import org.junit.jupiter.api.Test;
+
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+
 
 public class ReporterTest {
     private Reporter reporter = mock(Reporter.class);
@@ -18,7 +19,7 @@ public class ReporterTest {
 
         approvals.verify("different text");
 
-        verify(reporter).mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
+        then(reporter).should().mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
 
         approvalsFiles.removeApproved();
         approvalsFiles.removeReceived();
@@ -32,7 +33,7 @@ public class ReporterTest {
 
         approvals.verify("text");
 
-        verify(reporter).mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
+        then(reporter).should().mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
 
         approvalsFiles.removeApproved();
         approvalsFiles.removeReceived();
