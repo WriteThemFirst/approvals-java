@@ -49,9 +49,14 @@ class CommandTest {
         Command command = new Command(
             temp + OS_SEPARATOR + "JetBrains",
             "idea64.exe");
-        Optional<String> pathToExe = command.pathToExe();
+
+        Optional<String> pathToExe = command.pathToLatestExe();
+        boolean available = command.available();
+
         String expectedPath = "JetBrains" + OS_SEPARATOR + IDEA_8 + OS_SEPARATOR + "bin" + OS_SEPARATOR + "idea64.exe";
         assertThat(pathToExe.get()).endsWith(expectedPath);
+        assertThat(available).isTrue();
+
     }
 
     private void touchIdeaExe(String version, File temp) throws Exception {
@@ -63,7 +68,12 @@ class CommandTest {
     @Test
     void shouldNotLocateIntelliJ() {
         File temp = newTemporaryFolder();
-        Optional<String> command = new Command(temp.toString(), "idea64.exe").pathToExe();
-        assertThat(command).isEmpty();
+        Command command = new Command(temp.toString(), "idea64.exe");
+
+        Optional<String> latestExe = command.pathToLatestExe();
+        boolean available = command.available();
+
+        assertThat(latestExe).isEmpty();
+        assertThat(available).isFalse();
     }
 }

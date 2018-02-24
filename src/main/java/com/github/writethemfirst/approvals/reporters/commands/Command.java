@@ -23,6 +23,7 @@ public class Command {
     private final String path;
     private final String executable;
     private final Runtime runtime;
+    private Optional<String> cachedLatestPath;
 
     Command(String path, String executable) {
         this(path, executable, getRuntime());
@@ -37,16 +38,39 @@ public class Command {
         this.runtime = runtime;
     }
 
-    // TODO: cache the path
-    // TODO: method to check if available
     // TODO: programfiles aware
+
+    /**
+     * Runs the executable outside the JVM by calling Runtime.exec().
+     */
+    public void execute(String... arguments) throws IOException {
+        String[] cmdArray = concat(
+            of(pathToLatestExe().get()),
+            stream(arguments))
+            .toArray(String[]::new);
+        runtime.exec(cmdArray);
+    }
+
+    /**
+     * Tests if an executable file was found in the path.
+     */
+    public boolean available() {
+        return cachedLatestPath.isPresent();
+    }
 
     /**
      * Finds the latest version of an installed software.
      *
      * Sort order is based on folder names, assuming that latest version have a greater version number.
      */
-    public Optional<String> pathToExe() {
+    Optional<String> pathToLatestExe() {
+        if (cachedLatestPath == null) {
+            cachedLatestPath = searchForExe();
+        }
+        return cachedLatestPath;
+    }
+
+    private Optional<String> searchForExe() {
         try {
             return matchingCommands()
                 .map(Path::toString)
@@ -63,13 +87,5 @@ public class Command {
             MAX_FOLDERS_DEPTH,
             (p, a) -> p.endsWith(executable),
             FOLLOW_LINKS);
-    }
-
-    public void execute(String... arguments) throws IOException {
-        String[] cmdArray = concat(
-            of(pathToExe().get()),
-            stream(arguments))
-            .toArray(String[]::new);
-        runtime.exec(cmdArray);
     }
 }
