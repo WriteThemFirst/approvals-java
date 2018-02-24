@@ -2,10 +2,12 @@ package com.github.writethemfirst.approvals.reporters.commands;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.lang.Runtime.getRuntime;
+import static java.lang.System.getenv;
 import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
 import static java.nio.file.Files.find;
 import static java.nio.file.Paths.get;
@@ -20,25 +22,33 @@ import static java.util.stream.Stream.of;
  */
 public class Command {
     private static final int MAX_FOLDERS_DEPTH = 5;
+    static String WINDOWS_ENV_PROGRAM_FILES = "ProgramFiles";
+    public static final String PROGRAM_FILES_KEY = "%programFiles%";
+
+    private final Runtime runtime;
+    private final Map<String, String> env;
+
     private final String path;
     private final String executable;
-    private final Runtime runtime;
     private Optional<String> cachedLatestPath;
 
+    /**
+     * Represents the latest version of the executable found by scanning subfolders of path. The path will
+     * have %programFiles% replaced by the actual value in the environment variable `ProgramFiles`.
+     */
     Command(String path, String executable) {
-        this(path, executable, getRuntime());
+        this(path, executable, getRuntime(), getenv());
     }
 
     /**
-     * Only use this constructor from test code so the Runtime can be mocked.
+     * Only use this constructor from test code so the environment Map and Runtime can be mocked.
      */
-    Command(String path, String executable, Runtime runtime) {
+    Command(String path, String executable, Runtime runtime, Map<String, String> env) {
         this.path = path;
         this.executable = executable;
         this.runtime = runtime;
+        this.env = env;
     }
-
-    // TODO: programfiles aware
 
     /**
      * Runs the executable outside the JVM by calling Runtime.exec().
@@ -55,7 +65,7 @@ public class Command {
      * Tests if an executable file was found in the path.
      */
     public boolean available() {
-        return cachedLatestPath.isPresent();
+        return pathToLatestExe().isPresent();
     }
 
     /**
@@ -83,7 +93,7 @@ public class Command {
 
     private Stream<Path> matchingCommands() throws IOException {
         return find(
-            get(path),
+            get(path.replace(PROGRAM_FILES_KEY, env.get(WINDOWS_ENV_PROGRAM_FILES))),
             MAX_FOLDERS_DEPTH,
             (p, a) -> p.endsWith(executable),
             FOLLOW_LINKS);
