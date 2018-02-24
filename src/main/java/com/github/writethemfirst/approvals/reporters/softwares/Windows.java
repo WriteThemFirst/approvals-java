@@ -1,7 +1,7 @@
 package com.github.writethemfirst.approvals.reporters.softwares;
 
-import com.github.writethemfirst.approvals.Reporter;
-import com.github.writethemfirst.approvals.reporters.ExecReporter;
+    import com.github.writethemfirst.approvals.Reporter;
+    import com.github.writethemfirst.approvals.reporters.ExecReporter;
 
 public interface Windows {
 
@@ -20,3 +20,6 @@ public interface Windows {
 
 
 }
+
+
+

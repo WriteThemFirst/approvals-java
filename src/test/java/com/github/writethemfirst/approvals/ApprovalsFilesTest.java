@@ -1,12 +1,10 @@
 package com.github.writethemfirst.approvals;
 
-import java.util.stream.Stream;
-
-import com.github.writethemfirst.approvals.utils.StackUtils;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,7 +19,7 @@ class ApprovalsFilesTest {
 
         //THEN
         Path expectedPath = Paths.get(
-                "src/test/resources/com/github/writethemfirst/approvals/ApprovalsFilesTest/approvedFileShouldBeCorrect.approved");
+            "src/test/resources/com/github/writethemfirst/approvals/ApprovalsFilesTest/approvedFileShouldBeCorrect.approved");
         assertThat(approvedFile).isEqualTo(expectedPath);
     }
 
@@ -85,12 +83,6 @@ class ApprovalsFilesTest {
     @Test
     void methodNameShouldNotBeLambda() {
         Stream.of("whatever")
-              .forEach(s -> assertThat(companion.methodName()).contains("methodNameShouldNotBeLambda"));
-    }
-
-    @Test
-    void guessedClassShouldBeTestClass() {
-        Class<?> guessed = StackUtils.guessClass(StackUtils.class);
-        assertThat(guessed).isEqualTo(getClass());
+            .forEach(s -> assertThat(companion.methodName()).contains("methodNameShouldNotBeLambda"));
     }
 }
