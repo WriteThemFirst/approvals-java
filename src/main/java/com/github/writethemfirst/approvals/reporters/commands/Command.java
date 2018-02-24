@@ -2,7 +2,6 @@ package com.github.writethemfirst.approvals.reporters.commands;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -11,7 +10,7 @@ import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
 import static java.nio.file.Files.find;
 import static java.nio.file.Paths.get;
 import static java.util.Arrays.stream;
-import static java.util.Comparator.reverseOrder;
+import static java.util.Comparator.naturalOrder;
 import static java.util.Optional.empty;
 import static java.util.stream.Stream.concat;
 import static java.util.stream.Stream.of;
@@ -51,8 +50,7 @@ public class Command {
         try {
             return matchingCommands()
                 .map(Path::toString)
-                .sorted(reverseOrder())
-                .findFirst();
+                .max(naturalOrder());
         } catch (IOException e) {
             System.err.println(e);
             return empty();
