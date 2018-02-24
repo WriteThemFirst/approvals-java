@@ -2,7 +2,6 @@ package com.github.writethemfirst.approvals.reporters.softwares;
 
 import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.reporters.CommandReporter;
-import com.github.writethemfirst.approvals.reporters.WindowsReporter;
 import com.github.writethemfirst.approvals.reporters.commands.Command;
 
 public interface Windows {

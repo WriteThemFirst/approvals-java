@@ -22,10 +22,6 @@ public class ExecReporter implements Reporter {
         this.command = command.split(" ");
     }
 
-    public ExecReporter(String... command) {
-        this.command = command;
-    }
-
     @Override
     public void mismatch(Path approved, Path received) {
         String[] cmdLine = getCmdLine(approved, received);
