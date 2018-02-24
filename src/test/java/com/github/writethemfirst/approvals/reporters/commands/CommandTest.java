@@ -15,26 +15,41 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.Files.newTemporaryFolder;
 
 class CommandTest {
-
     private final String OS_SEPARATOR = FileSystems.getDefault().getSeparator();
+    private String IDEA_8 = "IntelliJ IDEA 2018";
+    private String IDEA_712 = "IntelliJ IDEA 2017.1.2";
+    private String IDEA_73 = "IntelliJ IDEA 2017.3";
 
     @Test
     void shouldLocateIntelliJ() throws Exception {
-        File temp = touchIdeaExe();
+        File temp = newTemporaryFolder();
+        touchIdeaExe(IDEA_712, temp);
         Command command = new Command(
             temp + OS_SEPARATOR + "JetBrains",
             "idea64.exe");
         Optional<String> pathToExe = command.pathToExe();
-        String expectedPath = format("JetBrains%sIntelliJ IDEA 2017.1.2%sbin%sidea64.exe", OS_SEPARATOR, OS_SEPARATOR, OS_SEPARATOR);
+        String expectedPath = "JetBrains" + OS_SEPARATOR + IDEA_712 + OS_SEPARATOR + "bin" + OS_SEPARATOR + "idea64.exe";
         assertThat(pathToExe).get().toString().endsWith(expectedPath);
     }
 
-    private File touchIdeaExe() throws Exception {
+    @Test
+    void shouldLocateLatestIntelliJ() throws Exception {
         File temp = newTemporaryFolder();
-        Path ideaFolder = createDirectories(get(temp.toString(), "JetBrains", "IntelliJ IDEA 2017.1.2", "bin"));
+        touchIdeaExe(IDEA_712, temp);
+        touchIdeaExe(IDEA_8, temp);
+        touchIdeaExe(IDEA_73, temp);
+        Command command = new Command(
+            temp + OS_SEPARATOR + "JetBrains",
+            "idea64.exe");
+        Optional<String> pathToExe = command.pathToExe();
+        String expectedPath = "JetBrains" + OS_SEPARATOR + IDEA_8 + OS_SEPARATOR + "bin" + OS_SEPARATOR + "idea64.exe";
+        assertThat(pathToExe.get()).endsWith(expectedPath);
+    }
+
+    private void touchIdeaExe(String version, File temp) throws Exception {
+        Path ideaFolder = createDirectories(get(temp.toString(), "JetBrains", version, "bin"));
         Path ideaExe = ideaFolder.resolve("idea64.exe");
         createFile(ideaExe);
-        return temp;
     }
 
     @Test

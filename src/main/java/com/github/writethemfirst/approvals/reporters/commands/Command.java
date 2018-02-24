@@ -8,8 +8,12 @@ import java.util.stream.Stream;
 import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
 import static java.nio.file.Files.find;
 import static java.nio.file.Paths.get;
+import static java.util.Comparator.reverseOrder;
 import static java.util.Optional.empty;
 
+/**
+ * Wrapper around an executable command outside the JVM.
+ */
 public class Command {
     private static final int MAX_FOLDERS_DEPTH = 5;
     private final String path;
@@ -20,10 +24,16 @@ public class Command {
         this.executable = executable;
     }
 
+    /**
+     * Finds the latest version of an installed software.
+     *
+     * Sort order is based on folder names, assuming that latest version have a greater version number.
+     */
     public Optional<String> pathToExe() {
         try {
             return matchingCommands()
                 .map(Path::toString)
+                .sorted(reverseOrder())
                 .findFirst();
         } catch (IOException e) {
             System.err.println(e);
