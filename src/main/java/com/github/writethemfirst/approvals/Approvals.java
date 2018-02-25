@@ -1,11 +1,5 @@
 package com.github.writethemfirst.approvals;
 
-import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 
 /**
@@ -38,34 +32,31 @@ import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 public class Approvals {
 
     private final ApprovalsFiles approvalsFiles;
-    private final List<Reporter> reporters;
+    private final Reporter reporter;
 
 
     /**
      * Constructs an `Approvals` object.
      *
-     * @param reporters As many `Reporter` as you want. Those reporters are then triggered in case of differences
-     *                  between the output and the files' content.
+     * @param reporter The reporter to trigger in case of differences between the output and the files' content.
      * @see Reporter
      */
-    public Approvals(final Reporter... reporters) {
-        this(callerClass(Approvals.class), reporters);
+    public Approvals(final Reporter reporter) {
+        this(callerClass(Approvals.class), reporter);
     }
 
 
     /**
      * Constructs an `Approvals` object.
      *
-     * @param clazz     The test class performing the assertions. It is used in order to compute the *approved* files'
-     *                  names. It can be omitted and will be infered to be the class calling the constructor.
-     * @param reporters As many `Reporter` as you want. Those reporters are then triggered in case of differences
-     *                  between the output and the files' content.
+     * @param clazz    The test class performing the assertions. It is used in order to compute the *approved* files'
+     *                 names. It can be omitted and will be inferred to be the class calling the constructor.
+     * @param reporter The reporter to trigger in case of differences between the output and the files' content.
      * @see Reporter
      */
-    public Approvals(final Class<?> clazz, final Reporter... reporters) {
+    public Approvals(final Class<?> clazz, final Reporter reporter) {
         approvalsFiles = new ApprovalsFiles(clazz);
-        this.reporters = reporters.length == 0 ? Collections.singletonList(new ThrowsReporter())
-            : Arrays.asList(reporters);
+        this.reporter = reporter;
     }
 
 
@@ -88,9 +79,7 @@ public class Approvals {
         if (matchesApprovedFile(output)) {
             approvalsFiles.removeReceived();
         } else {
-            for (final Reporter reporter : reporters) {
-                reporter.mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
-            }
+            reporter.mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
         }
     }
 

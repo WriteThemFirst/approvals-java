@@ -8,8 +8,7 @@ import static com.github.writethemfirst.approvals.reporters.softwares.Windows.*;
 
 
 class ApproveString {
-    // You would not use that many approvers, this is just to make testing easy.
-    private Approvals approvals = new Approvals(DEFAULT, new JUnit5Reporter());
+    private Approvals approvals = new Approvals(DEFAULT);
 
     @Test
     void verifySimpleString() throws Throwable {

@@ -1,18 +1,18 @@
 package com.github.writethemfirst.approvals;
 
+import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ApprovalsSimpleTest {
-    private Approvals approvals = new Approvals();
+    private Approvals approvals = new Approvals(new ThrowsReporter());
     private ApprovalsFiles approvalsFiles = new ApprovalsFiles(getClass());
 
 
     @Test
-    void approvalShouldDoNothingWhenApprovedFileExistsAndIsCorrect()
-        throws Throwable {
+    void shouldDoNothingWhenApprovedFileExistsAndIsCorrect() throws Throwable {
         approvalsFiles.writeApproved("some text");
         approvals.verify("some text");
         approvalsFiles.removeApproved();
@@ -20,7 +20,7 @@ public class ApprovalsSimpleTest {
 
 
     @Test
-    void approvalShouldFailWhenApprovedFileExistsAndIsDifferent() {
+    void shouldFailWhenApprovedFileExistsAndIsDifferent() {
         approvalsFiles.writeApproved("expected text");
 
         assertThatThrownBy(() -> approvals.verify("actual text"))
@@ -33,7 +33,7 @@ public class ApprovalsSimpleTest {
 
 
     @Test
-    void approvalShouldFailWhenApprovedFileDoesNotExist() {
+    void shouldFailWhenApprovedFileDoesNotExist() {
         approvalsFiles.removeApproved();
 
         assertThatThrownBy(() -> approvals.verify("text"))
@@ -45,8 +45,7 @@ public class ApprovalsSimpleTest {
 
 
     @Test
-    void approvalShouldKeepReceivedFileWhenApprovedFileDoesNotExist()
-        throws Throwable {
+    void shouldKeepReceivedFileWhenApprovedFileDoesNotExist() throws Throwable {
         approvalsFiles.removeApproved();
         approvalsFiles.removeReceived();
         try {
@@ -61,8 +60,7 @@ public class ApprovalsSimpleTest {
 
 
     @Test
-    void approvalShouldKeepReceivedFileWhenApprovedFileMismatch()
-        throws Throwable {
+    void shouldKeepReceivedFileWhenApprovedFileMismatch() throws Throwable {
         approvalsFiles.writeApproved("approved");
         try {
             approvals.verify("text");
@@ -76,8 +74,7 @@ public class ApprovalsSimpleTest {
 
 
     @Test
-    void approvalShouldRemoveReceivedFileWhenApprovedFileMatch()
-        throws Throwable {
+    void shouldRemoveReceivedFileWhenApprovedFileMatch() throws Throwable {
         approvalsFiles.writeReceived("last content");
         approvalsFiles.writeApproved("same");
 
