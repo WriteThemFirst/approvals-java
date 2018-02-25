@@ -1,15 +1,10 @@
 package com.github.writethemfirst.approvals;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.nio.file.Path;
 
-import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
-import static com.github.writethemfirst.approvals.utils.FileUtils.silentRemove;
+import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
 import static java.lang.String.format;
-import static java.nio.file.Files.createDirectories;
-import static java.nio.file.Files.newBufferedWriter;
 import static java.nio.file.Paths.get;
 
 /**
@@ -143,47 +138,85 @@ public class ApprovalsFiles {
     }
 
 
+    /**
+     * Computes and returns the *approved* file Path linked to the current method execution.
+     *
+     * That method will actually retrieve the method from which the call has been made and locate the *approved* file
+     * linked to the `testClass` attribute and the parent method calling this one.
+     *
+     * If the parent method cannot be found in the stack hierarchy, the method name will be replaced by `unknown_method`
+     * so it can easily be found in the files.
+     *
+     * @return The Path to the *approved* file linked to the current method execution, or to a specific file in case
+     * that calling hierarchy cannot be established.
+     */
     public Path approvedFile() {
-        return approvedFile(callerMethod(testClass).get());
+        return approvedFile(callerMethod(testClass).orElse("unknown_method"));
     }
 
 
+    /**
+     * Computes and returns the *received* file Path linked to the current method execution.
+     *
+     * That method will actually retrieve the method from which the call has been made and locate the *received* file
+     * linked to the `testClass` attribute and the parent method calling this one.
+     *
+     * If the parent method cannot be found in the stack hierarchy, the method name will be replaced by `unknown_method`
+     * so it can easily be found in the files.
+     *
+     * @return The Path to the *received* file linked to the current method execution, or to a specific file in case
+     * that calling hierarchy cannot be established.
+     */
     public Path receivedFile() {
-        return receivedFile(callerMethod(testClass).get());
+        return receivedFile(callerMethod(testClass).orElse("unknown_method"));
     }
 
 
-    Path receivedFile(String methodName) {
-        String fileName = format("%s.received", methodName);
+    /**
+     * Returns the *received* file Path linked to the specified `methodName`.
+     *
+     * The Path will be computed by adding a `.received` extension to the provided `methodName` and search for it in the
+     * `folder` associated with the `testClass`.
+     *
+     * @param methodName The methodName to be used as a basis for the *received* file name to be used.
+     * @return The Path to the *received* file linked to the provided `methodName`.
+     */
+    Path receivedFile(final String methodName) {
+        final String fileName = format("%s.received", methodName);
         return folder.resolve(fileName);
     }
 
 
-    Path approvedFile(String methodName) {
-        String fileName = format("%s.approved", methodName);
+    /**
+     * Returns the *approved* file Path linked to the specified `methodName`.
+     *
+     * The Path will be computed by adding a `.approved` extension to the provided `methodName` and search for it in the
+     * `folder` associated with the `testClass`.
+     *
+     * @param methodName The methodName to be used as a basis for the *approved* file name to be used.
+     * @return The Path to the *approved* file linked to the provided `methodName`.
+     */
+    Path approvedFile(final String methodName) {
+        final String fileName = format("%s.approved", methodName);
         return folder.resolve(fileName);
     }
 
 
+    /**
+     * Computes and returns the Path to the folder to be used for storing the *approved* and *received* files linked to
+     * the `testClass` instance.
+     *
+     * The folder will be created under `src/test/resources` in the really same project, and will be named after the
+     * package name of the `testClass`, followed by the name of the `testClass` itself. That folder will later contain
+     * one pair of files (*approved* and *received*) for each method to be tested.
+     *
+     * @return The Path to the folder linked to the `testClass` attribute, used for storing the *received* and
+     * *approved* files.
+     */
     private Path folderForClass() {
-        String packageName = testClass.getPackage()
-            .getName();
-        Path packageResourcesPath = get("src/test/resources/", packageName.split("\\."));
+        final String packageName = testClass.getPackage().getName();
+        final Path packageResourcesPath = get("src/test/resources/", packageName.split("\\."));
         return packageResourcesPath.resolve(testClass.getSimpleName());
     }
 
-
-    private void write(String content, Path file) {
-        try {
-            createDirectories(file.getParent());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try (BufferedWriter writer = newBufferedWriter(file)) {
-            writer.write(content);
-        } catch (IOException e) {
-            String message = format("Could not write to file %s because of %s", file.toAbsolutePath(), e);
-            throw new RuntimeException(message, e);
-        }
-    }
 }
