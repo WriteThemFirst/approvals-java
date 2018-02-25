@@ -1,5 +1,8 @@
 package com.github.writethemfirst.approvals;
 
+import com.github.writethemfirst.approvals.reporters.softwares.Generic;
+import com.github.writethemfirst.approvals.reporters.softwares.Windows;
+
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 
 /**
@@ -34,6 +37,9 @@ public class Approvals {
     private final ApprovalsFiles approvalsFiles;
     private final Reporter reporter;
 
+    public Approvals() {
+        this(Generic.DEFAULT);
+    }
 
     /**
      * Constructs an `Approvals` object.
