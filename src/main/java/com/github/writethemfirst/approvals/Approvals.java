@@ -37,6 +37,13 @@ public class Approvals {
     private final ApprovalsFiles approvalsFiles;
     private final Reporter reporter;
 
+    /**
+     * Constructs an `Approvals` object.
+     *
+     * A default `Reporter` will be created and used by the created `Approvals` instance.
+     * @see Reporter
+     * @see Generic
+     */
     public Approvals() {
         this(Generic.DEFAULT);
     }
