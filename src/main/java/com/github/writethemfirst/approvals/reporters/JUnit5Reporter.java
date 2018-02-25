@@ -17,8 +17,13 @@ public class JUnit5Reporter implements Reporter {
 
     private final String JUNIT5_ASSERTIONS = "org.junit.jupiter.api.Assertions";
 
+    /**
+     * @throws AssertionError   if the 2 contents do not match
+     * @throws RuntimeException if something went wrong with reflection calls to JUnit framework (should not happen if
+     *                          you checked {@link #isAvailable()} first)
+     */
     @Override
-    public void mismatch(Path approved, Path received) throws Throwable {
+    public void mismatch(Path approved, Path received) {
         try {
             Class<?> testCaseClass = Class.forName(JUNIT5_ASSERTIONS);
             Method assertEquals = testCaseClass.getMethod("assertEquals", Object.class, Object.class, String.class);
@@ -27,7 +32,9 @@ public class JUnit5Reporter implements Reporter {
                 silentRead(received),
                 format("%s differs from %s", received, approved));
         } catch (InvocationTargetException e) {
-            throw e.getCause();
+            throw (AssertionError) e.getCause();
+        } catch (NoSuchMethodException | IllegalAccessException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 

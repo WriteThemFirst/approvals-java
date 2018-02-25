@@ -18,7 +18,7 @@ public class FirstWorkingReporter implements Reporter {
     }
 
     @Override
-    public void mismatch(Path approved, Path received) throws Throwable {
+    public void mismatch(Path approved, Path received) {
         if (firstAvailable().isPresent()) {
             firstAvailable().get().mismatch(approved, received);
         }

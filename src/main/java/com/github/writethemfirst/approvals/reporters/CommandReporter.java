@@ -3,6 +3,7 @@ package com.github.writethemfirst.approvals.reporters;
 import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.reporters.commands.Command;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 import static java.util.Arrays.stream;
@@ -27,9 +28,13 @@ public class CommandReporter implements Reporter {
     }
 
     @Override
-    public void mismatch(Path approved, Path received) throws Throwable {
+    public void mismatch(Path approved, Path received) {
         if (command.isAvailable()) {
-            command.execute(actualArguments(approved, received));
+            try {
+                command.execute(actualArguments(approved, received));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

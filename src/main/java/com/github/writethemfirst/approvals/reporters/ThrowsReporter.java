@@ -8,9 +8,13 @@ import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 import static java.lang.String.format;
 
 /**
- * The most basic `Reporter`, it simply throws an {@link AssertionError}. It is always available.
+ * The most basic `Reporter`, it simply throws an {@link AssertionError} in case of mismatch between *approved* and
+ * *received*. It is always available.
  */
 public class ThrowsReporter implements Reporter {
+    /**
+     * @throws AssertionError if the 2 contents do not match
+     */
     @Override
     public void mismatch(Path approvedPath, Path receivedPath) {
         String approved = silentRead(approvedPath);
