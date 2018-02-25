@@ -7,6 +7,9 @@ import java.nio.file.Path;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 import static java.lang.String.format;
 
+/**
+ * The most basic `Reporter`, it simply throws an {@link AssertionError}. It is always available.
+ */
 public class ThrowsReporter implements Reporter {
     @Override
     public void mismatch(Path approvedPath, Path receivedPath) {

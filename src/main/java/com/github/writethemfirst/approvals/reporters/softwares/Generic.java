@@ -5,6 +5,9 @@ import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
 import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 
+/**
+ * Defines `Reporter`s which work on any OS.
+ */
 public interface Generic {
 
     String os = System.getProperty("os.name");

@@ -8,12 +8,15 @@ import java.nio.file.Path;
 import static java.util.Arrays.stream;
 
 /**
- * A reporter which executes an external command.
+ * A reporter which delegates execution to an external command.
  */
 public class CommandReporter implements Reporter {
     private final Command command;
     private final String[] arguments;
 
+    /**
+     * Constructs the reporter with a single String of arguments, split on spaces.
+     */
     public CommandReporter(Command command, String arguments) {
         this(command, arguments.split(" "));
     }

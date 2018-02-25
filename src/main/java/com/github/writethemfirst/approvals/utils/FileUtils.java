@@ -14,7 +14,7 @@ import static java.nio.file.Files.*;
  * Set of methods to help and ease the manipulation of Files. Most likely adding minor behavior on top of existing Files
  * methods.
  *
- * Methods in that file are to be static so no instance of `FileUtils` is necessary.
+ * Methods in that file are static so no instance of `FileUtils` is necessary.
  *
  * @author mdaviot / aneveux
  * @version 1.0
@@ -24,11 +24,11 @@ public class FileUtils {
     /**
      * Reads the file located at the specified Path, and returns its content in case the file exists.
      *
-     * If it doesn't exist or if it cannot be read, that method will return an empty String and swallow the Exception.
-     * An error message will be written in `System.err` though.
+     * If it doesn't exist or if it cannot be read, that method will return an empty String and ignore the {@link IOException}.
+     * An error message will be written in {@link System#err} though.
      *
      * @param file The path of the file to be read
-     * @return The content of the specified file if it exists and can be read, or an empty String otherwise.
+     * @return The content of the specified file if it exists and can be read, or an empty String otherwise
      */
     public static String silentRead(final Path file) {
         try {
@@ -68,7 +68,7 @@ public class FileUtils {
      * error.
      *
      * The provided `content` will then be written in the provided `file`. A `RuntimeException` will be thrown in case
-     * anything is going wrong will writting the content in the `file`.
+     * anything is going wrong will writing the content in the `file`.
      *
      * @param content The content to be written in the specified file
      * @param file    The file in which the content should be written

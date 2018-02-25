@@ -7,6 +7,10 @@ import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.reporters.commands.Command;
 
+
+/**
+ * Defines `Reporter`s which work on Windows only.
+ */
 public interface Windows {
 
     Reporter IDEA = new CommandReporter(new Command("%programFiles%\\JetBrains", "idea64.exe"), "merge %approved% %received% %approved%");

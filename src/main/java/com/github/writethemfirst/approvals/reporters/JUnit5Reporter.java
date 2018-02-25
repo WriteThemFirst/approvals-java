@@ -9,6 +9,10 @@ import java.nio.file.Path;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 import static java.lang.String.format;
 
+/**
+ * This `Reporter` uses reflection to throw the same exceptions that the JUnit 5 framework would send. It is useful when
+ * no executable can be found by any {@link CommandReporter} but JUnit 5 is on the classpath.
+ */
 public class JUnit5Reporter implements Reporter {
 
     private final String JUNIT5_ASSERTIONS = "org.junit.jupiter.api.Assertions";

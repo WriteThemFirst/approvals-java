@@ -12,11 +12,11 @@ import java.nio.file.Path;
  * differences to the developer. There are plenty of ways to report those differences, like generating assertions
  * errors, logging the differences in a file, or whatever you can imagine.
  *
- * The `Reporter` interface is the contract to implement for instanciating reporters to be called by the framework to
- * report the differences found during computing the comparisons.
+ * The `Reporter` interface is the contract used by the framework to report the differences found during computing the
+ * comparisons.
  *
- * There will be a set of reporters already implemented and provided by the framework, but people can then choose to
- * implement their owns, and to use them while computing the approvals.
+ * There will be a set of reporters already implemented and provided by the framework, but people can implement their
+ * owns and  use them while computing the approvals.
  *
  * @author mdaviot / aneveux
  * @version 1.0
@@ -43,12 +43,13 @@ public interface Reporter {
 
     /**
      * A `Reporter` may not be relevant in all contexts, and they should provide some automated checks validating that
-     * they're actually able to perform what they're supposed to do in the current execution context.
+     * they're actually able to perform what they're supposed to do in the current execution context (like libraries
+     * available in the classpath or Diff / Merge programs available on the computer).
      *
      * This method allows to state if a `Reporter` should be executed in case any differences are found during the
-     * comparison of *approved* and *received* files. If it returns false, the `Reporter` won't be triggered.
+     * comparison of *approved* and *received* files. If it returns false, the `Reporter` won't be used.
      *
-     * @return true if the `Reporter` should be triggered in the current execution context.
+     * @return true if the `Reporter` can be used in the current execution context.
      */
     boolean isAvailable();
 }

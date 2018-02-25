@@ -5,6 +5,10 @@ import com.github.writethemfirst.approvals.Reporter;
 import java.nio.file.Path;
 import java.util.Optional;
 
+/**
+ * `Reporter` implementation which delegates to the first of its known reporter
+ * for which {@link #isAvailable()} is true.
+ */
 public class FirstWorkingReporter implements Reporter {
     private final Reporter[] reporters;
     private Optional<Reporter> firstAvailable;

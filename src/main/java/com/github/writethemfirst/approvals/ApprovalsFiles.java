@@ -11,20 +11,19 @@ import static java.nio.file.Paths.get;
  * # ApprovalsFiles
  *
  * *Approval Testing* relies on comparing data produced by a *Program Under Tests* and data which has been reviewed and
- * validated by the developer. This validated data is stored in files along with the project, and is used for
+ * validated by the developer. This validated data is stored in *approved* files along with the project, and is used for
  * comparisons with the data produced by the program's execution.
  *
- * Two files are needed for computing *Approval Tests*: an *approved* file, which can (and should) be committed with the
- * source code, containing data validated by the developer, and a *received* file, which temporarly holds the data
- * produced by the *Program Under Tests* execution. Those files are then compared to validate the proper behavior of the
- * program.
+ * Two files are needed for computing *Approval Tests*: an *approved* file, which should be committed with the source
+ * code, containing data validated by the developer, and a *received* file, which temporarily holds the data produced by
+ * the *Program Under Tests* execution. Those files are then compared to validate the proper behavior of the program.
  *
  * That `ApprovalsFiles` class can be seen as a companion to a test class since it provides useful methods allowing to
  * read and write both *approved* and *received* files. It is linked to a test class since the produced files will be
  * named after the test class and its methods.
  *
  * An `ApprovalsFiles` object will be automatically created and attached to any created `Approvals` object, but you may
- * choose to instanciate one yourself for accessing and managing the *approved* and *received* files of a particular
+ * choose to instantiate one yourself for accessing and managing the *approved* and *received* files of a particular
  * class.
  *
  * @author mdaviot / aneveux
@@ -39,7 +38,7 @@ public class ApprovalsFiles {
     /**
      * Constructs an `ApprovalsFiles` instance.
      *
-     * @param testClass The test class linked to this intance. Created files will contain that class name in their
+     * @param testClass The test class linked to this instance. Created files will contain that class name in their
      *                  path.
      */
     public ApprovalsFiles(final Class<?> testClass) {

@@ -8,7 +8,7 @@ import static java.util.Arrays.stream;
 /**
  * # StackUtils
  *
- * Set of methods to be used for easing the parsing of the current Thread stacktrace, allowing to retrieve helpful
+ * Set of static methods to be used when parsing of the current Thread stacktrace, allowing to retrieve helpful
  * information about the classes and methods actually calling the *Approval Tests*.
  *
  * Those methods allow to retrieve information to be used for generating the default names of files and folders to be
@@ -20,11 +20,10 @@ import static java.util.Arrays.stream;
 public class StackUtils {
 
     /**
-     * Returns the caller class of the one provided as an argument by searching for it in the current thread
-     * stacktrace.
+     * Returns the caller class of `reference` by searching the current thread stacktrace.
      *
-     * We consider the caller class to be the really first one found in the current thread stacktrace after finding the
-     * reference one (and which obviously isn't the reference one).
+     * We consider the caller class to be the first one found in the current thread stacktrace after finding the
+     * reference one.
      *
      * If the caller class can't be found, a `RuntimeException` will be thrown since it isn't supposed to happen.
      *
@@ -64,7 +63,7 @@ public class StackUtils {
      *
      * @param referenceClass The `referenceClass` for which we want to search the caller method in the current thread
      *                       stacktrace
-     * @return An `Optional` object contaning either the caller method name (as a `String`) or an empty value if it
+     * @return An `Optional` object containing either the caller method name (as a `String`) or an empty value if it
      * cannot be found
      */
     public static Optional<String> callerMethod(final Class<?> referenceClass) {
