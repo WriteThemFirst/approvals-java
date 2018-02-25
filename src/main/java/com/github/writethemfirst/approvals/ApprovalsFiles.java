@@ -3,16 +3,14 @@ package com.github.writethemfirst.approvals;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Optional;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRemove;
+import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
 import static java.lang.String.format;
-import static java.lang.Thread.currentThread;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.newBufferedWriter;
 import static java.nio.file.Paths.get;
-import static java.util.Arrays.stream;
 
 /**
  * # ApprovalsFiles
@@ -71,39 +69,87 @@ public class ApprovalsFiles {
     }
 
 
+    /**
+     * Reads the content of the *approved* file linked to the current method execution.
+     *
+     * That method will actually retrieve the method from which the call has been made and read the *approved* file
+     * linked to the `testClass` attribute and the parent method calling this one.
+     *
+     * If the file doesn't exist, that method will simply display a message in `System.err` but won't fail.
+     *
+     * @return The content of the *approved* file linked to the parent method execution. An empty String if the file
+     * doesn't exist.
+     */
     public String readApproved() {
         return silentRead(approvedFile());
     }
 
 
+    /**
+     * Removes the *approved* file linked to the current method execution.
+     *
+     * That method will actually retrieve the method from which the call has been made and find the *approved* file
+     * linked to the `testClass` attribute and the parent method calling this one.
+     *
+     * If the file doesn't exist, it won't do anything and won't return any kind of error.
+     */
     public void removeApproved() {
         silentRemove(approvedFile());
     }
 
 
-    public void writeReceived(String content) {
-        Path receivedFile = receivedFile();
+    /**
+     * Writes the provided content in the *received* file linked to the current method execution.
+     *
+     * That method will actually retrieve the method from which the call has been made and name the *received* file from
+     * the `testClass` attribute, but also the parent method calling this one.
+     *
+     * If the file doesn't exist, that method will create it in the `src/test/resources` folder.
+     *
+     * @param content Content to be written in the *received* file linked to the parent method execution.
+     */
+    public void writeReceived(final String content) {
+        final Path receivedFile = receivedFile();
         write(content, receivedFile);
     }
 
 
+    /**
+     * Reads the content of the *received* file linked to the current method execution.
+     *
+     * That method will actually retrieve the method from which the call has been made and read the *received* file
+     * linked to the `testClass` attribute and the parent method calling this one.
+     *
+     * If the file doesn't exist, that method will simply display a message in `System.err` but won't fail.
+     *
+     * @return The content of the *received* file linked to the parent method execution. An empty String if the file
+     * doesn't exist.
+     */
     public String readReceived() {
         return silentRead(receivedFile());
     }
 
 
+    /**
+     * Removes the *received* file linked to the current method execution.
+     *
+     * That method will actually retrieve the method from which the call has been made and find the *received* file
+     * linked to the `testClass` attribute and the parent method calling this one.
+     *
+     * If the file doesn't exist, it won't do anything and won't return any kind of error.
+     */
     public void removeReceived() {
         silentRemove(receivedFile());
     }
 
 
     public Path approvedFile() {
-        return approvedFile(methodName().get());
+        return approvedFile(callerMethod(testClass).get());
     }
 
 
     public Path receivedFile() {
-        return receivedFile(methodName().get());
+        return receivedFile(callerMethod(testClass).get());
     }
 
 
@@ -116,23 +162,6 @@ public class ApprovalsFiles {
     Path approvedFile(String methodName) {
         String fileName = format("%s.approved", methodName);
         return folder.resolve(fileName);
-    }
-
-
-    /**
-     * Gets from the stack the name of the method which was called from the class.
-     *
-     * @return a method name, or empty if none was found
-     */
-    public Optional<String> methodName() {
-        return stream(currentThread()
-            .getStackTrace())
-            .filter(e -> e.getClassName()
-                .equals(testClass.getName()))
-            .filter(e -> !e.getMethodName()
-                .startsWith("lambda$"))
-            .map(e -> e.getMethodName())
-            .findFirst();
     }
 
 

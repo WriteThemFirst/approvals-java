@@ -1,6 +1,9 @@
 package com.github.writethemfirst.approvals.utils;
 
+import java.util.Optional;
+
 import static java.lang.Thread.currentThread;
+import static java.util.Arrays.stream;
 
 public class StackUtils {
     /**
@@ -30,4 +33,19 @@ public class StackUtils {
         }
     }
 
+    /**
+     * Gets from the stack the name of the method which was called from the class.
+     *
+     * @return a method name, or empty if none was found
+     */
+    public static Optional<String> callerMethod(Class<?> testClass) {
+        return stream(currentThread()
+            .getStackTrace())
+            .filter(e -> e.getClassName()
+                .equals(testClass.getName()))
+            .filter(e -> !e.getMethodName()
+                .startsWith("lambda$"))
+            .map(e -> e.getMethodName())
+            .findFirst();
+    }
 }

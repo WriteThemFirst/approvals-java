@@ -52,6 +52,7 @@ public class Approvals {
         this(callerClass(Approvals.class), reporters);
     }
 
+
     /**
      * Constructs an `Approvals` object.
      *
@@ -82,7 +83,8 @@ public class Approvals {
      *               *approved* file.
      * @throws Throwable Probably in case a `Reporter` is trying to do something it isn't capable of doing.
      */
-    public void verify(final Object output) throws Throwable {
+    public void verify(final Object output)
+        throws Throwable {
         if (matchesApprovedFile(output)) {
             approvalsFiles.removeReceived();
         } else {

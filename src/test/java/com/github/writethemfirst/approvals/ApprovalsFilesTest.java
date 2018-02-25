@@ -66,23 +66,4 @@ class ApprovalsFilesTest {
         assertThat(read).isEqualTo("");
     }
 
-
-    @Test
-    void methodNameShouldBeEmpty() {
-        final ApprovalsFiles stringCompanion = new ApprovalsFiles(String.class);
-        assertThat(stringCompanion.methodName()).isEmpty();
-    }
-
-
-    @Test
-    void methodNameShouldBeTheMethodName() {
-        assertThat(companion.methodName()).contains("methodNameShouldBeTheMethodName");
-    }
-
-
-    @Test
-    void methodNameShouldNotBeLambda() {
-        Stream.of("whatever")
-            .forEach(s -> assertThat(companion.methodName()).contains("methodNameShouldNotBeLambda"));
-    }
 }
