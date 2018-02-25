@@ -21,7 +21,6 @@ class JUnit5ReporterTest {
 
         approvalsFiles.removeApproved();
         approvalsFiles.removeReceived();
-
     }
 
 

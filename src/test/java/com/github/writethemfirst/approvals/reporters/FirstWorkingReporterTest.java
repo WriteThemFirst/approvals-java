@@ -1,6 +1,6 @@
 package com.github.writethemfirst.approvals.reporters;
 
-import com.github.writethemfirst.approvals.AvailableReporter;
+import com.github.writethemfirst.approvals.Reporter;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
@@ -13,9 +13,9 @@ import static org.mockito.Mockito.when;
 class FirstWorkingReporterTest {
     @Test
     void shouldUseFirstWorkingReporter() throws Throwable {
-        AvailableReporter reporter1 = mock(AvailableReporter.class);
-        AvailableReporter reporter2 = mock(AvailableReporter.class);
-        AvailableReporter reporter3 = mock(AvailableReporter.class);
+        Reporter reporter1 = mock(Reporter.class);
+        Reporter reporter2 = mock(Reporter.class);
+        Reporter reporter3 = mock(Reporter.class);
         Path a = Paths.get("a");
         Path b = Paths.get("b");
         when(reporter1.isAvailable()).thenReturn(false);
@@ -32,7 +32,7 @@ class FirstWorkingReporterTest {
 
     @Test
     void shouldIgnoreWhenNoReporterIsAvailable() throws Throwable {
-        AvailableReporter reporter1 = mock(AvailableReporter.class);
+        Reporter reporter1 = mock(Reporter.class);
         Path a = Paths.get("a");
         Path b = Paths.get("b");
         when(reporter1.isAvailable()).thenReturn(false);

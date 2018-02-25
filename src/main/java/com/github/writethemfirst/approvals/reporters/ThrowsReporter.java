@@ -15,4 +15,9 @@ public class ThrowsReporter implements Reporter {
         String detailMessage = format("expected: <%s> but was: <%s>", approved, actual);
         throw new AssertionError(detailMessage);
     }
+
+    @Override
+    public boolean isAvailable() {
+        return true;
+    }
 }

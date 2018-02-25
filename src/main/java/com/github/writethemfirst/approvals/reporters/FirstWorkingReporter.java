@@ -1,16 +1,15 @@
 package com.github.writethemfirst.approvals.reporters;
 
-import com.github.writethemfirst.approvals.AvailableReporter;
 import com.github.writethemfirst.approvals.Reporter;
 
 import java.nio.file.Path;
 import java.util.Optional;
 
 public class FirstWorkingReporter implements Reporter {
-    private final AvailableReporter[] reporters;
-    private Optional<AvailableReporter> firstAvailable;
+    private final Reporter[] reporters;
+    private Optional<Reporter> firstAvailable;
 
-    public FirstWorkingReporter(AvailableReporter... reporters) {
+    public FirstWorkingReporter(Reporter... reporters) {
         this.reporters = reporters;
     }
 
@@ -21,7 +20,12 @@ public class FirstWorkingReporter implements Reporter {
         }
     }
 
-    private Optional<AvailableReporter> firstAvailable() {
+    @Override
+    public boolean isAvailable() {
+        return firstAvailable().isPresent();
+    }
+
+    private Optional<Reporter> firstAvailable() {
         boolean firstTime = firstAvailable == null;
         if (firstTime) {
             firstAvailable = findFirstAvailable();
@@ -29,8 +33,8 @@ public class FirstWorkingReporter implements Reporter {
         return firstAvailable;
     }
 
-    private Optional<AvailableReporter> findFirstAvailable() {
-        for (AvailableReporter reporter : reporters) {
+    private Optional<Reporter> findFirstAvailable() {
+        for (Reporter reporter : reporters) {
             if (reporter.isAvailable()) {
                 return Optional.of(reporter);
             }
