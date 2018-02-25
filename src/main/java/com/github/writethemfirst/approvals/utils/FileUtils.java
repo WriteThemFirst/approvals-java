@@ -1,10 +1,10 @@
 package com.github.writethemfirst.approvals.utils;
 
-import static java.nio.file.Files.delete;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import static java.nio.file.Files.delete;
 
 public class FileUtils {
     public static String silentRead(Path file) {

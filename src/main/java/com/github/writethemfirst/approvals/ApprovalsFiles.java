@@ -3,8 +3,6 @@ package com.github.writethemfirst.approvals;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Optional;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;

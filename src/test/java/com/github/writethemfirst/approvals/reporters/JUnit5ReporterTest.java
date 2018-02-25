@@ -1,10 +1,10 @@
 package com.github.writethemfirst.approvals.reporters;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import com.github.writethemfirst.approvals.Approvals;
 import com.github.writethemfirst.approvals.ApprovalsFiles;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JUnit5ReporterTest {
     private Approvals approvals = new Approvals(new JUnit5Reporter());
