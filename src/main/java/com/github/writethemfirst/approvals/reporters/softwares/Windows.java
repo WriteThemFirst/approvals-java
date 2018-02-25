@@ -19,6 +19,3 @@ public interface Windows {
     Reporter GVIM = new CommandReporter(new Command("%programFiles%\\Vim", "gvim.exe"), "-d %approved% %received% %received%");
 
 }
-
-
-
