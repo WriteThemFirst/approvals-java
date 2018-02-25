@@ -55,7 +55,7 @@ class CommandTest {
             "idea64.exe");
 
         Optional<String> pathToExe = command.pathToLatestExe();
-        boolean available = command.available();
+        boolean available = command.isAvailable();
 
         String expectedPath = "JetBrains" + OS_SEPARATOR + IDEA_8 + OS_SEPARATOR + "bin" + OS_SEPARATOR + "idea64.exe";
         assertThat(pathToExe.get()).endsWith(expectedPath);
@@ -74,7 +74,7 @@ class CommandTest {
 
         Command command = new Command(PROGRAM_FILES_KEY, "idea64.exe", mock(Runtime.class), mockedEnv);
 
-        boolean available = command.available();
+        boolean available = command.isAvailable();
 
         assertThat(available).isTrue();
     }
@@ -90,7 +90,7 @@ class CommandTest {
 
         Command command = new Command(PROGRAM_FILES_KEY, "idea64.exe", mock(Runtime.class), mockedEnv);
 
-        boolean available = command.available();
+        boolean available = command.isAvailable();
 
         assertThat(available).isTrue();
     }
@@ -107,7 +107,7 @@ class CommandTest {
         Command command = new Command(temp.toString(), "idea64.exe");
 
         Optional<String> latestExe = command.pathToLatestExe();
-        boolean available = command.available();
+        boolean available = command.isAvailable();
 
         assertThat(latestExe).isEmpty();
         assertThat(available).isFalse();

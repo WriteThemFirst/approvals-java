@@ -1,6 +1,6 @@
 package com.github.writethemfirst.approvals.reporters;
 
-import com.github.writethemfirst.approvals.Reporter;
+import com.github.writethemfirst.approvals.AvailableReporter;
 import com.github.writethemfirst.approvals.reporters.commands.Command;
 
 import java.nio.file.Path;
@@ -10,7 +10,7 @@ import static java.util.Arrays.stream;
 /**
  * A reporter which executes an external command.
  */
-public class CommandReporter implements Reporter {
+public class CommandReporter implements AvailableReporter {
     private final Command command;
     private final String[] arguments;
 
@@ -25,9 +25,14 @@ public class CommandReporter implements Reporter {
 
     @Override
     public void mismatch(Path approved, Path received) throws Throwable {
-        if (command.available()) {
+        if (command.isAvailable()) {
             command.execute(actualArguments(approved, received));
         }
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return command.isAvailable();
     }
 
 

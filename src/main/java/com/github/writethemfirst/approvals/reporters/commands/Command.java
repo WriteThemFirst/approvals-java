@@ -69,7 +69,7 @@ public class Command {
     /**
      * Tests if an executable file was found in the path.
      */
-    public boolean available() {
+    public boolean isAvailable() {
         return pathToLatestExe().isPresent();
     }
 
