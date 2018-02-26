@@ -1,12 +1,18 @@
 package com.github.writethemfirst.approvals;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
+import java.util.function.BiPredicate;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
 import static java.lang.String.format;
 import static java.nio.file.Paths.get;
+import static java.util.stream.Collectors.toList;
 
 /**
  * # ApprovalsFiles
@@ -157,7 +163,7 @@ public class ApprovalsFiles {
      * that calling hierarchy cannot be established.
      */
     public Path approvedFile() {
-        return approvedFile(callerMethod(testClass).orElse("unknown_method"));
+        return approvedFile(callerMethodName());
     }
 
 
@@ -174,9 +180,34 @@ public class ApprovalsFiles {
      * that calling hierarchy cannot be established.
      */
     public Path receivedFile() {
-        return receivedFile(callerMethod(testClass).orElse("unknown_method"));
+        return receivedFile(callerMethodName());
     }
 
+    public Path approvedFolder() {
+        return approvedFolder(callerMethodName());
+    }
+
+    public List<Path> approvedFilesInFolder()  {
+        return approvedFilesInFolder(callerMethodName());
+    }
+
+    Path approvedFolder(String methodName) {
+        final String folderName = format("%s.Files", methodName);
+        return folder.resolve(folderName);
+    }
+
+    List<Path> approvedFilesInFolder(String methodName)  {
+        int MAX_DEPTH = 5;
+        BiPredicate<Path, BasicFileAttributes> followAllFiles = (path, attributes) -> attributes.isRegularFile();
+        Path approvedFolder = approvedFolder(methodName);
+        try {
+            return Files
+                .find(approvedFolder, MAX_DEPTH, followAllFiles)
+                .collect(toList());
+        } catch (IOException e) {
+            throw new RuntimeException(format("cannot browse %s for approved files", approvedFolder), e);
+        }
+    }
 
     /**
      * Returns the *received* file Path linked to the specified `methodName`.
@@ -225,8 +256,8 @@ public class ApprovalsFiles {
         return packageResourcesPath.resolve(testClass.getSimpleName());
     }
 
-    public Path approvedFolder(String methodName) {
-        final String folderName = format("%s.Files", methodName);
-        return folder.resolve(folderName);
+    private String callerMethodName() {
+        return callerMethod(testClass).orElse("unknown_method");
     }
+
 }
