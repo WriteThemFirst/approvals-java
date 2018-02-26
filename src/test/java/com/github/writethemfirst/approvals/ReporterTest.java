@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
 
-public class ReporterTest {
+ class ReporterTest {
     private Reporter reporter = mock(Reporter.class);
     private Approvals approvals = new Approvals(reporter);
     private ApprovalsFiles approvalsFiles = new ApprovalsFiles();

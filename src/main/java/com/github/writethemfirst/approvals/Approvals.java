@@ -3,6 +3,7 @@ package com.github.writethemfirst.approvals;
 import com.github.writethemfirst.approvals.reporters.softwares.Generic;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 
@@ -115,4 +116,15 @@ public class Approvals {
         return approvedContent != null && approvedContent.equals(output.toString());
     }
 
+    public void verifyAgainstMasterFolder(Path receivedFolder) {
+        Path approvedFolder = approvalsFiles.approvedFolder();
+        for (Path approvedFile : approvalsFiles.approvedFilesInFolder()) {
+            Path approvedRelative = approvedFolder.relativize(approvedFile);
+            Path simplePath = Paths.get(approvedRelative.toString().replace(".approved", ""));
+            Path receivedFile = receivedFolder.resolve(simplePath);
+            if(!receivedFile.toFile().exists()){
+                throw new AssertionError(String.format("missing file <%s> in <%s>", simplePath, receivedFolder));
+            }
+        }
+    }
 }
