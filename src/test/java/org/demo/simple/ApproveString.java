@@ -8,7 +8,7 @@ class ApproveString {
     private Approvals approvals = new Approvals();
 
     @Test
-    void verifySimpleString() throws Throwable {
+    void verifySimpleString() {
         approvals.verify("my string");
     }
 }

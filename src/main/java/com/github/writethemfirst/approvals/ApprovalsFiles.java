@@ -3,6 +3,7 @@ package com.github.writethemfirst.approvals;
 import java.nio.file.Path;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
+import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
 import static java.lang.String.format;
 import static java.nio.file.Paths.get;
@@ -34,14 +35,20 @@ public class ApprovalsFiles {
     private final Class<?> testClass;
     private final Path folder;
 
+    /**
+     * Constructs an `ApprovalsFiles` using the {@link com.github.writethemfirst.approvals.utils.StackUtils#callerClass(Class)}.
+     */
+    public ApprovalsFiles() {
+        this(callerClass(ApprovalsFiles.class));
+    }
 
     /**
-     * Constructs an `ApprovalsFiles` instance.
+     * Constructs an `ApprovalsFiles`.
      *
      * @param testClass The test class linked to this instance. Created files will contain that class name in their
      *                  path.
      */
-    public ApprovalsFiles(final Class<?> testClass) {
+    ApprovalsFiles(final Class<?> testClass) {
         this.testClass = testClass;
         this.folder = folderForClass();
     }
@@ -218,4 +225,8 @@ public class ApprovalsFiles {
         return packageResourcesPath.resolve(testClass.getSimpleName());
     }
 
+    public Path approvedFolder(String methodName) {
+        final String folderName = format("%s.Files", methodName);
+        return folder.resolve(folderName);
+    }
 }
