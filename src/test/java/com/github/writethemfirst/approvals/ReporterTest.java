@@ -13,8 +13,7 @@ public class ReporterTest {
 
 
     @Test
-    void approvalsShouldCallReporterWhenMismatch()
-        throws Throwable {
+    void approvalsShouldCallReporterWhenMismatch() {
         approvalsFiles.writeApproved("some text");
 
         approvals.verify("different text");
@@ -27,8 +26,7 @@ public class ReporterTest {
 
 
     @Test
-    void approvalsShouldCallReporterWhenNoApprovedFile()
-        throws Throwable {
+    void approvalsShouldCallReporterWhenNoApprovedFile() {
         approvalsFiles.removeApproved();
 
         approvals.verify("text");

@@ -88,9 +88,11 @@ public class Approvals {
      *
      * @param output Any object with a {@link Object#toString()} representation containing the output of your program.
      *               It will be compared to the associated *approved* file.
-     * @throws Throwable In case a `Reporter` is trying to do something it isn't capable of doing.
+     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
+     *                          framework like JUnit
+     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
-    public void verify(final Object output) throws Throwable {
+    public void verify(final Object output) {
         if (matchesApprovedFile(output)) {
             approvalsFiles.removeReceived();
         } else {

@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 
 class FirstWorkingReporterTest {
     @Test
-    void shouldUseFirstWorkingReporter() throws Throwable {
+    void shouldUseFirstWorkingReporter() {
         Reporter reporter1 = mock(Reporter.class);
         Reporter reporter2 = mock(Reporter.class);
         Reporter reporter3 = mock(Reporter.class);
@@ -31,7 +31,7 @@ class FirstWorkingReporterTest {
     }
 
     @Test
-    void shouldIgnoreWhenNoReporterIsAvailable() throws Throwable {
+    void shouldIgnoreWhenNoReporterIsAvailable() {
         Reporter reporter1 = mock(Reporter.class);
         Path a = Paths.get("a");
         Path b = Paths.get("b");
