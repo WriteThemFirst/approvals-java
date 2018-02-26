@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static com.github.writethemfirst.approvals.utils.FileUtils.silentRemoveRec;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.createFile;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +33,7 @@ class ApprovalsFilesFolderTest {
         //GIVEN
         Path parent = Paths.get("src/test/resources/com/github/writethemfirst/approvals" +
             "/ApprovalsFilesFolderTest/approvedFolderShouldContainListedFiles.Files");
-        delete(parent.toFile());
+        silentRemoveRec(parent.toFile());
         createDirectories(parent.resolve("sub"));
         Path xml = parent.resolve("sample.xml.expected");
         Path csv = parent.resolve("sub/ref.csv.expected");
@@ -45,16 +46,7 @@ class ApprovalsFilesFolderTest {
         //THEN
         assertThat(paths).containsExactlyInAnyOrder(xml, csv);
 
-        delete(parent.toFile());
-    }
-
-    private void delete(File f) {
-        if (f.isDirectory()) {
-            for (File c : f.listFiles()) {
-                delete(c);
-            }
-        }
-        f.delete();
+        silentRemoveRec(parent.toFile());
     }
 
 }

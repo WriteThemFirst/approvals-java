@@ -1,6 +1,7 @@
 package com.github.writethemfirst.approvals.utils;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,8 +25,8 @@ public class FileUtils {
     /**
      * Reads the file located at the specified Path, and returns its content in case the file exists.
      *
-     * If it doesn't exist or if it cannot be read, that method will return an empty String and ignore the {@link IOException}.
-     * An error message will be written in {@link System#err} though.
+     * If it doesn't exist or if it cannot be read, that method will return an empty String and ignore the {@link
+     * IOException}. An error message will be written in {@link System#err} though.
      *
      * @param file The path of the file to be read
      * @return The content of the specified file if it exists and can be read, or an empty String otherwise
@@ -59,6 +60,22 @@ public class FileUtils {
         }
     }
 
+    /**
+     * Removes recursively all elements if `file` is a directory, then removes `file`.
+     *
+     * If the file doesn't exist, nothing will be done.
+     *
+     * @param file the file to be removed
+     */
+    public static void silentRemoveRec(final File file) {
+        if (file.isDirectory()) {
+            for (final File child : file.listFiles()) {
+                silentRemoveRec(child);
+            }
+        }
+        file.delete();
+    }
+
 
     /**
      * Writes the specified `content` in the `file` located at the specified Path.
@@ -87,4 +104,6 @@ public class FileUtils {
             throw new RuntimeException(message, e);
         }
     }
+
+
 }

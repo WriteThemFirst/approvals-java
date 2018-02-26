@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ApprovalsSimpleTest {
     private Approvals approvals = new Approvals(new ThrowsReporter());
-    private ApprovalsFiles approvalsFiles = new ApprovalsFiles(getClass());
+    private ApprovalsFiles approvalsFiles = new ApprovalsFiles();
 
 
     @Test

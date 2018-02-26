@@ -9,7 +9,7 @@ import static org.mockito.Mockito.mock;
 public class ReporterTest {
     private Reporter reporter = mock(Reporter.class);
     private Approvals approvals = new Approvals(reporter);
-    private ApprovalsFiles approvalsFiles = new ApprovalsFiles(getClass());
+    private ApprovalsFiles approvalsFiles = new ApprovalsFiles();
 
 
     @Test
