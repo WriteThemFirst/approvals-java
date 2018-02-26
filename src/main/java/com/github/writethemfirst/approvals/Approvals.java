@@ -5,6 +5,7 @@ import com.github.writethemfirst.approvals.reporters.softwares.Generic;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 
 /**
@@ -122,8 +123,14 @@ public class Approvals {
             Path approvedRelative = approvedFolder.relativize(approvedFile);
             Path simplePath = Paths.get(approvedRelative.toString().replace(".approved", ""));
             Path receivedFile = receivedFolder.resolve(simplePath);
-            if(!receivedFile.toFile().exists()){
+            if (!receivedFile.toFile().exists()) {
                 throw new AssertionError(String.format("missing file <%s> in <%s>", simplePath, receivedFolder));
+            }
+            String receivedContent = silentRead(receivedFile);
+            String approvedContent = silentRead(approvedFile);
+            if (!receivedContent.equals(approvedContent)) {
+                throw new AssertionError(String.format(
+                    "compared to reference <%s>, content differs for file <%s>", approvedRelative, receivedFile));
             }
         }
     }

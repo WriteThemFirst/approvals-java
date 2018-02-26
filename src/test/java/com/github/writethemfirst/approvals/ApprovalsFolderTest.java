@@ -33,7 +33,17 @@ class ApprovalsFolderTest {
 
         assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
             .isInstanceOf(AssertionError.class)
-            .hasMessageContaining("missing file <sample.xml> ");
+            .hasMessageContaining("missing file <sample.xml>");
+
+    }
+
+    @Test
+    void shouldThrowWhenAFileIsDifferent() throws IOException {
+        Path parent = Files.createTempDirectory("shouldThrowWhenAFileIsDifferent");
+        Files.createFile(parent.resolve("sample.xml"));
+        assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
+            .isInstanceOf(AssertionError.class)
+            .hasMessageContaining("compared to reference <sample.xml.approved>, content differs");
 
     }
 }
