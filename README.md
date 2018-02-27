@@ -1,12 +1,13 @@
 [![Build Status](https://travis-ci.org/WriteThemFirst/approvals-java.svg?branch=master)](https://travis-ci.org/WriteThemFirst/approvals-java) 
-[![codecov](https://codecov.io/gh/WriteThemFirst/approvals-java/branch/master/graph/badge.svg)](https://codecov.io/gh/WriteThemFirst/approvals-java)
+[![Code coverage](https://codecov.io/gh/WriteThemFirst/approvals-java/branch/master/graph/badge.svg)](https://codecov.io/gh/WriteThemFirst/approvals-java)
+[![Maintainability](https://api.codeclimate.com/v1/badges/b5d49999f3d09bae95ce/maintainability)](https://codeclimate.com/github/WriteThemFirst/approvals-java/maintainability)
 
 [![HitCount](http://hits.dwyl.io/WriteThemFirst/approvals-java.svg)](http://hits.dwyl.io/WriteThemFirst/approvals-java)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.vavr/vavr/badge.png)](https://maven-badges.herokuapp.com/maven-central/io.vavr/vavr)
 
 
 **This is a WIP**, we are trying the [RDD](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) approach !
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.vavr/vavr/badge.png)](https://maven-badges.herokuapp.com/maven-central/io.vavr/vavr)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
