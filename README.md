@@ -5,7 +5,7 @@
 
 [![GitHub issues](https://img.shields.io/github/issues/WriteThemFirst/approvals-java.svg)](https://GitHub.com/WriteThemFirst/approvals-java/issues/)
 [![GitHub issues-closed](https://img.shields.io/github/issues-closed/WriteThemFirst/approvals-java.svg)](https://GitHub.com/WriteThemFirst/approvals-java/issues?q=is%3Aissue+is%3Aclosed)
-[![commits since last release](https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/initial.svg)](https://github.com/WriteThemFirst/approvals-java/commit/initial)
+[![commits since last release](https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/v0.1.svg)](https://github.com/WriteThemFirst/approvals-java/tree/v0.1)
 
 [![HitCount](http://hits.dwyl.io/WriteThemFirst/approvals-java.svg)](http://hits.dwyl.io/WriteThemFirst/approvals-java)
 [![Download](https://api.bintray.com/packages/writethemfirst/maven/approvals-java/images/download.svg)](https://bintray.com/writethemfirst/maven/approvals-java/_latestVersion)
