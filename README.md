@@ -1,13 +1,14 @@
 [![Build Status](https://travis-ci.org/WriteThemFirst/approvals-java.svg?branch=master)](https://travis-ci.org/WriteThemFirst/approvals-java) 
 [![Code coverage](https://codecov.io/gh/WriteThemFirst/approvals-java/branch/master/graph/badge.svg)](https://codecov.io/gh/WriteThemFirst/approvals-java)
-[![Maintainability](https://api.codeclimate.com/v1/badges/b5d49999f3d09bae95ce/maintainability)](https://codeclimate.com/github/WriteThemFirst/approvals-java/maintainability)
+[![Code Climate Maintainability](https://api.codeclimate.com/v1/badges/b5d49999f3d09bae95ce/maintainability)](https://codeclimate.com/github/WriteThemFirst/approvals-java/maintainability)
+[![Code Climate Test Coverage](https://api.codeclimate.com/v1/badges/b5d49999f3d09bae95ce/test_coverage)](https://codeclimate.com/github/WriteThemFirst/approvals-java/test_coverage)
 
 [![GitHub issues](https://img.shields.io/github/issues/WriteThemFirst/approvals-java.svg)](https://GitHub.com/WriteThemFirst/approvals-java/issues/)
 [![GitHub issues-closed](https://img.shields.io/github/issues-closed/WriteThemFirst/approvals-java.svg)](https://GitHub.com/WriteThemFirst/approvals-java/issues?q=is%3Aissue+is%3Aclosed)
 [![commits since last release](https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/initial.svg)](https://github.com/WriteThemFirst/approvals-java/commit/initial)
 
 [![HitCount](http://hits.dwyl.io/WriteThemFirst/approvals-java.svg)](http://hits.dwyl.io/WriteThemFirst/approvals-java)
-[ ![Download](https://api.bintray.com/packages/writethemfirst/maven/approvals-java/images/download.svg) ](https://bintray.com/writethemfirst/maven/approvals-java/_latestVersion)
+[![Download](https://api.bintray.com/packages/writethemfirst/maven/approvals-java/images/download.svg)](https://bintray.com/writethemfirst/maven/approvals-java/_latestVersion)
 ![code size](https://img.shields.io/github/languages/code-size/WriteThemFirst/approvals-java.svg)
 
 
