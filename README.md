@@ -174,15 +174,4 @@ The suggested fix is to add `*.approved binary` to your `.gitattributes`
 
 ### Contributing
 
-- :sparkles: small commits with messages using [gitmojis](https://gitmoji.carloscuesta.me/) 
-([IDEA plugin](https://plugins.jetbrains.com/plugin/9174-emoji-support-plugin))
-- :memo: Javadoc is written in Markdown, and processed with [Pegdown Doclet](https://github.com/jamesots/pegdown-doclet)
- [Pegdown plugin](https://plugins.jetbrains.com/plugin/7253-pegdown-doclet-for-idea) 
-will make it look nicer in IDEA. 
-Activate it in the settings after restart of IDEA. 
-
-#### Mutation tests
-
-You can check the test coverage with PIT by running: 
-
-    mvn clean test pitest:mutationCoverage
+See [CONTRIBUTING](CONTRIBUTING.md)
