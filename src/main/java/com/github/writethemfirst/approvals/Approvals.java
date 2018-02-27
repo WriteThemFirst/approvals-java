@@ -115,6 +115,7 @@ public class Approvals {
         if (matchesApprovedFile(output)) {
             approvalsFiles.removeReceived();
         } else {
+            approvalsFiles.createEmptyApprovedFileIfEmpty();
             reporter.mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
         }
     }

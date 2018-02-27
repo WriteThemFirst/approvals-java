@@ -103,4 +103,21 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
         approvalsFiles.removeApproved();
     }
 
+     @Test
+     void shouldCreateEmptyApprovedFile() {
+         approvalsFiles.removeReceived();
+         approvalsFiles.removeApproved();
+
+         try {
+             approvals.verify("new content");
+         } catch (AssertionError e){
+             //expected
+         }
+
+         assertThat(approvalsFiles.approvedFile()).exists();
+
+         approvalsFiles.removeReceived();
+         approvalsFiles.removeApproved();
+     }
+
 }

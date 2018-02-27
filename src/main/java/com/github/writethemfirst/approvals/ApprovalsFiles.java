@@ -17,6 +17,7 @@
  */
 package com.github.writethemfirst.approvals;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -204,7 +205,7 @@ public class ApprovalsFiles {
         return approvedFolder(callerMethodName());
     }
 
-    public List<Path> approvedFilesInFolder()  {
+    public List<Path> approvedFilesInFolder() {
         return approvedFilesInFolder(callerMethodName());
     }
 
@@ -213,7 +214,7 @@ public class ApprovalsFiles {
         return folder.resolve(folderName);
     }
 
-    List<Path> approvedFilesInFolder(String methodName)  {
+    List<Path> approvedFilesInFolder(String methodName) {
         int MAX_DEPTH = 5;
         BiPredicate<Path, BasicFileAttributes> followAllFiles = (path, attributes) -> attributes.isRegularFile();
         Path approvedFolder = approvedFolder(methodName);
@@ -277,4 +278,14 @@ public class ApprovalsFiles {
         return callerMethod(testClass).orElse("unknown_method");
     }
 
+    public void createEmptyApprovedFileIfEmpty() {
+        File approvedFile = approvedFile().toFile();
+        if (!approvedFile.exists()) {
+            try {
+                approvedFile.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(format("Could not create empty approved file <%s>", approvedFile), e);
+            }
+        }
+    }
 }
