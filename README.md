@@ -7,7 +7,7 @@
 [![commits since last release](https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/initial.svg)](https://github.com/WriteThemFirst/approvals-java/commit/initial)
 
 [![HitCount](http://hits.dwyl.io/WriteThemFirst/approvals-java.svg)](http://hits.dwyl.io/WriteThemFirst/approvals-java)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.vavr/vavr/badge.png)](https://maven-badges.herokuapp.com/maven-central/io.vavr/vavr)
+[ ![Download](https://api.bintray.com/packages/writethemfirst/maven/approvals-java/images/download.svg) ](https://bintray.com/writethemfirst/maven/approvals-java/_latestVersion)
 ![code size](https://img.shields.io/github/languages/code-size/WriteThemFirst/approvals-java.svg)
 
 

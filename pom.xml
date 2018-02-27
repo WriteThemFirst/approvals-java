@@ -6,7 +6,7 @@
 
     <groupId>com.github.writethemfirst</groupId>
     <artifactId>approvals-java</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
 
 
     <properties>
@@ -110,12 +110,12 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <distributionManagement>
         <repository>
-            <id>bintray-writethemfirst-approvals-java</id>
-            <name>writethemfirst-approvals-java</name>
-            <url>https://api.bintray.com/maven/writethemfirst/approvals-java/framework/;publish=1</url>
+            <id>bintray</id>
+            <name>writethemfirst-maven</name>
+            <url>https://api.bintray.com/maven/writethemfirst/maven/approvals-java/;publish=1</url>
         </repository>
     </distributionManagement>
 
