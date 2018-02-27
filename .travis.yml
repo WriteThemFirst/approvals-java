@@ -5,29 +5,22 @@ cache:
   directories:
   - "$HOME/.m2"
 
-env:
-  global:
-    - CC_TEST_REPORTER_ID=77518ad692ca74dd0a62d8d6c2bbb6b06e87a09344373977e2ce525f0495a2e9
-
 jobs:
   include:
-  - stage: test
+  - stage: build'n'report
     jdk: oraclejdk8
-    script: mvn clean install
     before_script:
       - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
       - chmod +x ./cc-test-reporter
       - ./cc-test-reporter before-build
+    script: mvn clean install
     after_script:
       - cp target/site/jacoco/jacoco.xml src/main/java/
       - cd src/main/java/
       - ../../../cc-test-reporter after-build --coverage-input-type jacoco --exit-code $TRAVIS_TEST_RESULT
     after_success:
-    - bash <(curl -s https://codecov.io/bash)
-  - stage: doc
+      - bash <(curl -s https://codecov.io/bash)
+  - stage: deploy
     jdk: oraclejdk8
-    env: JAVADOC=true
     script:
-    - mvn javadoc:aggregate
-
-
+      - mvn deploy --settings settings.xml
