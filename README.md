@@ -2,8 +2,14 @@
 [![Code coverage](https://codecov.io/gh/WriteThemFirst/approvals-java/branch/master/graph/badge.svg)](https://codecov.io/gh/WriteThemFirst/approvals-java)
 [![Maintainability](https://api.codeclimate.com/v1/badges/b5d49999f3d09bae95ce/maintainability)](https://codeclimate.com/github/WriteThemFirst/approvals-java/maintainability)
 
+[![GitHub issues](https://img.shields.io/github/issues/WriteThemFirst/approvals-java.svg)](https://GitHub.com/WriteThemFirst/approvals-java/issues/)
+[![GitHub issues-closed](https://img.shields.io/github/issues-closed/WriteThemFirst/approvals-java.svg)](https://GitHub.com/WriteThemFirst/approvals-java/issues?q=is%3Aissue+is%3Aclosed)
+[![commits since last release](https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/initial.svg)](https://github.com/WriteThemFirst/approvals-java/commit/initial)
+
 [![HitCount](http://hits.dwyl.io/WriteThemFirst/approvals-java.svg)](http://hits.dwyl.io/WriteThemFirst/approvals-java)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.vavr/vavr/badge.png)](https://maven-badges.herokuapp.com/maven-central/io.vavr/vavr)
+![code size](https://img.shields.io/github/languages/code-size/WriteThemFirst/approvals-java.svg)
+
 
 
 **This is a WIP**, we are trying the [RDD](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) approach !
