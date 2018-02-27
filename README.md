@@ -1,6 +1,9 @@
 [![Build Status](https://travis-ci.org/WriteThemFirst/approvals-java.svg?branch=master)](https://travis-ci.org/WriteThemFirst/approvals-java) 
 [![codecov](https://codecov.io/gh/WriteThemFirst/approvals-java/branch/master/graph/badge.svg)](https://codecov.io/gh/WriteThemFirst/approvals-java)
 
+[![HitCount](http://hits.dwyl.io/WriteThemFirst/approvals-java.svg)](http://hits.dwyl.io/WriteThemFirst/approvals-java)
+
+
 **This is a WIP**, we are trying the [RDD](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) approach !
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.vavr/vavr/badge.png)](https://maven-badges.herokuapp.com/maven-central/io.vavr/vavr)
