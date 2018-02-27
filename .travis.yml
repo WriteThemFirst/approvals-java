@@ -19,8 +19,9 @@ jobs:
       - chmod +x ./cc-test-reporter
       - ./cc-test-reporter before-build
     after_script:
-      - cp target/site/jacoco/jacoco.xml .
-      - ./cc-test-reporter after-build --debug --coverage-input-type jacoco --prefix $(pwd)/src/main/java --exit-code $TRAVIS_TEST_RESULT
+      - cp target/site/jacoco/jacoco.xml src/main/java/
+      - cd src/main/java/
+      - ../../../cc-test-reporter after-build --coverage-input-type jacoco --exit-code $TRAVIS_TEST_RESULT
     after_success:
     - bash <(curl -s https://codecov.io/bash)
   - stage: doc
