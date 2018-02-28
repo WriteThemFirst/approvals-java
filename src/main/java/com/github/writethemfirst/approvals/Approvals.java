@@ -82,6 +82,14 @@ public class Approvals {
         this(callerClass(Approvals.class), reporter);
     }
 
+    /**
+     * Constructs an `Approvals` object using the default {@link Reporter} ({@link Generic#DEFAULT}).
+     *
+     * @param clazz    The calling test class. It is used in order to compute the *approved* files' names.
+     */
+    public Approvals(final Class<?> clazz) {
+        this(clazz, Generic.DEFAULT);
+    }
 
     /**
      * Constructs an `Approvals` object.
