@@ -22,8 +22,8 @@
     <a href='http://hits.dwyl.io/WriteThemFirst/approvals-java'>
         <img src='http://hits.dwyl.io/WriteThemFirst/approvals-java.svg' />
     </a>
-    <a href='https://github.com/WriteThemFirst/approvals-java/tree/v0.1'>
-        <img src='https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/v0.1.svg' />
+    <a href='https://github.com/WriteThemFirst/approvals-java/tree/v0.2'>
+        <img src='https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/v0.2.svg' />
     </a>
     <a href='https://github.com/WriteThemFirst/approvals-java/issues/'>
         <img src='https://img.shields.io/github/issues/WriteThemFirst/approvals-java.svg' />
@@ -51,7 +51,7 @@
 
 # Approvals-Java
 
-Approvals is an lightweight open source assertion/verification library to aid unit testing. It alleviates the burden of hand-writing assertions.
+Approvals is an lightweight open source assertion/verification library to facilitate unit testing. It alleviates the burden of hand-writing assertions.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -60,15 +60,19 @@ Approvals is an lightweight open source assertion/verification library to aid un
 
 # Approvals
 
-Instead you call a `verify` method.
+Traditional unit testing is based on hand-writing assertions on the output of your method.
 
-1. The first time `verify` is called, a file is generated with a representation of its argument
-2. You review the content and *approve* it by renaming the file
-3. You commit the file, it is now part of the unit test and contains part of the specification for your code
+With approvals-java you call instead `Approvals.verify(result)`.
+
+1. The first time `verify` is called, a *received* file is generated with a representation of its argument
+2. You review the content and *approve* it by renaming the file 
+(this step is usually facilitated by a merge tool detected and launched by approvals)
+3. You commit the *approved* file, it is now part of the unit test and specifies the behaviour of your code
 4. Now each time `verify` is called, the argument is compared with the *approved* file. 
 This replaces the calls to traditional `assert` methods.
 
-Approval is compatible with most unit test frameworks like JUnit.
+Approval is compatible with most unit test frameworks like JUnit, AssertJ ... 
+For Kotlin or Scala test frameworks a different way to invoke the verification can be needed, see the Wiki (TODO) for the details.
 
 
 ## What can it be used for?
@@ -86,23 +90,33 @@ Approvals can be used to verify objects which would usually require several hand
 
 It is written in pure java and has no dependency on other frameworks.
 
-Version 1.2.1 and earlier were built for Java 6, while newer
-versions (1.3.0 and above) will be built for Java 8.
+You can find published releases on bintray (Maven Central to come soon).
 
-You can find published releases on Maven Central.
+<a href='https://bintray.com/writethemfirst/maven/approvals-java/_latestVersion'>
+  <img src='https://api.bintray.com/packages/writethemfirst/maven/approvals-java/images/download.svg' />
+</a>
 
-    <dependency>
-        <groupId>com.typesafe</groupId>
-        <artifactId>config</artifactId>
-        <version>1.3.1</version>
-    </dependency>
+        <dependency>
+            <groupId>com.github.writethemfirst</groupId>
+            <artifactId>approvals-java</artifactId>
+            <version>0.2</version>
+        </dependency>
 
+For the moment you need to add the repository to your `pom.xml` or `settings.xml`:
 
-Link for direct download if you don't use a dependency manager:
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-writethemfirst-maven</id>
+            <name>bintray</name>
+            <url>https://dl.bintray.com/writethemfirst/maven</url>
+        </repository>
 
- - http://central.maven.org/maven2/com/typesafe/config/
  
 ### How to use it
+
+Have a look at our sample project [GildedRoseApprovalDemo](https://github.com/WriteThemFirst/GildedRoseApprovalDemo) 
 
 #### Verify a simple object
 
@@ -112,7 +126,7 @@ package com.examples;
 import org.approvalsj.Approvals;
 
 public class GildedRoseApprovalTest {
-    Approvals approvals = new Approvals(getClass());
+    Approvals approvals = new Approvals();
 
     @Test
     void approvalSwordShouldDeteriorate() {
@@ -124,7 +138,27 @@ public class GildedRoseApprovalTest {
 
 The `toString()` of sword is used.
 
+#### Verify each file in a folder
+
+Coming soon !
+
+```java
+@Test
+void approvalCopySrcFolder() throws Exception {
+    Approvals approvals = new Approvals(getClass());
+    
+    Path outDir = Files.createTempDirectory("src");
+    FolderCopy.copyFrom(Paths.get("."), outDir);
+    approvals.verifyEachFileInDirectory(outDir.toFile(), f -> f.getName().endsWith(".xml"));
+}
+```
+
+Each file in `outDir` is checked against the master directory.
+
+
 #### Verify the output of a method when called with combinations of arguments
+
+To be implemented.
 
 ```java
 @Test
@@ -141,48 +175,6 @@ void approvalBrieShouldImprove() throws Exception {
 
 `GildedRose.nextDay` is called 8 times, each time with an instance of `Item` constructed with a possible combination of `sellIn` and `quality`.
 
-#### Verify each file in a folder
-
-```java
-@Test
-void approvalCopySrcFolder() throws Exception {
-    Approvals approvals = new Approvals(getClass());
-    
-    Path outDir = Files.createTempDirectory("src");
-    FolderCopy.copyFrom(Paths.get("."), outDir);
-    approvals.verifyEachFileInDirectory(outDir.toFile(), f -> f.getName().endsWith(".xml"));
-}
-```
-
-Each file in `outDir` is checked against the master directory.
-
-## More Examples
-
-Approvals eats it own dogfood, so the best examples are in the source code itself.
-
-None the less,  Here's a quick look at some
-[Sample Code](https://github.com/approvals/ApprovalTests.Java/blob/master/java/org/approvaltests/tests/demos/SampleArrayTest.java)
-
-```java
-public class SampleArrayTest extends TestCase {
-    public void testList() {
-        String[] names = {"Llewellyn", "James", "Dan", "Jason", "Katrina"};
-        Arrays.sort(names);
-        Approvals.verifyAll(names);
-    }
-}
-```
-
-Will Produce a File
-
-    SampleTest.TestList.received
-    [0] = Dan
-    [1] = James
-    [2] = Jason
-    [3] = Katrina
-    [4] = Llewellyn
-
-Simply rename this to `SampleTest.testList.approved` and the test will now pass.
 
 ## More Info
 
@@ -196,9 +188,7 @@ We liked the idea of approval testing but not so much the Java implementation ([
 - not actively maintained (Pull Requests are not actively merged)
 - code style not up to Java standards (developer is mainly working with .Net)
 
-So we decided to implement quickly a subset of the initial features and deploy the dependency on Maven Central 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.vavr/vavr/badge.png)](https://maven-badges.herokuapp.com/maven-central/io.vavr/vavr)
-
+So we decided to implement quickly a subset of the initial features and deploy the dependency on Maven Central (coming soon!)
 
 ### Documentation
 
@@ -213,7 +203,7 @@ The suggested fix is to add `*.approved binary` to your `.gitattributes`
 
 
 ### LICENSE
-[Apache 2.0 License](https://github.com/SignalR/SignalR/blob/master/LICENSE.md)
+[GNU General Public License v3.0](LICENSE.md)
 
 
 ### Contributing
