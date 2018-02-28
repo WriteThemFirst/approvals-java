@@ -20,7 +20,7 @@ jobs:
       - ../../../cc-test-reporter after-build --coverage-input-type jacoco --exit-code $TRAVIS_TEST_RESULT
     after_success:
       - bash <(curl -s https://codecov.io/bash)
-#  - stage: deploy
-#    jdk: oraclejdk8
-#    script:
-#      - mvn deploy --settings settings.xml
+  - stage: deploy
+    jdk: oraclejdk8
+    script:
+      - mvn deploy --settings settings.xml
