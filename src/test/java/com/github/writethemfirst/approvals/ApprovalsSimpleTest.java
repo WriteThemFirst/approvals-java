@@ -148,21 +148,22 @@ class ApprovalsSimpleTest {
         context.removeApproved();
     }
 
-//    @Test
-//    void shouldUseSpecificFileName() {
-//        silentRemove(approvalsFiles.approvedFile("myScalaMethod"));
-//        silentRemove(approvalsFiles.receivedFile("myScalaMethod"));
-//
-//        try {
-//            approvals.verify("new content", "myScalaMethod");
-//        } catch (AssertionError e) {
-//            //expected
-//        }
-//
-//        assertThat(approvalsFiles.receivedFile("myScalaMethod")).hasContent("new content");
-//
-//        approvalsFiles.removeReceived();
-//        approvalsFiles.removeApproved();
-//    }
+    @Test
+    void shouldUseSpecificMethodName() {
+        ApprobationContext context = approvalsFiles.context("myScalaMethod");
+        context.removeReceived();
+        context.removeApproved();
+
+        try {
+            approvals.verify("new content", "myScalaMethod");
+        } catch (AssertionError e) {
+            //expected
+        }
+
+        assertThat(context.receivedFile()).hasContent("new content");
+
+        context.removeReceived();
+        context.removeApproved();
+    }
 
 }

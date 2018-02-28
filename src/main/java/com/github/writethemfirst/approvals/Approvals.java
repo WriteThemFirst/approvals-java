@@ -85,7 +85,7 @@ public class Approvals {
     /**
      * Constructs an `Approvals` object using the default {@link Reporter} ({@link Generic#DEFAULT}).
      *
-     * @param clazz    The calling test class. It is used in order to compute the *approved* files' names.
+     * @param clazz The calling test class. It is used in order to compute the *approved* files' names.
      */
     public Approvals(final Class<?> clazz) {
         this(clazz, Generic.DEFAULT);
@@ -121,9 +121,35 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public void verify(final Object output) {
-        ApprobationContext context = approvalsFiles.defaultContext();
+        verify(output, approvalsFiles.defaultContext());
+    }
 
-        if (matchesApprovedFile(output)) {
+    /**
+     * Compares the actual output of your program (the function's argument) and the content of the *approved* file
+     * matching with the test method.
+     *
+     * It'll use a temporary *received* file to store the output of your program. This file will be erased in case the
+     * results are matching. Otherwise, it will be kept for you to review it.
+     *
+     * In case of differences found in the output, the {@link Reporter} linked to this `Approvals` instance will be
+     * called ({@link Reporter#mismatch(Path, Path)}).
+     *
+     * This method is useful for non Java test frameworks (ScalaTest, KotlinTest ...) where methodName cannot be
+     * inferred from the stack.
+     *
+     * @param output     Any object with a {@link Object#toString()} representation containing the output of your
+     *                   program. It will be compared to the associated *approved* file.
+     * @param methodName specifies the caller method name, which is used to name the *approved* and *received* files.
+     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
+     *                          framework like JUnit
+     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
+     */
+    public void verify(final Object output, final String methodName) {
+        verify(output, approvalsFiles.context(methodName));
+    }
+
+    private void verify(Object output, ApprobationContext context) {
+        if (matchesApprovedFile(output, context)) {
             context.removeReceived();
         } else {
             context.createEmptyApprovedFileIfEmpty();
@@ -136,14 +162,13 @@ public class Approvals {
     /**
      * Compares the *Program Under Tests*' output to the content of the *approved* file and checks for any differences.
      *
-     * @param output Any object representing the output of *Program  Under Tests*. A `String` representation of that
-     *               object will be computed using `toString()` and will be used for the comparison with the *approved*
-     *               file's content.
+     * @param output  Any object representing the output of *Program  Under Tests*. A `String` representation of that
+     *                object will be computed using `toString()` and will be used for the comparison with the *approved*
+     *                file's content.
+     * @param context
      * @return true if the provided output perfectly matches with the existing *approved* file
      */
-    private boolean matchesApprovedFile(final Object output) {
-        ApprobationContext context = approvalsFiles.defaultContext();
-
+    private boolean matchesApprovedFile(final Object output, ApprobationContext context) {
         final String approvedContent = context.readApproved();
         context.writeReceived(output.toString());
         return approvedContent != null && approvedContent.equals(output.toString());
