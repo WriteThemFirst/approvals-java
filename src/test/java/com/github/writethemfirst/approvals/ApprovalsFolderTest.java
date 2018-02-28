@@ -34,7 +34,7 @@ class ApprovalsFolderTest {
     @Test
     void shouldDoNothingWhenBothFoldersAreEmpty() throws IOException {
         //GIVEN
-        Files.createDirectories(approvalsFiles.approvedFolder());
+        Files.createDirectories(approvalsFiles.defaultContext().approvedFolder());
         Path parent = Files.createTempDirectory("shouldDoNothingWhenBothFoldersAreEmpty");
 
         //WHEN

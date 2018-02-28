@@ -121,12 +121,14 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public void verify(final Object output) {
+        ApprobationContext context = approvalsFiles.defaultContext();
+
         if (matchesApprovedFile(output)) {
-            approvalsFiles.removeReceived();
+            context.removeReceived();
         } else {
-            approvalsFiles.createEmptyApprovedFileIfEmpty();
-            reporter.mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
-            new ThrowsReporter().mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
+            context.createEmptyApprovedFileIfEmpty();
+            reporter.mismatch(context.approvedFile(), context.receivedFile());
+            new ThrowsReporter().mismatch(context.approvedFile(), context.receivedFile());
         }
     }
 
@@ -140,14 +142,18 @@ public class Approvals {
      * @return true if the provided output perfectly matches with the existing *approved* file
      */
     private boolean matchesApprovedFile(final Object output) {
-        final String approvedContent = approvalsFiles.readApproved();
-        approvalsFiles.writeReceived(output.toString());
+        ApprobationContext context = approvalsFiles.defaultContext();
+
+        final String approvedContent = context.readApproved();
+        context.writeReceived(output.toString());
         return approvedContent != null && approvedContent.equals(output.toString());
     }
 
     public void verifyAgainstMasterFolder(Path receivedFolder) {
-        Path approvedFolder = approvalsFiles.approvedFolder();
-        for (Path approvedFile : approvalsFiles.approvedFilesInFolder()) {
+        ApprobationContext context = approvalsFiles.defaultContext();
+
+        Path approvedFolder = context.approvedFolder();
+        for (Path approvedFile : context.approvedFilesInFolder()) {
             Path approvedRelative = approvedFolder.relativize(approvedFile);
             Path simplePath = Paths.get(approvedRelative.toString().replace(".approved", ""));
             Path receivedFile = receivedFolder.resolve(simplePath);

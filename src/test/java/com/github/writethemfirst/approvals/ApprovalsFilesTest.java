@@ -32,7 +32,7 @@ class ApprovalsFilesTest {
     @Test
     void approvedFileShouldBeExpectedPath() {
         //WHEN
-        Path approvedFile = companion.approvedFile("approvedFileShouldBeCorrect");
+        Path approvedFile = companion.context("approvedFileShouldBeCorrect").approvedFile();
 
         //THEN
         Path expectedPath = Paths.get(
@@ -43,41 +43,46 @@ class ApprovalsFilesTest {
 
     @Test
     void approvedFileShouldBeReadAfterWritten() {
+        ApprobationContext context = companion.defaultContext();
         //WHEN
         String content = "some content\non 2 lines";
-        companion.writeApproved(content);
+        context.writeApproved(content);
 
         //THEN
-        String actualContent = companion.readApproved();
+        String actualContent = context.readApproved();
         assertThat(actualContent).isEqualTo(content);
 
         //CLEANUP
-        companion.removeApproved();
+        context.removeApproved();
     }
 
 
     @Test
     void receivedFileShouldBeReadAfterWritten() {
+        ApprobationContext context = companion.defaultContext();
+
         //WHEN
         String content = "some content\non 2 lines";
-        companion.writeReceived(content);
+        context.writeReceived(content);
 
         //THEN
-        String actualContent = companion.readReceived();
+        String actualContent = context.readReceived();
         assertThat(actualContent).isEqualTo(content);
 
         //CLEANUP
-        companion.removeReceived();
+        context.removeReceived();
     }
 
 
     @Test
     void readApprovedShouldBeEmptyWhenFileMissing() {
+        ApprobationContext context = companion.defaultContext();
+
         //GIVEN
-        companion.removeApproved();
+        context.removeApproved();
 
         //WHEN
-        String read = companion.readApproved();
+        String read = context.readApproved();
 
         //THEN
         assertThat(read).isEqualTo("");

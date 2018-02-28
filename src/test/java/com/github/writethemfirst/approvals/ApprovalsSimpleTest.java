@@ -19,7 +19,6 @@ package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.reporters.CommandReporter;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
-import com.github.writethemfirst.approvals.reporters.commands.Command;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,110 +31,138 @@ class ApprovalsSimpleTest {
 
 
     @Test
-    void shouldThrowWhenMismatchAndUsingCommandReporter(){
+    void shouldThrowWhenMismatchAndUsingCommandReporter() {
         CommandReporter reporter = mock(CommandReporter.class);
         Approvals approvals = new Approvals(reporter);
-        approvalsFiles.writeApproved("approved text");
+        ApprobationContext context = approvalsFiles.defaultContext();
+
+        context.writeApproved("approved text");
 
         assertThatThrownBy(() -> approvals.verify("actual text"))
             .isInstanceOf(AssertionError.class)
             .hasMessage("expected: <approved text> but was: <actual text>");
 
-        approvalsFiles.removeApproved();
-        approvalsFiles.removeReceived();
+        context.removeApproved();
+        context.removeReceived();
     }
 
     @Test
     void shouldDoNothingWhenApprovedFileExistsAndIsCorrect() {
-        approvalsFiles.writeApproved("some text");
+        ApprobationContext context = approvalsFiles.defaultContext();
+        context.writeApproved("some text");
         approvals.verify("some text");
-        approvalsFiles.removeApproved();
+        context.removeApproved();
     }
 
 
     @Test
     void shouldFailWhenApprovedFileExistsAndIsDifferent() {
-        approvalsFiles.writeApproved("expected text");
+        ApprobationContext context = approvalsFiles.defaultContext();
+
+        context.writeApproved("expected text");
 
         assertThatThrownBy(() -> approvals.verify("actual text"))
             .isInstanceOf(AssertionError.class)
             .hasMessage("expected: <expected text> but was: <actual text>");
 
-        approvalsFiles.removeApproved();
-        approvalsFiles.removeReceived();
+        context.removeApproved();
+        context.removeReceived();
     }
 
 
     @Test
     void shouldFailWhenApprovedFileDoesNotExist() {
-        approvalsFiles.removeApproved();
+        ApprobationContext context = approvalsFiles.defaultContext();
+
+        context.removeApproved();
 
         assertThatThrownBy(() -> approvals.verify("text"))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <> but was: <text>");
 
-        approvalsFiles.removeReceived();
-        approvalsFiles.removeApproved();
+        context.removeReceived();
+        context.removeApproved();
     }
 
 
     @Test
     void shouldKeepReceivedFileWhenApprovedFileDoesNotExist() {
-        approvalsFiles.removeApproved();
-        approvalsFiles.removeReceived();
+        ApprobationContext context = approvalsFiles.defaultContext();
+        context.removeApproved();
+        context.removeReceived();
         try {
             approvals.verify("text");
         } catch (AssertionError e) {
-            String received = approvalsFiles.readReceived();
+            String received = context.readReceived();
             assertThat(received).isEqualTo("text");
         }
-        approvalsFiles.removeReceived();
-        approvalsFiles.removeApproved();
+        context.removeReceived();
+        context.removeApproved();
     }
 
 
     @Test
     void shouldKeepReceivedFileWhenApprovedFileMismatch() {
-        approvalsFiles.writeApproved("approved");
+        ApprobationContext context = approvalsFiles.defaultContext();
+        context.writeApproved("approved");
         try {
             approvals.verify("text");
         } catch (AssertionError e) {
-            String received = approvalsFiles.readReceived();
+            String received = context.readReceived();
             assertThat(received).isEqualTo("text");
         }
-        approvalsFiles.removeReceived();
-        approvalsFiles.removeApproved();
+        context.removeReceived();
+        context.removeApproved();
     }
 
 
     @Test
     void shouldRemoveReceivedFileWhenApprovedFileMatch() {
-        approvalsFiles.writeReceived("last content");
-        approvalsFiles.writeApproved("same");
+        ApprobationContext context = approvalsFiles.defaultContext();
+        context.writeReceived("last content");
+        context.writeApproved("same");
 
         approvals.verify("same");
 
-        String received = approvalsFiles.readReceived();
+        String received = context.readReceived();
         assertThat(received).isEqualTo("");
 
-        approvalsFiles.removeApproved();
+        context.removeApproved();
     }
 
-     @Test
-     void shouldCreateEmptyApprovedFile() {
-         approvalsFiles.removeReceived();
-         approvalsFiles.removeApproved();
+    @Test
+    void shouldCreateEmptyApprovedFile() {
+        ApprobationContext context = approvalsFiles.defaultContext();
+        context.removeReceived();
+        context.removeApproved();
 
-         try {
-             approvals.verify("new content");
-         } catch (AssertionError e){
-             //expected
-         }
+        try {
+            approvals.verify("new content");
+        } catch (AssertionError e) {
+            //expected
+        }
 
-         assertThat(approvalsFiles.approvedFile()).exists();
+        assertThat(context.approvedFile()).exists();
 
-         approvalsFiles.removeReceived();
-         approvalsFiles.removeApproved();
-     }
+        context.removeReceived();
+        context.removeApproved();
+    }
+
+//    @Test
+//    void shouldUseSpecificFileName() {
+//        silentRemove(approvalsFiles.approvedFile("myScalaMethod"));
+//        silentRemove(approvalsFiles.receivedFile("myScalaMethod"));
+//
+//        try {
+//            approvals.verify("new content", "myScalaMethod");
+//        } catch (AssertionError e) {
+//            //expected
+//        }
+//
+//        assertThat(approvalsFiles.receivedFile("myScalaMethod")).hasContent("new content");
+//
+//        approvalsFiles.removeReceived();
+//        approvalsFiles.removeApproved();
+//    }
 
 }

@@ -37,7 +37,7 @@ class ApprovalsFilesFolderTest {
     @Test
     void approvedFolderShouldBeExpectedPath() {
         //WHEN
-        Path approvedFile = companion.approvedFolder();
+        Path approvedFile = companion.defaultContext().approvedFolder();
 
         //THEN
         Path expectedPath = Paths.get("src/test/resources/com/github/writethemfirst/approvals" +
@@ -58,7 +58,7 @@ class ApprovalsFilesFolderTest {
         createFile(csv);
 
         //WHEN
-        List<Path> paths = companion.approvedFilesInFolder();
+        List<Path> paths = companion.defaultContext().approvedFilesInFolder();
 
         //THEN
         assertThat(paths).containsExactlyInAnyOrder(xml, csv);

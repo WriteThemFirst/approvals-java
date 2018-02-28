@@ -31,7 +31,8 @@ import static org.mockito.Mockito.mock;
 
     @Test
     void approvalsShouldCallReporterWhenMismatch() {
-        approvalsFiles.writeApproved("some text");
+        ApprobationContext context = approvalsFiles.defaultContext();
+        context.writeApproved("some text");
 
         try {
             approvals.verify("different text");
@@ -39,16 +40,18 @@ import static org.mockito.Mockito.mock;
             // expected
         }
 
-        then(reporter).should().mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
+        then(reporter).should().mismatch(context.approvedFile(), context.receivedFile());
 
-        approvalsFiles.removeApproved();
-        approvalsFiles.removeReceived();
+        context.removeApproved();
+        context.removeReceived();
     }
 
 
     @Test
     void approvalsShouldCallReporterWhenNoApprovedFile() {
-        approvalsFiles.removeApproved();
+        ApprobationContext context = approvalsFiles.defaultContext();
+
+        context.removeApproved();
 
         try {
             approvals.verify("text");
@@ -56,10 +59,10 @@ import static org.mockito.Mockito.mock;
             // expected
         }
 
-        then(reporter).should().mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
+        then(reporter).should().mismatch(context.approvedFile(), context.receivedFile());
 
-        approvalsFiles.removeApproved();
-        approvalsFiles.removeReceived();
+        context.removeApproved();
+        context.removeReceived();
     }
 
 }

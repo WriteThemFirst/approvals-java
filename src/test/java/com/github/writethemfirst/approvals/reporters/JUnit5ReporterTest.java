@@ -17,6 +17,7 @@
  */
 package com.github.writethemfirst.approvals.reporters;
 
+import com.github.writethemfirst.approvals.ApprobationContext;
 import com.github.writethemfirst.approvals.Approvals;
 import com.github.writethemfirst.approvals.ApprovalsFiles;
 import org.junit.jupiter.api.Test;
@@ -30,26 +31,29 @@ class JUnit5ReporterTest {
 
     @Test
     void shouldThrowWhenMismatch() {
-        approvalsFiles.writeApproved("some text");
+        ApprobationContext context = approvalsFiles.defaultContext();
+        context.writeApproved("some text");
 
         assertThatThrownBy(() -> approvals.verify("other text"))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <some text> but was: <other text>");
 
-        approvalsFiles.removeApproved();
-        approvalsFiles.removeReceived();
+        context.removeApproved();
+        context.removeReceived();
     }
 
 
     @Test
     void shouldThrowWhenMissing() {
-        approvalsFiles.removeApproved();
+        ApprobationContext context = approvalsFiles.defaultContext();
 
-        assertThatThrownBy(() -> approvals.verify("text"))
+        context.removeApproved();
+
+        assertThatThrownBy(() -> approvals.verify("my text"))
             .isInstanceOf(AssertionError.class)
-            .hasMessageContaining("expected: <> but was: <text>");
+            .hasMessageContaining("expected: <> but was: <my text>");
 
-        approvalsFiles.removeReceived();
-        approvalsFiles.removeApproved();
+        context.removeReceived();
+        context.removeApproved();
     }
 }
