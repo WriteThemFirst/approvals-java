@@ -1,17 +1,53 @@
-[![Build Status](https://travis-ci.org/WriteThemFirst/approvals-java.svg?branch=master)](https://travis-ci.org/WriteThemFirst/approvals-java) 
-[![Code coverage](https://codecov.io/gh/WriteThemFirst/approvals-java/branch/master/graph/badge.svg)](https://codecov.io/gh/WriteThemFirst/approvals-java)
-[![Code Climate Maintainability](https://api.codeclimate.com/v1/badges/b5d49999f3d09bae95ce/maintainability)](https://codeclimate.com/github/WriteThemFirst/approvals-java/maintainability)
-[![Code Climate Test Coverage](https://api.codeclimate.com/v1/badges/b5d49999f3d09bae95ce/test_coverage)](https://codeclimate.com/github/WriteThemFirst/approvals-java/test_coverage)
+<p align='center'>
+    <img alt='Write Them First!' src='https://raw.githubusercontent.com/WriteThemFirst/approvals-java/master/etc/logo.png' />
+</p>
+<p align='center'>
+    <a href='https://travis-ci.org/WriteThemFirst/approvals-java'>
+        <img src='https://travis-ci.org/WriteThemFirst/approvals-java.svg?branch=master' />
+    </a>
+    <a href='https://bintray.com/writethemfirst/maven/approvals-java/_latestVersion'>
+        <img src='https://api.bintray.com/packages/writethemfirst/maven/approvals-java/images/download.svg' />
+    </a>
+    <a href='https://codecov.io/gh/WriteThemFirst/approvals-java'>
+        <img src='https://codecov.io/gh/WriteThemFirst/approvals-java/branch/master/graph/badge.svg' />
+    </a>
+    <a href='https://codeclimate.com/github/WriteThemFirst/approvals-java/maintainability'>
+        <img src='https://api.codeclimate.com/v1/badges/b5d49999f3d09bae95ce/maintainability' />
+    </a>
+    <a href='https://codeclimate.com/github/WriteThemFirst/approvals-java/test_coverage'>
+        <img src='https://api.codeclimate.com/v1/badges/b5d49999f3d09bae95ce/test_coverage' />
+    </a>
+</p>
+<p align='center'>
+    <a href='http://hits.dwyl.io/WriteThemFirst/approvals-java'>
+        <img src='http://hits.dwyl.io/WriteThemFirst/approvals-java.svg' />
+    </a>
+    <a href='https://github.com/WriteThemFirst/approvals-java/tree/v0.1'>
+        <img src='https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/v0.1.svg' />
+    </a>
+    <a href='https://github.com/WriteThemFirst/approvals-java/issues/'>
+        <img src='https://img.shields.io/github/issues/WriteThemFirst/approvals-java.svg' />
+    </a>
+    <a href='https://github.com/WriteThemFirst/approvals-java/issues?q=is%3Aissue+is%3Aclosed'>
+        <img src='https://img.shields.io/github/issues-closed/WriteThemFirst/approvals-java.svg' />
+    </a>
+    <a href='https://github.com/WriteThemFirst/approvals-java'>
+        <img src='https://img.shields.io/github/languages/code-size/WriteThemFirst/approvals-java.svg' />
+    </a>
+</p>
+<p align='center'>
+    <a href='https://www.gnu.org/licenses/gpl-3.0'>
+        <img src='https://img.shields.io/badge/License-GPL%20v3-blue.svg' />
+    </a>
+    <a href='http://semver.org/spec/v2.0.0.html'>
+        <img src='https://img.shields.io/SemVer/2.0.0.png' />
+    </a>
+    <a href='https://github.com/WriteThemFirst/approvals-java/pulls'>
+        <img src='https://img.shields.io/badge/made%20with-%E2%99%A5-pink.svg' />
+    </a>
+</p>
 
-[![GitHub issues](https://img.shields.io/github/issues/WriteThemFirst/approvals-java.svg)](https://GitHub.com/WriteThemFirst/approvals-java/issues/)
-[![GitHub issues-closed](https://img.shields.io/github/issues-closed/WriteThemFirst/approvals-java.svg)](https://GitHub.com/WriteThemFirst/approvals-java/issues?q=is%3Aissue+is%3Aclosed)
-[![commits since last release](https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/v0.1.svg)](https://github.com/WriteThemFirst/approvals-java/tree/v0.1)
-
-[![HitCount](http://hits.dwyl.io/WriteThemFirst/approvals-java.svg)](http://hits.dwyl.io/WriteThemFirst/approvals-java)
-[![Download](https://api.bintray.com/packages/writethemfirst/maven/approvals-java/images/download.svg)](https://bintray.com/writethemfirst/maven/approvals-java/_latestVersion)
-![code size](https://img.shields.io/github/languages/code-size/WriteThemFirst/approvals-java.svg)
-
-
+---
 
 **This is a WIP**, we are trying the [RDD](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) approach !
 
