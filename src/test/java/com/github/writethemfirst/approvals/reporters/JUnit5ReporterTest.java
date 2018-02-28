@@ -50,6 +50,6 @@ class JUnit5ReporterTest {
             .hasMessageContaining("expected: <> but was: <text>");
 
         approvalsFiles.removeReceived();
-
+        approvalsFiles.removeApproved();
     }
 }

@@ -33,7 +33,11 @@ import static org.mockito.Mockito.mock;
     void approvalsShouldCallReporterWhenMismatch() {
         approvalsFiles.writeApproved("some text");
 
-        approvals.verify("different text");
+        try {
+            approvals.verify("different text");
+        } catch (AssertionError e) {
+            // expected
+        }
 
         then(reporter).should().mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
 
@@ -46,7 +50,11 @@ import static org.mockito.Mockito.mock;
     void approvalsShouldCallReporterWhenNoApprovedFile() {
         approvalsFiles.removeApproved();
 
-        approvals.verify("text");
+        try {
+            approvals.verify("text");
+        } catch (AssertionError e) {
+            // expected
+        }
 
         then(reporter).should().mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
 

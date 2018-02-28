@@ -17,16 +17,33 @@
  */
 package com.github.writethemfirst.approvals;
 
+import com.github.writethemfirst.approvals.reporters.CommandReporter;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
+import com.github.writethemfirst.approvals.reporters.commands.Command;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 
- class ApprovalsSimpleTest {
+class ApprovalsSimpleTest {
     private Approvals approvals = new Approvals(new ThrowsReporter());
     private ApprovalsFiles approvalsFiles = new ApprovalsFiles();
 
+
+    @Test
+    void shouldThrowWhenMismatchAndUsingCommandReporter(){
+        CommandReporter reporter = mock(CommandReporter.class);
+        Approvals approvals = new Approvals(reporter);
+        approvalsFiles.writeApproved("approved text");
+
+        assertThatThrownBy(() -> approvals.verify("actual text"))
+            .isInstanceOf(AssertionError.class)
+            .hasMessage("expected: <approved text> but was: <actual text>");
+
+        approvalsFiles.removeApproved();
+        approvalsFiles.removeReceived();
+    }
 
     @Test
     void shouldDoNothingWhenApprovedFileExistsAndIsCorrect() {
@@ -58,6 +75,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
             .hasMessageContaining("expected: <> but was: <text>");
 
         approvalsFiles.removeReceived();
+        approvalsFiles.removeApproved();
     }
 
 

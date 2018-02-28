@@ -17,6 +17,7 @@
  */
 package com.github.writethemfirst.approvals;
 
+import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.reporters.softwares.Generic;
 
 import java.nio.file.Path;
@@ -117,6 +118,7 @@ public class Approvals {
         } else {
             approvalsFiles.createEmptyApprovedFileIfEmpty();
             reporter.mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
+            new ThrowsReporter().mismatch(approvalsFiles.approvedFile(), approvalsFiles.receivedFile());
         }
     }
 
