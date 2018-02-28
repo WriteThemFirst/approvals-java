@@ -49,20 +49,17 @@
 
 ---
 
-**This is a WIP**, we are trying the [RDD](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) approach !
+# Approvals-Java
 
+Approvals is an lightweight open source assertion/verification library to aid unit testing. It alleviates the burden of hand-writing assertions.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
 # Approvals
 
-Approvals is an lightweight open source assertion/verification library to aid unit testing. 
-It alleviates the burden of hand-writing assertions.
 Instead you call a `verify` method.
 
 1. The first time `verify` is called, a file is generated with a representation of its argument
