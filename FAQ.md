@@ -5,17 +5,27 @@
 When using the default `Windows.IDEA` Reporter, it adds a line at the end of the *approved* file
 and my test never passes.
 
-**Solution**: Add this block to your `.editorconfig` file. 
+**Solution**: 
+Add this block to your `.editorconfig` file. 
 
     [*.approved]
     insert_final_newline = false
 
 
-## Approved Files and Git
+## *.approved files and Git line endings
 
-The `*.approved` files must be checked into source your source control. This can be an issue with git as it will change the line endings.
-The suggested fix is to add `*.approved binary` to your `.gitattributes`
+The `*.approved` files must be checked into source your source control, they are part of your tests. 
 
+This can be an issue with git as it will change the line endings.
+
+**Solution**:
+Add this block to your `.gitattributes`
+
+    *.approved.* binary
+    *.approved binary
+
+With this, git will treat these files are *binary* instead of *text* 
+and will respect their line endings.
 
 
 ## Using approvals-java with a unit test framework in another JVM language
