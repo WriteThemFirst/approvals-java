@@ -19,6 +19,7 @@ package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.reporters.softwares.Generic;
+import com.github.writethemfirst.approvals.utils.FileUtils;
 import javafx.util.Pair;
 
 import java.nio.file.Path;
@@ -188,7 +189,7 @@ public class Approvals {
             Path simplePath = Paths.get(approvedRelative.toString().replace(".approved", ""));
             Path actualFile = actualFolder.resolve(simplePath);
             Path receivedFile = approvedFolder.resolve(simplePath + ".received");
-//        TODO:    FileUtils.copy(actualFile, receivedFile);
+            FileUtils.copy(actualFile, receivedFile);
             if (!actualFile.toFile().exists()) {
                 throw new AssertionError(format("missing file <%s> in <%s>", simplePath, actualFolder));
             }

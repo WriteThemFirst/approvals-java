@@ -18,6 +18,7 @@
 package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
+import com.github.writethemfirst.approvals.utils.FileUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -25,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
@@ -32,6 +34,9 @@ import static org.mockito.Mockito.mock;
 class ApprovalsFolderTest {
     private Approvals approvals = new Approvals(new ThrowsReporter());
     private ApprovalsFiles approvalsFiles = new ApprovalsFiles();
+    private Path sample = Paths.get("sample.xml");
+    private Path sample2 = Paths.get("sample2.xml");
+    Reporter reporter = mock(Reporter.class);
 
 
     @Test
@@ -69,12 +74,9 @@ class ApprovalsFolderTest {
 
     @Test
     void shouldFireReporterOnEachMismatch() throws IOException {
-        Reporter reporter = mock(Reporter.class);
         Approvals approvals = new Approvals(reporter);
 
         Path parent = Files.createTempDirectory("shouldFireReporterOnEachMismatch");
-        Path sample = Paths.get("sample.xml");
-        Path sample2 = Paths.get("sample2.xml");
         Files.createFile(parent.resolve(sample));
         Files.createFile(parent.resolve(sample2));
         ApprobationContext context = approvalsFiles.defaultContext();
@@ -87,6 +89,28 @@ class ApprovalsFolderTest {
 
         then(reporter).should().mismatch(context.approvedFile(sample), context.receivedFile(sample));
         then(reporter).should().mismatch(context.approvedFile(sample2), context.receivedFile(sample2));
+
+        context.removeReceived(sample);
+        context.removeReceived(sample2);
+    }
+
+    @Test
+    void shouldCreateAllReceivedFiles() throws IOException {
+        Approvals approvals = new Approvals(reporter);
+
+        Path parent = Files.createTempDirectory("shouldCreateAllReceivedFiles");
+        FileUtils.write("actual", parent.resolve("sample.xml"));
+        FileUtils.write("actual2", parent.resolve("sample2.xml"));
+        ApprobationContext context = approvalsFiles.defaultContext();
+
+        try {
+            approvals.verifyAgainstMasterFolder(parent);
+        } catch (AssertionError e) {
+            // expected
+        }
+
+        assertThat(context.receivedFile(sample)).hasContent("actual");
+        assertThat(context.receivedFile(sample2)).hasContent("actual2");
 
         context.removeReceived(sample);
         context.removeReceived(sample2);

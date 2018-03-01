@@ -123,4 +123,7 @@ public class FileUtils {
     }
 
 
+    public static void copy(Path fromFile, Path toFile) {
+        write(silentRead(fromFile), toFile);
+    }
 }

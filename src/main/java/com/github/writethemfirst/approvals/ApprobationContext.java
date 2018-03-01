@@ -25,9 +25,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.function.BiPredicate;
 
-import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
-import static com.github.writethemfirst.approvals.utils.FileUtils.silentRemove;
-import static com.github.writethemfirst.approvals.utils.FileUtils.write;
+import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
@@ -175,12 +173,13 @@ public class ApprobationContext {
 
     List<Path> approvedFilesInFolder() {
         int MAX_DEPTH = 5;
-        BiPredicate<Path, BasicFileAttributes> followAllFiles = (path, attributes) -> attributes.isRegularFile();
+        BiPredicate<Path, BasicFileAttributes> approvedExtension = (path, attributes) ->
+            attributes.isRegularFile() && path.toString().endsWith(".approved");
         Path approvedFolder = approvedFolder();
         try {
             Files.createDirectories(approvedFolder);
             return Files
-                .find(approvedFolder, MAX_DEPTH, followAllFiles)
+                .find(approvedFolder, MAX_DEPTH, approvedExtension)
                 .collect(toList());
         } catch (IOException e) {
             throw new RuntimeException(format("cannot browse %s for approved files", approvedFolder), e);
