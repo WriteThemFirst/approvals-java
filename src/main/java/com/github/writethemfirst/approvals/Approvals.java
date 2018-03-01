@@ -19,12 +19,16 @@ package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.reporters.softwares.Generic;
+import javafx.util.Pair;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
+import static java.lang.String.format;
 
 /**
  * # Approvals
@@ -174,23 +178,32 @@ public class Approvals {
         return approvedContent != null && approvedContent.equals(output.toString());
     }
 
-    public void verifyAgainstMasterFolder(Path receivedFolder) {
+    public void verifyAgainstMasterFolder(Path actualFolder) {
         ApprobationContext context = approvalsFiles.defaultContext();
 
         Path approvedFolder = context.approvedFolder();
+        List<Pair<Path, Path>> mismatches = new ArrayList<>();
         for (Path approvedFile : context.approvedFilesInFolder()) {
             Path approvedRelative = approvedFolder.relativize(approvedFile);
             Path simplePath = Paths.get(approvedRelative.toString().replace(".approved", ""));
-            Path receivedFile = receivedFolder.resolve(simplePath);
-            if (!receivedFile.toFile().exists()) {
-                throw new AssertionError(String.format("missing file <%s> in <%s>", simplePath, receivedFolder));
+            Path actualFile = actualFolder.resolve(simplePath);
+            Path receivedFile = approvedFolder.resolve(simplePath + ".received");
+//        TODO:    FileUtils.copy(actualFile, receivedFile);
+            if (!actualFile.toFile().exists()) {
+                throw new AssertionError(format("missing file <%s> in <%s>", simplePath, actualFolder));
             }
-            String receivedContent = silentRead(receivedFile);
+            String receivedContent = silentRead(actualFile);
             String approvedContent = silentRead(approvedFile);
             if (!receivedContent.equals(approvedContent)) {
-                throw new AssertionError(String.format(
-                    "compared to reference <%s>, content differs for file <%s>", approvedRelative, receivedFile));
+                mismatches.add(new Pair<>(approvedFile, receivedFile));
             }
+        }
+        for (Pair<Path, Path> mismatch : mismatches) {
+            reporter.mismatch(mismatch.getKey(), mismatch.getValue());
+        }
+        for (Pair<Path, Path> mismatch : mismatches) {
+            throw new AssertionError(format(
+                "compared to reference <%s>, content differs for file <%s>", mismatch.getKey(), mismatch.getValue()));
         }
     }
 }

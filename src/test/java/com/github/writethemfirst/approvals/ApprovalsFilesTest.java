@@ -56,6 +56,22 @@ class ApprovalsFilesTest {
         context.removeApproved();
     }
 
+    @Test
+    void approvedFileInFolderShouldBeReadAfterWritten() {
+        ApprobationContext context = companion.defaultContext();
+        //WHEN
+        Path file = Paths.get("subfolder/file.txt");
+        String content = "some content\non 2 lines";
+        context.writeApproved(content, file);
+
+        //THEN
+        String actualContent = context.readApproved(file);
+        assertThat(actualContent).isEqualTo(content);
+
+        //CLEANUP
+        context.removeApproved(file);
+    }
+
 
     @Test
     void receivedFileShouldBeReadAfterWritten() {

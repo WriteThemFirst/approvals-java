@@ -61,6 +61,37 @@ public class ApprobationContext {
     }
 
     /**
+     * Writes content to a file relative to the *approved* folder.
+     */
+    public void writeApproved(final String content, Path relativeFile) {
+        final Path approvedFile = approvedFile(relativeFile);
+        write(content, approvedFile);
+    }
+
+    /**
+     * Reads from a file relative to the *approved* folder.
+     */
+    public String readApproved(Path relativeFile) {
+        return silentRead(approvedFile(relativeFile));
+    }
+
+    public void removeApproved(Path relativeFile) {
+        silentRemove(approvedFile(relativeFile));
+    }
+
+    public void removeReceived(Path relativeFile) {
+        silentRemove(receivedFile(relativeFile));
+    }
+
+    public Path approvedFile(Path relativeFile) {
+        return approvedFolder().resolve(relativeFile + ".approved");
+    }
+
+    public Path receivedFile(Path relativeFile) {
+        return approvedFolder().resolve(relativeFile + ".received");
+    }
+
+    /**
      * Reads the content of the *approved* file linked to the current method execution.
      *
      * That method will actually retrieve the method from which the call has been made and read the *approved* file
@@ -147,6 +178,7 @@ public class ApprobationContext {
         BiPredicate<Path, BasicFileAttributes> followAllFiles = (path, attributes) -> attributes.isRegularFile();
         Path approvedFolder = approvedFolder();
         try {
+            Files.createDirectories(approvedFolder);
             return Files
                 .find(approvedFolder, MAX_DEPTH, followAllFiles)
                 .collect(toList());

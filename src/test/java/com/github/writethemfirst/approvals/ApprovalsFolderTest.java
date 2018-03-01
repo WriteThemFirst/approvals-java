@@ -23,8 +23,11 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
 
 class ApprovalsFolderTest {
     private Approvals approvals = new Approvals(new ThrowsReporter());
@@ -60,7 +63,32 @@ class ApprovalsFolderTest {
         Files.createFile(parent.resolve("sample.xml"));
         assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
             .isInstanceOf(AssertionError.class)
-            .hasMessageContaining("compared to reference <sample.xml.approved>, content differs");
+            .hasMessageContaining("expected: <expected content> but was: <>");
 
+    }
+
+    @Test
+    void shouldFireReporterOnEachMismatch() throws IOException {
+        Reporter reporter = mock(Reporter.class);
+        Approvals approvals = new Approvals(reporter);
+
+        Path parent = Files.createTempDirectory("shouldFireReporterOnEachMismatch");
+        Path sample = Paths.get("sample.xml");
+        Path sample2 = Paths.get("sample2.xml");
+        Files.createFile(parent.resolve(sample));
+        Files.createFile(parent.resolve(sample2));
+        ApprobationContext context = approvalsFiles.defaultContext();
+
+        try {
+            approvals.verifyAgainstMasterFolder(parent);
+        } catch (AssertionError e) {
+            // expected
+        }
+
+        then(reporter).should().mismatch(context.approvedFile(sample), context.receivedFile(sample));
+        then(reporter).should().mismatch(context.approvedFile(sample2), context.receivedFile(sample2));
+
+        context.removeReceived(sample);
+        context.removeReceived(sample2);
     }
 }
