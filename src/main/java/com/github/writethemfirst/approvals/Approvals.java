@@ -20,16 +20,15 @@ package com.github.writethemfirst.approvals;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.reporters.softwares.Generic;
 import com.github.writethemfirst.approvals.utils.FileUtils;
-import javafx.util.Pair;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
+import static com.github.writethemfirst.approvals.utils.FileUtils.silentRemove;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
-import static java.lang.String.format;
+import static java.util.stream.Collectors.partitioningBy;
 
 /**
  * # Approvals
@@ -183,30 +182,28 @@ public class Approvals {
         ApprobationContext context = approvalsFiles.defaultContext();
 
         Path approvedFolder = context.approvedFolder();
-        List<Pair<Path, Path>> mismatches = new ArrayList<>();
-        for (Path approvedFile : context.approvedFilesInFolder()) {
-            Path approvedRelative = approvedFolder.relativize(approvedFile);
-            Path simplePath = Paths.get(approvedRelative.toString().replace(".approved", ""));
-            Path actualFile = actualFolder.resolve(simplePath);
-            Path receivedFile = approvedFolder.resolve(simplePath + ".received");
-            FileUtils.copy(actualFile, receivedFile);
-            if (!actualFile.toFile().exists()) {
-                throw new AssertionError(format("missing file <%s> in <%s>", simplePath, actualFolder));
-            }
-            String receivedContent = silentRead(actualFile);
-            String approvedContent = silentRead(approvedFile);
-            if (receivedContent.equals(approvedContent)) {
-                context.removeReceived(simplePath);
-            } else {
-                mismatches.add(new Pair<>(approvedFile, receivedFile));
-            }
-        }
-        for (Pair<Path, Path> mismatch : mismatches) {
-            reporter.mismatch(mismatch.getKey(), mismatch.getValue());
-        }
-        for (Pair<Path, Path> mismatch : mismatches) {
-            throw new AssertionError(format(
-                "compared to reference <%s>, content differs for file <%s>", mismatch.getKey(), mismatch.getValue()));
-        }
+        Map<Boolean, List<ApprovedAndReceived>> matchesAndMismatches =
+            context.approvedFilesInFolder()
+                .stream()
+                .map(approvedFile -> approvedAndReceived(actualFolder, approvedFolder, approvedFile))
+                .collect(partitioningBy(ar -> ar.haveSameContent()));
+
+        matchesAndMismatches.get(true).forEach(ar -> silentRemove(ar.receivedFile));
+
+        handleMismatches(matchesAndMismatches.get(false));
+    }
+
+    private void handleMismatches(List<ApprovedAndReceived> mismatches) {
+        mismatches.forEach(mismatch -> reporter.mismatch(mismatch.approvedFile, mismatch.receivedFile));
+        mismatches.forEach(mismatch -> new ThrowsReporter().mismatch(mismatch.approvedFile, mismatch.receivedFile));
+    }
+
+    private ApprovedAndReceived approvedAndReceived(Path actualFolder, Path approvedFolder, Path approvedFile) {
+        Path approvedRelative = approvedFolder.relativize(approvedFile);
+        Path simplePath = Paths.get(approvedRelative.toString().replace(".approved", ""));
+        Path actualFile = actualFolder.resolve(simplePath);
+        Path receivedFile = approvedFolder.resolve(simplePath + ".received");
+        FileUtils.copy(actualFile, receivedFile);
+        return new ApprovedAndReceived(approvedFile, receivedFile);
     }
 }

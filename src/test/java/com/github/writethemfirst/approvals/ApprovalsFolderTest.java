@@ -58,7 +58,7 @@ class ApprovalsFolderTest {
 
         assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
             .isInstanceOf(AssertionError.class)
-            .hasMessageContaining("missing file <sample.xml>");
+            .hasMessageContaining("expected: <some content> but was: <>");
 
     }
 
@@ -134,4 +134,20 @@ class ApprovalsFolderTest {
         context.removeReceived(sample);
         context.removeApproved(sample);
     }
+
+//    @Test
+//    void shouldThrowOnReceivedFilesNotExpected() throws IOException {
+//        Approvals approvals = new Approvals(new ThrowsReporter());
+//
+//        Path parent = Files.createTempDirectory("shouldThrowOnReceivedFilesNotExpected");
+//        FileUtils.write("actual", parent.resolve("sample.xml"));
+//        ApprobationContext context = approvalsFiles.defaultContext();
+//
+//        assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
+//            .isInstanceOf(AssertionError.class)
+//            .hasMessageContaining("");
+//
+//        context.removeReceived(sample);
+//        context.removeApproved(sample);
+//    }
 }
