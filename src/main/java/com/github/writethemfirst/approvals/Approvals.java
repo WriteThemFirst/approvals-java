@@ -195,7 +195,9 @@ public class Approvals {
             }
             String receivedContent = silentRead(actualFile);
             String approvedContent = silentRead(approvedFile);
-            if (!receivedContent.equals(approvedContent)) {
+            if (receivedContent.equals(approvedContent)) {
+                context.removeReceived(simplePath);
+            } else {
                 mismatches.add(new Pair<>(approvedFile, receivedFile));
             }
         }

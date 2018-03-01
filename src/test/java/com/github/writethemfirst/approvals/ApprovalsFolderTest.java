@@ -115,4 +115,23 @@ class ApprovalsFolderTest {
         context.removeReceived(sample);
         context.removeReceived(sample2);
     }
+
+
+    @Test
+    void shouldRemoveMatchedReceivedFiles() throws IOException {
+        Approvals approvals = new Approvals(reporter);
+
+        Path parent = Files.createTempDirectory("shouldRemoveMatchedReceivedFiles");
+        FileUtils.write("actual", parent.resolve("sample.xml"));
+        ApprobationContext context = approvalsFiles.defaultContext();
+        context.writeApproved("actual", sample);
+        context.writeReceived("actual", sample);
+
+        approvals.verifyAgainstMasterFolder(parent);
+
+        assertThat(context.receivedFile(sample)).doesNotExist();
+
+        context.removeReceived(sample);
+        context.removeApproved(sample);
+    }
 }

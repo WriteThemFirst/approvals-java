@@ -66,6 +66,11 @@ public class ApprobationContext {
         write(content, approvedFile);
     }
 
+    public void writeReceived(final String content, Path relativeFile) {
+        final Path receivedFile = receivedFile(relativeFile);
+        write(content, receivedFile);
+    }
+
     /**
      * Reads from a file relative to the *approved* folder.
      */

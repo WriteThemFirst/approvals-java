@@ -52,8 +52,8 @@ class ApprovalsFilesFolderTest {
             "/ApprovalsFilesFolderTest/approvedFolderShouldContainListedFiles.Files");
         silentRemoveRec(parent.toFile());
         createDirectories(parent.resolve("sub"));
-        Path xml = parent.resolve("sample.xml.expected");
-        Path csv = parent.resolve("sub/ref.csv.expected");
+        Path xml = parent.resolve("sample.xml.approved");
+        Path csv = parent.resolve("sub/ref.csv.approved");
         createFile(xml);
         createFile(csv);
 
