@@ -192,14 +192,9 @@ So we decided to implement quickly a subset of the initial features and deploy t
 
 ### Documentation
 
-[Getting Started Doc](https://github.com/approvals/ApprovalTests.Java/blob/master/build/resources/approval_tests/documentation/ApprovalTests%20-%20GettingStarted.md)
+[Frequently Asked Questions](FAQ.md)
 
 [Javadoc](https://projects.raffael.ch/markdown-doclet/)
-
-### Approved Files and Git
-
-The `*.approved` files must be checked into source your source control. This can be an issue with git as it will change the line endings.
-The suggested fix is to add `*.approved binary` to your `.gitattributes`
 
 
 ### LICENSE

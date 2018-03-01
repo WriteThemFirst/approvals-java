@@ -12,7 +12,19 @@ Thanks for contributing on [approvals-java](https://github.com/WriteThemFirst/ap
 
 ## How to add a Reporter
 
-TODO
+You should probably instantiate a new `CommandReporter` in the `Windows` or `Linux` (TBC) interface. 
+Here is a sample syntax:
+
+```java
+Reporter IDEA = new CommandReporter(new Command(
+    "%programFiles%\\JetBrains", "idea64.exe"), 
+    "merge %approved% %received% %approved%");
+```
+
+`Command` will replace `%programFiles%` with one of the "Program Files" folders on your computer
+until it finds the executable.
+
+`%approved%` and `%received%` are replaced by the file names of the *approved* and *received* files.
 
 ## Small commits
 
