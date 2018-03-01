@@ -35,12 +35,17 @@ public interface Windows {
     /**
      * Download KDiff3 from https://sourceforge.net/projects/kdiff3/files/
      */
-    Reporter KDIFF = new CommandReporter(new Command("%programFiles%\\KDiff3", "kdiff3.exe"), "%approved% %received% -o %approved%");
+    Reporter KDIFF = new CommandReporter(new Command("%programFiles%\\KDiff3", "kdiff3.exe"), "%received% %approved% -o %approved%");
 
     /**
      * Download GVim from http://www.vim.org/download.php
      */
     Reporter GVIM = new CommandReporter(new Command("%programFiles%\\Vim", "gvim.exe"), "-d %approved% %received% %received%");
 
-    Reporter DEFAULT = new FirstWorkingReporter(IDEA, KDIFF, GVIM, new JUnit5Reporter(), new ThrowsReporter());
+    /**
+     * Download TortoiseSVN from https://tortoisesvn.net/downloads.html
+     */
+    Reporter TORTOISE_SVN = new CommandReporter(new Command("%programFiles%\\TortoiseSVN", "TortoiseMerge.exe"), "%received% %approved%");
+
+    Reporter DEFAULT = new FirstWorkingReporter(TORTOISE_SVN, IDEA, KDIFF, GVIM, new JUnit5Reporter(), new ThrowsReporter());
 }

@@ -28,4 +28,14 @@ class ApproveString {
     void verifySimpleString() {
         approvals.verify("my string");
     }
+
+    @Test
+    void verifyWithLineFeed() {
+        approvals.verify("line1\nline2");
+    }
+
+    @Test
+    void verifyWithCarriageReturnLineFeed() {
+        approvals.verify("line1\r\nline2");
+    }
 }
