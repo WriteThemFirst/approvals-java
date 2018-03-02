@@ -30,22 +30,66 @@ import com.github.writethemfirst.approvals.reporters.commands.Command;
  */
 public interface Windows {
 
-    Reporter IDEA = new CommandReporter(new Command("%programFiles%\\JetBrains", "idea64.exe"), "merge %approved% %received% %approved%");
+    Reporter IDEA = new CommandReporter(new Command(
+        "%programFiles%\\JetBrains",
+        "idea64.exe"),
+        "merge %approved% %received% %approved%");
 
     /**
      * Download KDiff3 from https://sourceforge.net/projects/kdiff3/files/
      */
-    Reporter KDIFF = new CommandReporter(new Command("%programFiles%\\KDiff3", "kdiff3.exe"), "%received% %approved% -o %approved%");
+    Reporter KDIFF = new CommandReporter(new Command(
+        "%programFiles%\\KDiff3",
+        "kdiff3.exe"),
+        "%received% %approved% -o %approved%");
 
     /**
      * Download GVim from http://www.vim.org/download.php
      */
-    Reporter GVIM = new CommandReporter(new Command("%programFiles%\\Vim", "gvim.exe"), "-d %approved% %received% %received%");
+    Reporter GVIM = new CommandReporter(new Command(
+        "%programFiles%\\Vim",
+        "gvim.exe"),
+        "-d %approved% %received% %received%");
 
     /**
      * Download TortoiseSVN from https://tortoisesvn.net/downloads.html
      */
-    Reporter TORTOISE_SVN = new CommandReporter(new Command("%programFiles%\\TortoiseSVN", "TortoiseMerge.exe"), "%received% %approved%");
+    Reporter TORTOISE_SVN = new CommandReporter(new Command(
+        "%programFiles%\\TortoiseSVN",
+        "TortoiseMerge.exe"));
 
-    Reporter DEFAULT = new FirstWorkingReporter(TORTOISE_SVN, IDEA, KDIFF, GVIM, new JUnit5Reporter(), new ThrowsReporter());
+    Reporter BEYOND_COMPARE_3 = new CommandReporter(new Command(
+        "%programFiles%\\Beyond Compare 3",
+        "BCompare.exe"));
+
+    Reporter BEYOND_COMPARE_4 = new CommandReporter(new Command(
+        "%programFiles%\\Beyond Compare 3",
+        "BCompare.exe"));
+
+    Reporter WINMERGE = new CommandReporter(new Command(
+        "%programFiles%\\WinMerge",
+        "WinMergeU.exe"));
+
+    Reporter ARAXIS = new CommandReporter(new Command(
+        "%programFiles%\\Araxis",
+        "Compare.exe"));
+
+    Reporter CODE_COMPARE = new CommandReporter(new Command(
+        "%programFiles%\\Devart",
+        "CodeCompare.exe"),
+        "%received% %approved%");
+
+
+    Reporter DEFAULT = new FirstWorkingReporter(
+        IDEA,
+        TORTOISE_SVN,
+        BEYOND_COMPARE_4,
+        BEYOND_COMPARE_3,
+        WINMERGE,
+        ARAXIS,
+        CODE_COMPARE,
+        KDIFF,
+        GVIM,
+        new JUnit5Reporter(),
+        new ThrowsReporter());
 }

@@ -31,6 +31,12 @@ import static java.util.Arrays.stream;
 public class CommandReporter implements Reporter {
     private final Command command;
     private final String[] arguments;
+    public final static String DEFAULT_ARGUMENTS = "%received% %approved%";
+
+
+    public CommandReporter(Command command) {
+        this(command, DEFAULT_ARGUMENTS);
+    }
 
     /**
      * Constructs the reporter with a single String of arguments, split on spaces.
