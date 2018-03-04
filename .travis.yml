@@ -24,3 +24,6 @@ jobs:
     jdk: oraclejdk8
     script:
       - mvn deploy --settings settings.xml
+  branches:
+    except:
+    - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
