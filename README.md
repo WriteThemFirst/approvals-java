@@ -125,15 +125,15 @@ testCompile 'com.github.writethemfirst:approvals-java:0.3'
 Our `SNAPSHOT` versions are released on [oss.jfrog.org](https://oss.jfrog.org/artifactory/oss-snapshot-local). To use them, simply add this repository to your `pom.xml` or to your `settings.xml`:
 
 ```xml
-    <repositories>
-        <repository>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>oss-jfrog-snapshot</id>
-            <name>oss-jfrog-snapshot</name>
-            <url>https://oss.jfrog.org/artifactory/oss-snapshot-local</url>
-        </repository>
+<repositories>
+    <repository>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+        <id>oss-jfrog-snapshot</id>
+        <name>oss-jfrog-snapshot</name>
+        <url>https://oss.jfrog.org/artifactory/oss-snapshot-local</url>
+    </repository>
 </repositories>
 ```
 
