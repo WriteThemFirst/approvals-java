@@ -64,6 +64,7 @@ Approvals-Java is a lightweight open source assertion/verification library to fa
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [What's new?](#whats-new)
 - [Get Approvals-Java](#get-approvals-java)
   - [Maven](#maven)
   - [Gradle](#gradle)
@@ -87,6 +88,10 @@ Approvals-Java is a lightweight open source assertion/verification library to fa
 - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+# What's new?
+
+Just have a look at our [Releases Notes](https://github.com/WriteThemFirst/approvals-java/releases)!
 
 # Get Approvals-Java
 
