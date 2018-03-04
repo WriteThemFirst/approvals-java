@@ -289,6 +289,12 @@ So we decided to implement quickly a subset of the initial features and deploy t
 
 Thanks a lot to [all the people behind Approvals](https://github.com/orgs/approvals/people) then, because we surely got the inspiration from their work! 
 
+Thanks also to all people who created those tools we love:
+
+- [Gitmoji](https://gitmoji.carloscuesta.me/)
+- [Gitmoji for IDEA](https://plugins.jetbrains.com/plugin/10315-gitmoji)
+- [doctoc](https://github.com/thlorenz/doctoc)
+
 # The team?
 
 [Write Them First!](https://github.com/WriteThemFirst) is just a bunch of french developers who strongly believe that automated tests are extremely important in software development. 
