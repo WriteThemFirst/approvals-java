@@ -1,45 +1,54 @@
 # Frequently Asked Questions
 
-## IntelliJ merge and newlines
-
-When using the default `Windows.IDEA` Reporter, it adds a line at the end of the *approved* file
-and my test never passes.
-
-**Solution**: 
-Add this block to your `.editorconfig` file. 
-
-    [*.approved]
-    insert_final_newline = false
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-## *.approved files and Git line endings
+- [How to ensure IntelliJ is not creating empty lines in approved files?](#how-to-ensure-intellij-is-not-creating-empty-lines-in-approved-files)
+- [How to commit properly approved files in Git?](#how-to-commit-properly-approved-files-in-git)
+- [How to use Approvals-Java with another JVM language?](#how-to-use-approvals-java-with-another-jvm-language)
+  - [Example solution with ScalaTest](#example-solution-with-scalatest)
 
-The `*.approved` files must be checked into source your source control, they are part of your tests. 
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-This can be an issue with git as it will change the line endings.
+## How to ensure IntelliJ is not creating empty lines in approved files? 
 
-**Solution**:
-Add this block to your `.gitattributes`
+**Problem:** When using the default `Windows.IDEA` Reporter, an empty line is added at the end of the *approved* file and the tests never pass.
 
-    *.approved.* binary
-    *.approved binary
+**Solution:** Add this block to your `.editorconfig` file: 
 
-With this, git will treat these files are *binary* instead of *text* 
-and will respect their line endings.
+```
+[*.approved]
+insert_final_newline = false
+```
 
+Or, if you don't use *editorconfig*, check your IDE's formatter settings.
 
-## Using approvals-java with a unit test framework in another JVM language
+## How to commit properly approved files in Git? 
 
-Approvals tries to name your *approved* files by looking at the stack 
-which called `approvals.verify()` to detect the calling class and method name.
+**Fact:** The `*.approved` files must be checked into source your source control since they are part of your tests. 
 
-When you use it from a Kotlin or Scala unit test framework, you can have issue with the naming.
+**Problem:** You could encounter issues with Git messing with line endings so the file always looks like being modified while running the tests.
 
-### Example solution with ScalaTest:
+**Solution:** Add this block to your `.gitattributes`:
 
-When you use `approvals.verify()` from a spec, you need to specify the filename for *approved* and *received* files 
-because it is not inferred from the stack like in JUnit tests 
-(the classes and methods are not expressive in this context).
+```
+*.approved.* binary
+*.approved binary
+```
+
+Git will then treat the *approved* files as *binary* instead of *text* and will respect their line endings.
+
+## How to use Approvals-Java with another JVM language? 
+
+**Fact:** Approvals tries to name your *approved* files by looking at the stack 
+which called `Approvals.verify()` to detect the calling class and method name.
+
+**Problem:** When you use it from a Kotlin or Scala unit test framework, you could have issues with the naming.
+
+### Example solution with ScalaTest
+
+When you use `Approvals.verify()` from a spec, you need to specify the filename for *approved* and *received* files because it is not inferred from the stack like in JUnit tests (the classes and methods are not expressive in this context).
 
 ```scala
  "Parser" should "parse example" in {
