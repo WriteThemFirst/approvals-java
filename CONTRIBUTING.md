@@ -7,6 +7,26 @@ Please keep in mind that all contributions are valuable, and that **feedbacks ar
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [Getting in touch with the team](#getting-in-touch-with-the-team)
+- [About Approvals-Java](#about-approvals-java)
+- [Environment & Tooling](#environment--tooling)
+- [Contribution Conventions](#contribution-conventions)
+  - [Source Code](#source-code)
+  - [Formatting](#formatting)
+  - [Javadoc](#javadoc)
+  - [Documentation](#documentation)
+  - [Commits](#commits)
+  - [Versions](#versions)
+- [Processes and Operations](#processes-and-operations)
+  - [Releasing the library](#releasing-the-library)
+- [Useful commands](#useful-commands)
+  - [Licenses in source headers](#licenses-in-source-headers)
+  - [Table of Contents in Markdown files](#table-of-contents-in-markdown-files)
+  - [Validate your tests coverage with mutations](#validate-your-tests-coverage-with-mutations)
+  - [Generate the changelog to put in the release notes on GitHub](#generate-the-changelog-to-put-in-the-release-notes-on-github)
+- [Development Tips'n'Tricks](#development-tipsntricks)
+  - [Adding a new Reporter](#adding-a-new-reporter)
+
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 Oh, and also, remember our [Code of Conduct](CODE_OF_CONDUCT.md) ;)
