@@ -64,6 +64,28 @@ Approvals-Java is a lightweight open source assertion/verification library to fa
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [Get Approvals-Java](#get-approvals-java)
+  - [Maven](#maven)
+  - [Gradle](#gradle)
+  - [Nightly Builds](#nightly-builds)
+  - [Requirements](#requirements)
+- [Why using Approvals-Java?](#why-using-approvals-java)
+  - [Approval testing basics](#approval-testing-basics)
+  - [Approvals-Java basics](#approvals-java-basics)
+  - [What about other testing libraries?](#what-about-other-testing-libraries)
+  - [Is it Java only?](#is-it-java-only)
+  - [Usage examples?](#usage-examples)
+- [How to use Approvals-Java?](#how-to-use-approvals-java)
+  - [Sample project](#sample-project)
+  - [Verify a simple object](#verify-a-simple-object)
+  - [Verify each file in a folder](#verify-each-file-in-a-folder)
+- [Advanced documentation](#advanced-documentation)
+- [Frequently Asked Questions](#frequently-asked-questions)
+- [Help/Contribute](#helpcontribute)
+- [Thanks/Inspiration](#thanksinspiration)
+- [The team?](#the-team)
+- [License](#license)
+
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Get Approvals-Java
