@@ -5,6 +5,14 @@
     <a href='https://travis-ci.org/WriteThemFirst/approvals-java'>
         <img src='https://travis-ci.org/WriteThemFirst/approvals-java.svg?branch=master' />
     </a>
+    <a href='http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.writethemfirst%22%20AND%20a%3A%22approvals-java%22'>
+        <img src='https://img.shields.io/maven-central/v/com.github.writethemfirst/approvals-java.svg' />
+    </a>
+    <a href='https://www.javadoc.io/doc/com.github.writethemfirst/approvals-java'>
+        <img src='https://www.javadoc.io/badge/com.github.writethemfirst/approvals-java.svg' />
+    </a>
+</p>
+<p align='center'>
     <a href='https://bintray.com/writethemfirst/maven/approvals-java/_latestVersion'>
         <img src='https://api.bintray.com/packages/writethemfirst/maven/approvals-java/images/download.svg' />
     </a>
@@ -22,8 +30,8 @@
     <a href='http://hits.dwyl.io/WriteThemFirst/approvals-java'>
         <img src='http://hits.dwyl.io/WriteThemFirst/approvals-java.svg' />
     </a>
-    <a href='https://github.com/WriteThemFirst/approvals-java/tree/v0.2'>
-        <img src='https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/v0.2.svg' />
+    <a href='https://github.com/WriteThemFirst/approvals-java/tree/v0.3'>
+        <img src='https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/v0.3.svg' />
     </a>
     <a href='https://github.com/WriteThemFirst/approvals-java/issues/'>
         <img src='https://img.shields.io/github/issues/WriteThemFirst/approvals-java.svg' />
