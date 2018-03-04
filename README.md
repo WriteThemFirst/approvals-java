@@ -59,156 +59,220 @@
 
 # Approvals-Java
 
-Approvals is an lightweight open source assertion/verification library to facilitate unit testing. It alleviates the burden of hand-writing assertions.
+Approvals-Java is a lightweight open source assertion/verification library to facilitate unit testing. It alleviates the burden of hand-writing assertions.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# Approvals
+# Get Approvals-Java
 
-Traditional unit testing is based on hand-writing assertions on the output of your method.
+Approvals-Java is released on [Maven Central](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.writethemfirst%22%20AND%20a%3A%22approvals-java%22) which means you don't need any particular Maven/Gradle configuration to retrieve it.
 
-With approvals-java you call instead `Approvals.verify(result)`.
+Also, it is written in pure Java and has no additional dependencies.
 
-1. The first time `verify` is called, a *received* file is generated with a representation of its argument
-2. You review the content and *approve* it by renaming the file 
-(this step is usually facilitated by a merge tool detected and launched by approvals)
-3. You commit the *approved* file, it is now part of the unit test and specifies the behaviour of your code
-4. Now each time `verify` is called, the argument is compared with the *approved* file. 
-This replaces the calls to traditional `assert` methods.
+## Maven
 
-Approval is compatible with most unit test frameworks like JUnit, AssertJ ... 
-For Kotlin or Scala test frameworks a different way to invoke the verification can be needed, see the Wiki (TODO) for the details.
+In your project's `pom.xml`, simply add this dependency:
 
+```xml
+<dependency>
+    <groupId>com.github.writethemfirst</groupId>
+    <artifactId>approvals-java</artifactId>
+    <version>0.3</version>
+    <scope>test</scope>
+</dependency>
+```
 
-## What can it be used for?
+## Gradle
 
-Approvals can be used to verify objects which would usually require several hand-written assertions, such as:
+In your `build.gradle`, simply add this dependency:
 
-- HashMaps & Collections
-- Long Strings
-- Files and folders
-- Anything with a proper toString method
+```groovy
+testCompile 'com.github.writethemfirst:approvals-java:0.3'
+```
 
-## How to get it
+## Nightly Builds
 
-### Binary Releases
+Our `SNAPSHOT` versions are released on [oss.jfrog.org](https://oss.jfrog.org/artifactory/oss-snapshot-local). To use them, simply add this repository to your `pom.xml` or to your `settings.xml`:
 
-It is written in pure java and has no dependency on other frameworks.
-
-You can find published releases on bintray (Maven Central to come soon).
-
-<a href='https://bintray.com/writethemfirst/maven/approvals-java/_latestVersion'>
-  <img src='https://api.bintray.com/packages/writethemfirst/maven/approvals-java/images/download.svg' />
-</a>
-
-        <dependency>
-            <groupId>com.github.writethemfirst</groupId>
-            <artifactId>approvals-java</artifactId>
-            <version>0.2</version>
-        </dependency>
-
-For the moment you need to add the repository to your `pom.xml` or `settings.xml`:
-
+```xml
+    <repositories>
         <repository>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
-            <id>bintray-writethemfirst-maven</id>
-            <name>bintray</name>
-            <url>https://dl.bintray.com/writethemfirst/maven</url>
+            <id>oss-jfrog-snapshot</id>
+            <name>oss-jfrog-snapshot</name>
+            <url>https://oss.jfrog.org/artifactory/oss-snapshot-local</url>
         </repository>
+</repositories>
+```
 
- 
-### How to use it
+And then you can simply rely on the latest `SNAPSHOT`:
 
-Have a look at our sample project [GildedRoseApprovalDemo](https://github.com/WriteThemFirst/GildedRoseApprovalDemo) 
+```xml
+<dependency>
+    <groupId>com.github.writethemfirst</groupId>
+    <artifactId>approvals-java</artifactId>
+    <version>0.4-SNAPSHOT</version>
+    <scope>test</scope>
+</dependency>
+```
 
-#### Verify a simple object
+## Requirements
+
+Approvals-Java has been tested to work efficiently with:
+
+- Windows 8+,
+- Linux,
+- Java 8,
+- JUnit 5.
+
+If you use it in other contexts, do not hesitate to let us know!
+
+# Why using Approvals-Java?
+
+## Approval testing basics
+
+Traditional unit testing is based on hand-writing assertions on the output of your method. This might sound boring for some people, or even sometimes really hard in case of working on some legacy source code. 
+
+*Approval Testing* is a way of approching assertions with the following principle:
+
+1. You first execute the source code you'd like to test and let it produce its usual output,
+2. You review it manually, and say if it's producing the results you expect,
+3. All future test executions will actually compare the produced results with what has been previsouly approved.
+
+Which means you no longer write assertions... You just approve the data which will be used by assertions computer by the framework.
+
+## Approvals-Java basics
+
+Approvals-Java is a simple Java framework allowing you to compute verifications of what your source code is doing, relying on *Approval Testing* principles.
+
+Instead of writing tons of assertions, you simply call `Approvals.verify(result);`.
+
+1. The first time `verify` is called, a *received* file is generated with a representation of its argument,
+2. You review the content and *approve* it by renaming the file, *(this step is usually facilitated by a merge tool detected and launched by Approvals-Java)*
+3. You commit the *approved* file, it is now part of the unit test and specifies the behaviour of your code,
+4. Now each time `verify` is called, the argument is compared with the *approved* file.
+
+This replaces the calls to traditional `assert` methods.
+
+## What about other testing libraries?
+
+Approvals-Java is compatible with most unit test frameworks and libraries such as JUnit, AssertJ, Mockito, etc. Since it's actually doing another job.
+
+## Is it Java only?
+
+Approvals-Java should be able to work fine while being called from Scala or Kotlin, at least we're working on that topic. There might be a few things to take in consideration while calling the framework though. Refer to our [wiki](https://github.com/WriteThemFirst/approvals-java/wiki) to get some details.
+
+## Usage examples?
+
+Approvals-Java can be used to verify objects which would usually require several hand-written assertions, such as:
+
+- HashMaps & Collections,
+- Long Strings,
+- Files and folders,
+- Anything with a proper toString method...
+
+And for sure lots of other usages you will find out!
+
+# How to use Approvals-Java?
+
+Please note that most of our code samples are based on the [Gilded Rose Kata](https://github.com/emilybache/GildedRose-Refactoring-Kata). Do not hesitate to check it out ;)
+
+## Sample project
+
+First, if you'd just want a sample project to see it in action, [we have one for you](https://github.com/WriteThemFirst/GildedRoseApprovalDemo)!
+
+## Verify a simple object
 
 ```java
 package com.examples;
 
-import org.approvalsj.Approvals;
+import com.github.writethemfirst.approvals.Approvals;
 
 public class GildedRoseApprovalTest {
-    Approvals approvals = new Approvals();
+    private Approvals approvals = new Approvals();
 
     @Test
     void approvalSwordShouldDeteriorate() {
-        Item sword = new Item("basic sword", 10, 8);
+        final Item sword = new Item("basic sword", 10, 8);
         approvals.verify(GildedRose.nextDay(sword));
     }
 }
 ```
 
-The `toString()` of sword is used.
+The `toString()` of sword is used for representing the data to be stored in the *approved* file.
 
-#### Verify each file in a folder
-
-Coming soon !
+## Verify each file in a folder
 
 ```java
-@Test
-void approvalCopySrcFolder() throws Exception {
-    Approvals approvals = new Approvals(getClass());
-    
-    Path outDir = Files.createTempDirectory("src");
-    FolderCopy.copyFrom(Paths.get("."), outDir);
-    approvals.verifyEachFileInDirectory(outDir.toFile(), f -> f.getName().endsWith(".xml"));
+package com.examples;
+
+import com.github.writethemfirst.approvals.Approvals;
+
+public class GildedRoseApprovalTests {
+    @Test
+    void approvalCopySrcFolder() {
+        final Approvals approvals = new Approvals(getClass());
+        
+        final Path output = Files.createTempDirectory("src");
+        FolderCopy.copyFrom(Paths.get("."), output);
+        approvals.verifyEachFileInDirectory(output.toFile(), f -> f.getName().endsWith(".xml"));
+    }
 }
 ```
 
-Each file in `outDir` is checked against the master directory.
+Each file in `output` is checked against the master directory.
 
+# Advanced documentation
 
-#### Verify the output of a method when called with combinations of arguments
+If you can't find the information you're searching for in [our documentation](README.md) or in our [code sample](https://github.com/WriteThemFirst/GildedRoseApprovalDemo), then don't hesitate to have a look at our complete [Javadoc](https://www.javadoc.io/doc/com.github.writethemfirst/approvals-java/).
 
-To be implemented.
+# Frequently Asked Questions
 
-```java
-@Test
-void approvalBrieShouldImprove() throws Exception {
-    Approvals approvals = new Approvals(getClass());
+Don't hesitate to have a quick look at our [Frequently Asked Questions](FAQ.md) before submitting an issue.
 
-    Integer[] sellInDays = {-5, 0, 1, 20};
-    Integer[] qualities = {0, 10};
+# Help/Contribute
 
-    approvals.verifyAllCombinations((sellIn, quality) ->
-            GildedRose.nextDay(new Item(BRIE, sellIn, quality)), sellInDays, qualities);
-}
-```
+This project is completely open to any contributions! *(and remember: feedbacks are valuable contributions!)*
 
-`GildedRose.nextDay` is called 8 times, each time with an instance of `Item` constructed with a possible combination of `sellIn` and `quality`.
+Do not hesitate to:
 
+1. [Submit issues](https://github.com/WriteThemFirst/approvals-java/issues/new) about any feedbacks you may have about the library,
+2. [Send us a Pull Request](https://github.com/WriteThemFirst/approvals-java/pulls) with any contribution you think about,
+3. [Have a look at open issues](https://github.com/WriteThemFirst/approvals-java/issues) if you want to find a topic to work on,
+4. Do not hesitate to have a look at [good first issues](https://github.com/WriteThemFirst/approvals-java/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3A%2B1%3A+good+first+issue%22) or [help wanted issues](https://github.com/WriteThemFirst/approvals-java/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3Asos%3A+help+wanted%22) if you search for something to start with!
+5. Get in touch with us to discuss about what you'd like to contribute if you don't feel like starting alone ;)
 
-## More Info
+Before contributing though, please have a look at our [Code of Conduct](CODE_OF_CONDUCT.md) *(because we value humans and their differences)* and to our [Contribution Guide](CONTRIBUTING.md) *(because we think that a few rules allow to work faster and safer)*.
 
-### ApprovalTests initial project
+Do not hesitate to discuss anything from those documents if you feel they need any modification though.
 
-Approvals is inspired by [ApprovalTests](http://approvaltests.sourceforge.net/)
+# Thanks/Inspiration
 
-We liked the idea of approval testing but not so much the Java implementation ([Github](https://github.com/approvals/ApprovalTests.Java))
-- not built with maven
-- not published on a repository like Maven Central (you have to download the zip and add the jar manually to your project)
-- not actively maintained (Pull Requests are not actively merged)
-- code style not up to Java standards (developer is mainly working with .Net)
+Approvals-Java is inspired by [ApprovalTests](http://approvaltests.sourceforge.net/).
 
-So we decided to implement quickly a subset of the initial features and deploy the dependency on Maven Central (coming soon!)
+We really liked the idea of approval testing but not so much the Java implementation *([Github](https://github.com/approvals/ApprovalTests.Java))*.
 
-### Documentation
+Our main concerns were that:
 
-[Frequently Asked Questions](FAQ.md)
+- it is not published on Maven Central, so you need to add the jar manually to your project,
+- it is not actively maintained (Pull Requests are not actively merged),
+- the code style is not up to Java standards (developer is mainly working with .Net).
 
-[Javadoc](https://projects.raffael.ch/markdown-doclet/)
+So we decided to implement quickly a subset of the initial features and deploy the dependency on Maven Central!
 
+Thanks a lot to [all the people behind Approvals](https://github.com/orgs/approvals/people) then, because we surely got the inspiration from their work! 
 
-### LICENSE
-[GNU General Public License v3.0](LICENSE.md)
+# The team?
 
+[Write Them First!](https://github.com/WriteThemFirst) is just a bunch of french developers who strongly believe that automated tests are extremely important in software development. 
 
-### Contributing
+Since they also value [TDD](https://en.wikipedia.org/wiki/Test-driven_development) or [BDD](https://en.wikipedia.org/wiki/Behavior-driven_development), they decided to create a few *(at least one)* tools to make those activities easier! 
 
-See [CONTRIBUTING](CONTRIBUTING.md)
+# License
+
+Our code is released under [GNU General Public License v3.0](LICENSE).
