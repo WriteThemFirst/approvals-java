@@ -95,7 +95,7 @@ Just have a look at our [Releases Notes](https://github.com/WriteThemFirst/appro
 
 # Get Approvals-Java
 
-Approvals-Java is released on [Maven Central](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.writethemfirst%22%20AND%20a%3A%22approvals-java%22) which means you don't need any particular Maven/Gradle configuration to retrieve it.
+Approvals-Java is released on <a href='http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.writethemfirst%22%20AND%20a%3A%22approvals-java%22'><img src='https://img.shields.io/maven-central/v/com.github.writethemfirst/approvals-java.svg' /></a> which means you don't need any particular Maven/Gradle configuration to retrieve it.
 
 Also, it is written in pure Java and has no additional dependencies.
 
@@ -152,7 +152,7 @@ And then you can simply rely on the latest `SNAPSHOT`:
 
 Approvals-Java has been tested to work efficiently with:
 
-- Windows 8+,
+- Windows 7+,
 - Linux,
 - Java 8,
 - JUnit 5.
