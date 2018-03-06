@@ -17,8 +17,8 @@
  */
 package com.github.writethemfirst.approvals;
 
-import com.github.writethemfirst.approvals.files.ApprobationContext;
 import com.github.writethemfirst.approvals.files.ApprovalsFiles;
+import com.github.writethemfirst.approvals.files.ApprobationContext;
 import com.github.writethemfirst.approvals.files.ApprovedAndReceived;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.reporters.softwares.Generic;
@@ -65,7 +65,7 @@ import static java.util.stream.Collectors.partitioningBy;
  */
 public class Approvals {
 
-    private final ApprovalsFiles approvalsFiles;
+    private final ApprobationContext approbationContext;
     private final Reporter reporter;
 
     /**
@@ -106,7 +106,7 @@ public class Approvals {
      *                 content.
      */
     public Approvals(final Class<?> clazz, final Reporter reporter) {
-        approvalsFiles = new ApprovalsFiles(clazz);
+        approbationContext = new ApprobationContext(clazz);
         this.reporter = reporter;
     }
 
@@ -128,7 +128,7 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public void verify(final Object output) {
-        verify(output, approvalsFiles.defaultContext());
+        verify(output, approbationContext.defaultFiles());
     }
 
     /**
@@ -152,16 +152,16 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public void verify(final Object output, final String methodName) {
-        verify(output, approvalsFiles.context(methodName));
+        verify(output, approbationContext.customFiles(methodName));
     }
 
-    private void verify(Object output, ApprobationContext context) {
+    private void verify(Object output, ApprovalsFiles context) {
         if (matchesApprovedFile(output, context)) {
-            context.removeReceived();
+            context.receivedFile.removeReceived();
         } else {
-            context.createEmptyApprovedFileIfEmpty();
-            reporter.mismatch(context.approvedFile(), context.receivedFile());
-            new ThrowsReporter().mismatch(context.approvedFile(), context.receivedFile());
+            context.approvedFile.createEmptyApprovedFileIfEmpty();
+            reporter.mismatch(context.approvedFile.approvedFile(), context.receivedFile.receivedFile());
+            new ThrowsReporter().mismatch(context.approvedFile.approvedFile(), context.receivedFile.receivedFile());
         }
     }
 
@@ -175,18 +175,18 @@ public class Approvals {
      * @param context
      * @return true if the provided output perfectly matches with the existing *approved* file
      */
-    private boolean matchesApprovedFile(final Object output, ApprobationContext context) {
-        final String approvedContent = context.readApproved();
-        context.writeReceived(output.toString());
+    private boolean matchesApprovedFile(final Object output, ApprovalsFiles context) {
+        final String approvedContent = context.approvedFile.readApproved();
+        context.receivedFile.writeReceived(output.toString());
         return approvedContent != null && approvedContent.equals(output.toString());
     }
 
     public void verifyAgainstMasterFolder(Path actualFolder) {
-        ApprobationContext context = approvalsFiles.defaultContext();
+        ApprovalsFiles context = approbationContext.defaultFiles();
 
-        Path approvedFolder = context.approvedFolder();
+        Path approvedFolder = context.approvalsFolder();
         Map<Boolean, List<ApprovedAndReceived>> matchesAndMismatches =
-            context.approvedFilesInFolder()
+            context.approvedFile.approvedFilesInFolder()
                 .stream()
                 .map(approvedFile -> approvedAndReceived(actualFolder, approvedFolder, approvedFile))
                 .collect(partitioningBy(ar -> ar.haveSameContent()));

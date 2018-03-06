@@ -25,16 +25,16 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
 
- class ReporterTest {
+class ReporterTest {
     private Reporter reporter = mock(Reporter.class);
     private Approvals approvals = new Approvals(reporter);
-    private ApprovalsFiles approvalsFiles = new ApprovalsFiles();
+    private ApprobationContext approbationContext = new ApprobationContext();
 
 
     @Test
     void approvalsShouldCallReporterWhenMismatch() {
-        ApprobationContext context = approvalsFiles.defaultContext();
-        context.writeApproved("some text");
+        ApprovalsFiles context = approbationContext.defaultFiles();
+        context.approvedFile.writeApproved("some text");
 
         try {
             approvals.verify("different text");
@@ -42,18 +42,18 @@ import static org.mockito.Mockito.mock;
             // expected
         }
 
-        then(reporter).should().mismatch(context.approvedFile(), context.receivedFile());
+        then(reporter).should().mismatch(context.approvedFile.approvedFile(), context.receivedFile.receivedFile());
 
-        context.removeApproved();
-        context.removeReceived();
+        context.approvedFile.removeApproved();
+        context.receivedFile.removeReceived();
     }
 
 
     @Test
     void approvalsShouldCallReporterWhenNoApprovedFile() {
-        ApprobationContext context = approvalsFiles.defaultContext();
+        ApprovalsFiles context = approbationContext.defaultFiles();
 
-        context.removeApproved();
+        context.approvedFile.removeApproved();
 
         try {
             approvals.verify("text");
@@ -61,10 +61,10 @@ import static org.mockito.Mockito.mock;
             // expected
         }
 
-        then(reporter).should().mismatch(context.approvedFile(), context.receivedFile());
+        then(reporter).should().mismatch(context.approvedFile.approvedFile(), context.receivedFile.receivedFile());
 
-        context.removeApproved();
-        context.removeReceived();
+        context.approvedFile.removeApproved();
+        context.receivedFile.removeReceived();
     }
 
 }

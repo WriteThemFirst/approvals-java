@@ -17,43 +17,43 @@
  */
 package com.github.writethemfirst.approvals.reporters;
 
-import com.github.writethemfirst.approvals.files.ApprobationContext;
-import com.github.writethemfirst.approvals.Approvals;
 import com.github.writethemfirst.approvals.files.ApprovalsFiles;
+import com.github.writethemfirst.approvals.Approvals;
+import com.github.writethemfirst.approvals.files.ApprobationContext;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JUnit5ReporterTest {
     private Approvals approvals = new Approvals(new JUnit5Reporter());
-    private ApprovalsFiles approvalsFiles = new ApprovalsFiles();
+    private ApprobationContext approbationContext = new ApprobationContext();
 
 
     @Test
     void shouldThrowWhenMismatch() {
-        ApprobationContext context = approvalsFiles.defaultContext();
-        context.writeApproved("some text");
+        ApprovalsFiles context = approbationContext.defaultFiles();
+        context.approvedFile.writeApproved("some text");
 
         assertThatThrownBy(() -> approvals.verify("other text"))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <some text> but was: <other text>");
 
-        context.removeApproved();
-        context.removeReceived();
+        context.approvedFile.removeApproved();
+        context.receivedFile.removeReceived();
     }
 
 
     @Test
     void shouldThrowWhenMissing() {
-        ApprobationContext context = approvalsFiles.defaultContext();
+        ApprovalsFiles context = approbationContext.defaultFiles();
 
-        context.removeApproved();
+        context.approvedFile.removeApproved();
 
         assertThatThrownBy(() -> approvals.verify("my text"))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <> but was: <my text>");
 
-        context.removeReceived();
-        context.removeApproved();
+        context.receivedFile.removeReceived();
+        context.approvedFile.removeApproved();
     }
 }

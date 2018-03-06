@@ -29,114 +29,114 @@ import static org.mockito.Mockito.mock;
 
 class ApprovalsSimpleTest {
     private Approvals approvals = new Approvals(new ThrowsReporter());
-    private ApprovalsFiles approvalsFiles = new ApprovalsFiles();
+    private ApprobationContext approbationContext = new ApprobationContext();
 
 
     @Test
     void shouldThrowWhenMismatchAndUsingCommandReporter() {
         CommandReporter reporter = mock(CommandReporter.class);
         Approvals approvals = new Approvals(reporter);
-        ApprobationContext context = approvalsFiles.defaultContext();
+        ApprovalsFiles context = approbationContext.defaultFiles();
 
-        context.writeApproved("approved text");
+        context.approvedFile.writeApproved("approved text");
 
         assertThatThrownBy(() -> approvals.verify("actual text"))
             .isInstanceOf(AssertionError.class)
             .hasMessage("expected: <approved text> but was: <actual text>");
 
-        context.removeApproved();
-        context.removeReceived();
+        context.approvedFile.removeApproved();
+        context.receivedFile.removeReceived();
     }
 
     @Test
     void shouldDoNothingWhenApprovedFileExistsAndIsCorrect() {
-        ApprobationContext context = approvalsFiles.defaultContext();
-        context.writeApproved("some text");
+        ApprovalsFiles context = approbationContext.defaultFiles();
+        context.approvedFile.writeApproved("some text");
         approvals.verify("some text");
-        context.removeApproved();
+        context.approvedFile.removeApproved();
     }
 
 
     @Test
     void shouldFailWhenApprovedFileExistsAndIsDifferent() {
-        ApprobationContext context = approvalsFiles.defaultContext();
+        ApprovalsFiles context = approbationContext.defaultFiles();
 
-        context.writeApproved("expected text");
+        context.approvedFile.writeApproved("expected text");
 
         assertThatThrownBy(() -> approvals.verify("actual text"))
             .isInstanceOf(AssertionError.class)
             .hasMessage("expected: <expected text> but was: <actual text>");
 
-        context.removeApproved();
-        context.removeReceived();
+        context.approvedFile.removeApproved();
+        context.receivedFile.removeReceived();
     }
 
 
     @Test
     void shouldFailWhenApprovedFileDoesNotExist() {
-        ApprobationContext context = approvalsFiles.defaultContext();
+        ApprovalsFiles context = approbationContext.defaultFiles();
 
-        context.removeApproved();
+        context.approvedFile.removeApproved();
 
         assertThatThrownBy(() -> approvals.verify("text"))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <> but was: <text>");
 
-        context.removeReceived();
-        context.removeApproved();
+        context.receivedFile.removeReceived();
+        context.approvedFile.removeApproved();
     }
 
 
     @Test
     void shouldKeepReceivedFileWhenApprovedFileDoesNotExist() {
-        ApprobationContext context = approvalsFiles.defaultContext();
-        context.removeApproved();
-        context.removeReceived();
+        ApprovalsFiles context = approbationContext.defaultFiles();
+        context.approvedFile.removeApproved();
+        context.receivedFile.removeReceived();
         try {
             approvals.verify("text");
         } catch (AssertionError e) {
-            String received = context.readReceived();
+            String received = context.receivedFile.readReceived();
             assertThat(received).isEqualTo("text");
         }
-        context.removeReceived();
-        context.removeApproved();
+        context.receivedFile.removeReceived();
+        context.approvedFile.removeApproved();
     }
 
 
     @Test
     void shouldKeepReceivedFileWhenApprovedFileMismatch() {
-        ApprobationContext context = approvalsFiles.defaultContext();
-        context.writeApproved("approved");
+        ApprovalsFiles context = approbationContext.defaultFiles();
+        context.approvedFile.writeApproved("approved");
         try {
             approvals.verify("text");
         } catch (AssertionError e) {
-            String received = context.readReceived();
+            String received = context.receivedFile.readReceived();
             assertThat(received).isEqualTo("text");
         }
-        context.removeReceived();
-        context.removeApproved();
+        context.receivedFile.removeReceived();
+        context.approvedFile.removeApproved();
     }
 
 
     @Test
     void shouldRemoveReceivedFileWhenApprovedFileMatch() {
-        ApprobationContext context = approvalsFiles.defaultContext();
-        context.writeReceived("last content");
-        context.writeApproved("same");
+        ApprovalsFiles context = approbationContext.defaultFiles();
+        context.receivedFile.writeReceived("last content");
+        context.approvedFile.writeApproved("same");
 
         approvals.verify("same");
 
-        String received = context.readReceived();
+        String received = context.receivedFile.readReceived();
         assertThat(received).isEqualTo("");
 
-        context.removeApproved();
+        context.approvedFile.removeApproved();
     }
 
     @Test
     void shouldCreateEmptyApprovedFile() {
-        ApprobationContext context = approvalsFiles.defaultContext();
-        context.removeReceived();
-        context.removeApproved();
+        ApprovalsFiles context = approbationContext.defaultFiles();
+        context.receivedFile.removeReceived();
+        context.approvedFile.removeApproved();
 
         try {
             approvals.verify("new content");
@@ -144,17 +144,17 @@ class ApprovalsSimpleTest {
             //expected
         }
 
-        assertThat(context.approvedFile()).exists();
+        assertThat(context.approvedFile.approvedFile()).exists();
 
-        context.removeReceived();
-        context.removeApproved();
+        context.receivedFile.removeReceived();
+        context.approvedFile.removeApproved();
     }
 
     @Test
     void shouldUseSpecificMethodName() {
-        ApprobationContext context = approvalsFiles.context("myScalaMethod");
-        context.removeReceived();
-        context.removeApproved();
+        ApprovalsFiles context = approbationContext.customFiles("myScalaMethod");
+        context.receivedFile.removeReceived();
+        context.approvedFile.removeApproved();
 
         try {
             approvals.verify("new content", "myScalaMethod");
@@ -162,10 +162,10 @@ class ApprovalsSimpleTest {
             //expected
         }
 
-        assertThat(context.receivedFile()).hasContent("new content");
+        assertThat(context.receivedFile.receivedFile()).hasContent("new content");
 
-        context.removeReceived();
-        context.removeApproved();
+        context.receivedFile.removeReceived();
+        context.approvedFile.removeApproved();
     }
 
 }

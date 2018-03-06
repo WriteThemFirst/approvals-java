@@ -58,13 +58,13 @@ public interface Reporter {
 
     /**
      * A `Reporter` may not be relevant in all contexts, and they should provide some automated checks validating that
-     * they're actually able to perform what they're supposed to do in the current execution context (like libraries
+     * they're actually able to perform what they're supposed to do in the current execution customFiles (like libraries
      * available in the classpath or Diff / Merge programs available on the computer).
      *
      * This method allows to state if a `Reporter` should be executed in case any differences are found during the
      * comparison of *approved* and *received* files. If it returns false, the `Reporter` won't be used.
      *
-     * @return true if the `Reporter` can be used in the current execution context.
+     * @return true if the `Reporter` can be used in the current execution customFiles.
      */
     boolean isAvailable();
 }

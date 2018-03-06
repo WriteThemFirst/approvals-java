@@ -17,7 +17,6 @@
  */
 package com.github.writethemfirst.approvals.files;
 
-import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -30,18 +29,18 @@ import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.createFile;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ApprovalsFilesFolderTest {
-    private ApprovalsFiles companion = new ApprovalsFiles();
+class ApprobationContextFolderTest {
+    private ApprobationContext companion = new ApprobationContext();
 
 
     @Test
     void approvedFolderShouldBeExpectedPath() {
         //WHEN
-        Path approvedFile = companion.defaultContext().approvedFolder();
+        Path approvedFile = companion.defaultFiles().approvalsFolder();
 
         //THEN
         Path expectedPath = Paths.get("src/test/resources/com/github/writethemfirst/approvals/files" +
-            "/ApprovalsFilesFolderTest/approvedFolderShouldBeExpectedPath.Files");
+            "/ApprobationContextFolderTest/approvedFolderShouldBeExpectedPath.Files");
         assertThat(approvedFile).isEqualTo(expectedPath);
     }
 
@@ -49,7 +48,7 @@ class ApprovalsFilesFolderTest {
     void approvedFolderShouldContainListedFiles() throws IOException {
         //GIVEN
         Path parent = Paths.get("src/test/resources/com/github/writethemfirst/approvals/files" +
-            "/ApprovalsFilesFolderTest/approvedFolderShouldContainListedFiles.Files");
+            "/ApprobationContextFolderTest/approvedFolderShouldContainListedFiles.Files");
         silentRecursiveRemove(parent.toFile());
         createDirectories(parent.resolve("sub"));
         Path xml = parent.resolve("sample.xml.approved");
@@ -58,7 +57,7 @@ class ApprovalsFilesFolderTest {
         createFile(csv);
 
         //WHEN
-        List<Path> paths = companion.defaultContext().approvedFilesInFolder();
+        List<Path> paths = companion.defaultFiles().approvedFile.approvedFilesInFolder();
 
         //THEN
         assertThat(paths).containsExactlyInAnyOrder(xml, csv);
