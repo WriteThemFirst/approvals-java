@@ -61,9 +61,14 @@ public class StackUtils {
         }
     }
 
+    /**
+     * Parses the current thread stacktrace and returns a list of all distinct class names found in it.
+     *
+     * @return A List containing all distinct classes' names from the current thread stacktrace
+     */
     private static List<String> distinctClassesInStack() {
         return Arrays.stream(currentThread().getStackTrace())
-            .map(e -> e.getClassName())
+            .map(StackTraceElement::getClassName)
             .distinct()
             .collect(Collectors.toList());
     }
