@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Objects;
 
 import static java.lang.String.format;
 import static java.nio.file.Files.*;
@@ -84,12 +86,14 @@ public class FileUtils {
      *
      * @param file the file to be removed
      */
-    public static void silentRemoveRec(final File file) {
+    public static void silentRecursiveRemove(final File file) {
         if (file.isDirectory()) {
-            for (final File child : file.listFiles()) {
-                silentRemoveRec(child);
+            final File[] children = file.listFiles();
+            if (children != null) {
+                Arrays.stream(children).forEach(FileUtils::silentRecursiveRemove);
             }
         }
+        //noinspection ResultOfMethodCallIgnored
         file.delete();
     }
 
@@ -123,7 +127,16 @@ public class FileUtils {
     }
 
 
-    public static void copy(Path fromFile, Path toFile) {
-        write(silentRead(fromFile), toFile);
+    /**
+     * Copies the content of a file found at a specified Path to another file located at another specified Path.
+     *
+     * It'll swallow all errors while reading the source file and only produce exceptions in case of errors while
+     * writting the new file.
+     *
+     * @param source      The path from which the source file should be read (data to be copied)
+     * @param destination The path to which the destination file should be written (containing the read data)
+     */
+    public static void copy(final Path source, final Path destination) {
+        write(silentRead(source), destination);
     }
 }
