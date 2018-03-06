@@ -75,15 +75,15 @@ public class ApprovalsFiles {
         this.methodName = methodName;
     }
 
-    public Approved approvedFile = new Approved();
-    public Received receivedFile = new Received();
+    public ApprovedFile approvedFile = new ApprovedFile();
+    public ReceivedFile receivedFile = new ReceivedFile();
 
     public Path approvalsFolder() {
         final String folderName = format("%s.Files", methodName);
         return folder.resolve(folderName);
     }
 
-    public class Approved {
+    public class ApprovedFile {
         public Path approvedFile(Path relativeFile) {
             return approvalsFolder().resolve(relativeFile + ".approved");
         }
@@ -189,7 +189,7 @@ public class ApprovalsFiles {
         }
     }
 
-    public class Received {
+    public class ReceivedFile {
         public void writeReceived(final String content, Path relativeFile) {
             final Path receivedFile = receivedFile(relativeFile);
             write(content, receivedFile);
