@@ -17,7 +17,6 @@
  */
 package com.github.writethemfirst.approvals.utils;
 
-import com.github.writethemfirst.approvals.ApprovalsFiles;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;

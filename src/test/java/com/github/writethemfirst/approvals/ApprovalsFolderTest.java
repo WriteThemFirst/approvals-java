@@ -17,6 +17,10 @@
  */
 package com.github.writethemfirst.approvals;
 
+import com.github.writethemfirst.approvals.Approvals;
+import com.github.writethemfirst.approvals.Reporter;
+import com.github.writethemfirst.approvals.files.ApprobationContext;
+import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.FileUtils;
 import org.junit.jupiter.api.Test;

@@ -15,13 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals;
+package com.github.writethemfirst.approvals.files;
 
+import com.github.writethemfirst.approvals.files.ApprobationContext;
+import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,7 +37,7 @@ class ApprovalsFilesTest {
 
         //THEN
         Path expectedPath = Paths.get(
-            "src/test/resources/com/github/writethemfirst/approvals/ApprovalsFilesTest/approvedFileShouldBeCorrect.approved");
+            "src/test/resources/com/github/writethemfirst/approvals/files/ApprovalsFilesTest/approvedFileShouldBeCorrect.approved");
         assertThat(approvedFile).isEqualTo(expectedPath);
     }
 

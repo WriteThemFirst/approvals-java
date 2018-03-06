@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals;
+package com.github.writethemfirst.approvals.files;
 
 import java.io.File;
 import java.io.IOException;
@@ -176,7 +176,7 @@ public class ApprobationContext {
         }
     }
 
-    List<Path> approvedFilesInFolder() {
+    public List<Path> approvedFilesInFolder() {
         int MAX_DEPTH = 5;
         BiPredicate<Path, BasicFileAttributes> approvedExtension = (path, attributes) ->
             attributes.isRegularFile() && path.toString().endsWith(".approved");
@@ -200,7 +200,7 @@ public class ApprobationContext {
      *
      * @return The Path to the *approved* file linked to the provided `methodName`.
      */
-    Path approvedFile() {
+    public Path approvedFile() {
         final String fileName = format("%s.approved", methodName);
         return folder.resolve(fileName);
     }
@@ -213,12 +213,12 @@ public class ApprobationContext {
      *
      * @return The Path to the *received* file linked to the provided `methodName`.
      */
-    Path receivedFile() {
+    public Path receivedFile() {
         final String fileName = format("%s.received", methodName);
         return folder.resolve(fileName);
     }
 
-    Path approvedFolder() {
+    public Path approvedFolder() {
         final String folderName = format("%s.Files", methodName);
         return folder.resolve(folderName);
     }

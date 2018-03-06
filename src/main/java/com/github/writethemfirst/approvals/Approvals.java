@@ -17,6 +17,9 @@
  */
 package com.github.writethemfirst.approvals;
 
+import com.github.writethemfirst.approvals.files.ApprobationContext;
+import com.github.writethemfirst.approvals.files.ApprovalsFiles;
+import com.github.writethemfirst.approvals.files.ApprovedAndReceived;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.reporters.softwares.Generic;
 import com.github.writethemfirst.approvals.utils.FileUtils;

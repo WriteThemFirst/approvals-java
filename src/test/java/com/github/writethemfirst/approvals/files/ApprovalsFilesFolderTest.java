@@ -15,8 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals;
+package com.github.writethemfirst.approvals.files;
 
+import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -39,7 +40,7 @@ class ApprovalsFilesFolderTest {
         Path approvedFile = companion.defaultContext().approvedFolder();
 
         //THEN
-        Path expectedPath = Paths.get("src/test/resources/com/github/writethemfirst/approvals" +
+        Path expectedPath = Paths.get("src/test/resources/com/github/writethemfirst/approvals/files" +
             "/ApprovalsFilesFolderTest/approvedFolderShouldBeExpectedPath.Files");
         assertThat(approvedFile).isEqualTo(expectedPath);
     }
@@ -47,7 +48,7 @@ class ApprovalsFilesFolderTest {
     @Test
     void approvedFolderShouldContainListedFiles() throws IOException {
         //GIVEN
-        Path parent = Paths.get("src/test/resources/com/github/writethemfirst/approvals" +
+        Path parent = Paths.get("src/test/resources/com/github/writethemfirst/approvals/files" +
             "/ApprovalsFilesFolderTest/approvedFolderShouldContainListedFiles.Files");
         silentRecursiveRemove(parent.toFile());
         createDirectories(parent.resolve("sub"));

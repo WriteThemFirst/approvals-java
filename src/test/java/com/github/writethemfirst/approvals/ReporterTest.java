@@ -17,6 +17,8 @@
  */
 package com.github.writethemfirst.approvals;
 
+import com.github.writethemfirst.approvals.files.ApprobationContext;
+import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.BDDMockito.then;

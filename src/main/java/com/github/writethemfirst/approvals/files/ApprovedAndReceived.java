@@ -15,15 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals;
+package com.github.writethemfirst.approvals.files;
 
 import java.nio.file.Path;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 
-class ApprovedAndReceived {
-    final Path approvedFile;
-    final Path receivedFile;
+public class ApprovedAndReceived {
+    public final Path approvedFile;
+    public final Path receivedFile;
 
 
     public ApprovedAndReceived(Path approvedFile, Path receivedFile) {

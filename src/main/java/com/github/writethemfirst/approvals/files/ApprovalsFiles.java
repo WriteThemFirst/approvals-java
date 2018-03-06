@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals;
+package com.github.writethemfirst.approvals.files;
 
 import java.nio.file.Path;
 
@@ -63,7 +63,7 @@ public class ApprovalsFiles {
      * @param testClass The test class linked to this instance. Created files will contain that class name in their
      *                  path.
      */
-    ApprovalsFiles(final Class<?> testClass) {
+    public ApprovalsFiles(final Class<?> testClass) {
         this.testClass = testClass;
     }
 

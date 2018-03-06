@@ -17,9 +17,9 @@
  */
 package com.github.writethemfirst.approvals.reporters;
 
-import com.github.writethemfirst.approvals.ApprobationContext;
+import com.github.writethemfirst.approvals.files.ApprobationContext;
 import com.github.writethemfirst.approvals.Approvals;
-import com.github.writethemfirst.approvals.ApprovalsFiles;
+import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
