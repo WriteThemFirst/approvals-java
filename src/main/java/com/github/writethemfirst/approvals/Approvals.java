@@ -19,7 +19,7 @@ package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import com.github.writethemfirst.approvals.files.ApprobationContext;
-import com.github.writethemfirst.approvals.files.ApprovedAndReceived;
+import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.reporters.softwares.Generic;
 import com.github.writethemfirst.approvals.utils.FileUtils;
@@ -185,7 +185,7 @@ public class Approvals {
         ApprovalsFiles context = approbationContext.defaultFiles();
 
         Path approvedFolder = context.approvalsFolder();
-        Map<Boolean, List<ApprovedAndReceived>> matchesAndMismatches =
+        Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches =
             context.approvedFilesInFolder()
                 .stream()
                 .map(approvedFile -> approvedAndReceived(actualFolder, approvedFolder, approvedFile))
@@ -196,17 +196,17 @@ public class Approvals {
         handleMismatches(matchesAndMismatches.get(false));
     }
 
-    private void handleMismatches(List<ApprovedAndReceived> mismatches) {
+    private void handleMismatches(List<ApprovedAndReceivedPaths> mismatches) {
         mismatches.forEach(mismatch -> reporter.mismatch(mismatch.approvedFile, mismatch.receivedFile));
         mismatches.forEach(mismatch -> new ThrowsReporter().mismatch(mismatch.approvedFile, mismatch.receivedFile));
     }
 
-    private ApprovedAndReceived approvedAndReceived(Path actualFolder, Path approvedFolder, Path approvedFile) {
+    private ApprovedAndReceivedPaths approvedAndReceived(Path actualFolder, Path approvedFolder, Path approvedFile) {
         Path approvedRelative = approvedFolder.relativize(approvedFile);
         Path simplePath = Paths.get(approvedRelative.toString().replace(".approved", ""));
         Path actualFile = actualFolder.resolve(simplePath);
         Path receivedFile = approvedFolder.resolve(simplePath + ".received");
         FileUtils.copy(actualFile, receivedFile);
-        return new ApprovedAndReceived(approvedFile, receivedFile);
+        return new ApprovedAndReceivedPaths(approvedFile, receivedFile);
     }
 }

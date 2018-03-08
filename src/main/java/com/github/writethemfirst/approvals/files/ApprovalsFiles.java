@@ -63,14 +63,14 @@ public class ApprovalsFiles {
     final String methodName;
 
     /**
-     * Instance of the {@link ApprovedFile} linked to that {@link ApprovalsFiles} instance.
+     * Instance of the {@link ApprovedOrReceivedFile} linked to that {@link ApprovalsFiles} instance.
      */
-    final public ApprovedFile approved;
+    final public ApprovedOrReceivedFile approved;
 
     /**
-     * Instance of the {@link ReceivedFile} linked to that {@link ApprovalsFiles} instance.
+     * Instance of the {@link ApprovedOrReceivedFile} linked to that {@link ApprovalsFiles} instance.
      */
-    final public ReceivedFile received;
+    final public ApprovedOrReceivedFile received;
 
     /**
      * Constructs an {@link ApprovalsFiles} instance linked to the specified folder and methodName.
@@ -81,8 +81,8 @@ public class ApprovalsFiles {
     public ApprovalsFiles(final Path folder, final String methodName) {
         this.folder = folder;
         this.methodName = methodName;
-        approved = new ApprovedFile(this);
-        received = new ReceivedFile(this);
+        approved = new ApprovedOrReceivedFile(this, ApprovedOrReceivedFile.APPROVED_EXTENSION);
+        received = new ApprovedOrReceivedFile(this, "received");
     }
 
     /**
@@ -108,7 +108,7 @@ public class ApprovalsFiles {
     public List<Path> approvedFilesInFolder() {
         final int MAX_DEPTH = 5;
         final BiPredicate<Path, BasicFileAttributes> isAnApprovedFile = (path, attributes) ->
-            attributes.isRegularFile() && path.toString().endsWith("." + ApprovedFile.APPROVED_EXTENSION);
+            attributes.isRegularFile() && path.toString().endsWith("." + ApprovedOrReceivedFile.APPROVED_EXTENSION);
         final Path approvalsFolder = approvalsFolder();
         try {
             Files.createDirectories(approvalsFolder);

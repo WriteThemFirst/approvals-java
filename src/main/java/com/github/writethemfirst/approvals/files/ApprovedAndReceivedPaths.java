@@ -21,12 +21,12 @@ import java.nio.file.Path;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 
-public class ApprovedAndReceived {
+public class ApprovedAndReceivedPaths {
     public final Path approvedFile;
     public final Path receivedFile;
 
 
-    public ApprovedAndReceived(Path approvedFile, Path receivedFile) {
+    public ApprovedAndReceivedPaths(Path approvedFile, Path receivedFile) {
         this.approvedFile = approvedFile;
         this.receivedFile = receivedFile;
     }
