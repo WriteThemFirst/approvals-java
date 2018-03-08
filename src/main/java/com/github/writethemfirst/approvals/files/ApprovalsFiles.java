@@ -128,6 +128,15 @@ public class ApprovalsFiles {
     }
 
     /**
+     * Checks if the *received* file's content matches with the *approved* file's content.
+     *
+     * @return true if *approved* and *received* file have the exact same content. False otherwise.
+     */
+    public boolean haveSameContent() {
+        return received.match(approved);
+    }
+
+    /**
      * # ApprovedFile
      *
      * That class allows to manipulate *approved* files.
@@ -340,6 +349,20 @@ public class ApprovalsFiles {
                     throw new RuntimeException(format("Could not create empty file <%s>", file), e);
                 }
             }
+        }
+
+        /**
+         * Reads and compares the current ApprovalFile and the other one provided as an argument.
+         *
+         * All errors while reading the files will be swallowed.
+         *
+         * @param other an approval file to be read and compared to the current one
+         * @return true if both approval file contain the exact same content. False otherwise.
+         */
+        public boolean match(final ApprovalFile other) {
+            final String content = silentRead(get());
+            final String otherContent = silentRead(other.get());
+            return content.equals(otherContent);
         }
     }
 
