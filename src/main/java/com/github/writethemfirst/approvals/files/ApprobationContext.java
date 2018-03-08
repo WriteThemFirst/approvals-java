@@ -40,7 +40,7 @@ import static java.nio.file.Paths.get;
  *
  * In order to keep that library compliant with other languages and other test frameworks though (like scalatest, or
  * kotlintest), we can't only rely on the library to detect from where the test has been executed, because in those case
- * it would simply fail and put all the files in an *unknown* folder. For those partiular cases, we introduced the
+ * it would simply fail and put all the files in an *unknown* folder. For those particular cases, we introduced the
  * {@link ApprobationContext} object which allows to hold the callers of a test (both class and method), and will allow
  * to specify the method name in case of another language for example. This will allow to manage in a smart and
  * effective way the actual ApprovalsFiles.
