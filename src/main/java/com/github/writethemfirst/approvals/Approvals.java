@@ -157,11 +157,11 @@ public class Approvals {
 
     private void verify(Object output, ApprovalsFiles context) {
         if (matchesApprovedFile(output, context)) {
-            context.receivedFile.removeReceived();
+            context.received.remove();
         } else {
-            context.approvedFile.createEmptyApprovedFileIfEmpty();
-            reporter.mismatch(context.approvedFile.approvedFile(), context.receivedFile.receivedFile());
-            new ThrowsReporter().mismatch(context.approvedFile.approvedFile(), context.receivedFile.receivedFile());
+            context.approved.init();
+            reporter.mismatch(context.approved.get(), context.received.get());
+            new ThrowsReporter().mismatch(context.approved.get(), context.received.get());
         }
     }
 
@@ -176,8 +176,8 @@ public class Approvals {
      * @return true if the provided output perfectly matches with the existing *approved* file
      */
     private boolean matchesApprovedFile(final Object output, ApprovalsFiles context) {
-        final String approvedContent = context.approvedFile.readApproved();
-        context.receivedFile.writeReceived(output.toString());
+        final String approvedContent = context.approved.read();
+        context.received.write(output.toString());
         return approvedContent != null && approvedContent.equals(output.toString());
     }
 
@@ -186,7 +186,7 @@ public class Approvals {
 
         Path approvedFolder = context.approvalsFolder();
         Map<Boolean, List<ApprovedAndReceived>> matchesAndMismatches =
-            context.approvedFile.approvedFilesInFolder()
+            context.approvedFilesInFolder()
                 .stream()
                 .map(approvedFile -> approvedAndReceived(actualFolder, approvedFolder, approvedFile))
                 .collect(partitioningBy(ar -> ar.haveSameContent()));

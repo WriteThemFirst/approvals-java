@@ -31,7 +31,7 @@ class ApprobationContextTest {
     @Test
     void approvedFileShouldBeExpectedPath() {
         //WHEN
-        Path approvedFile = companion.customFiles("approvedFileShouldBeCorrect").approvedFile.approvedFile();
+        Path approvedFile = companion.customFiles("approvedFileShouldBeCorrect").approved.get();
 
         //THEN
         Path expectedPath = Paths.get(
@@ -45,14 +45,14 @@ class ApprobationContextTest {
         ApprovalsFiles context = companion.defaultFiles();
         //WHEN
         String content = "some content\non 2 lines";
-        context.approvedFile.writeApproved(content);
+        context.approved.write(content);
 
         //THEN
-        String actualContent = context.approvedFile.readApproved();
+        String actualContent = context.approved.read();
         assertThat(actualContent).isEqualTo(content);
 
         //CLEANUP
-        context.approvedFile.removeApproved();
+        context.approved.remove();
     }
 
     @Test
@@ -61,14 +61,14 @@ class ApprobationContextTest {
         //WHEN
         Path file = Paths.get("subfolder/file.txt");
         String content = "some content\non 2 lines";
-        context.approvedFile.writeApproved(content, file);
+        context.approved.write(content, file);
 
         //THEN
-        String actualContent = context.approvedFile.readApproved(file);
+        String actualContent = context.approved.read(file);
         assertThat(actualContent).isEqualTo(content);
 
         //CLEANUP
-        context.approvedFile.removeApproved(file);
+        context.approved.remove(file);
     }
 
 
@@ -78,14 +78,14 @@ class ApprobationContextTest {
 
         //WHEN
         String content = "some content\non 2 lines";
-        context.receivedFile.writeReceived(content);
+        context.received.write(content);
 
         //THEN
-        String actualContent = context.receivedFile.readReceived();
+        String actualContent = context.received.read();
         assertThat(actualContent).isEqualTo(content);
 
         //CLEANUP
-        context.receivedFile.removeReceived();
+        context.received.remove();
     }
 
 
@@ -94,10 +94,10 @@ class ApprobationContextTest {
         ApprovalsFiles context = companion.defaultFiles();
 
         //GIVEN
-        context.approvedFile.removeApproved();
+        context.approved.remove();
 
         //WHEN
-        String read = context.approvedFile.readApproved();
+        String read = context.approved.read();
 
         //THEN
         assertThat(read).isEqualTo("");

@@ -89,11 +89,11 @@ class ApprovalsFolderTest {
             // expected
         }
 
-        then(reporter).should().mismatch(context.approvedFile.approvedFile(sample), context.receivedFile.receivedFile(sample));
-        then(reporter).should().mismatch(context.approvedFile.approvedFile(sample2), context.receivedFile.receivedFile(sample2));
+        then(reporter).should().mismatch(context.approved.get(sample), context.received.get(sample));
+        then(reporter).should().mismatch(context.approved.get(sample2), context.received.get(sample2));
 
-        context.receivedFile.removeReceived(sample);
-        context.receivedFile.removeReceived(sample2);
+        context.received.remove(sample);
+        context.received.remove(sample2);
     }
 
     @Test
@@ -111,11 +111,11 @@ class ApprovalsFolderTest {
             // expected
         }
 
-        assertThat(context.receivedFile.receivedFile(sample)).hasContent("actual");
-        assertThat(context.receivedFile.receivedFile(sample2)).hasContent("actual2");
+        assertThat(context.received.get(sample)).hasContent("actual");
+        assertThat(context.received.get(sample2)).hasContent("actual2");
 
-        context.receivedFile.removeReceived(sample);
-        context.receivedFile.removeReceived(sample2);
+        context.received.remove(sample);
+        context.received.remove(sample2);
     }
 
 
@@ -126,15 +126,15 @@ class ApprovalsFolderTest {
         Path parent = Files.createTempDirectory("shouldRemoveMatchedReceivedFiles");
         FileUtils.write("actual", parent.resolve("sample.xml"));
         ApprovalsFiles context = approbationContext.defaultFiles();
-        context.approvedFile.writeApproved("actual", sample);
-        context.receivedFile.writeReceived("actual", sample);
+        context.approved.write("actual", sample);
+        context.received.write("actual", sample);
 
         approvals.verifyAgainstMasterFolder(parent);
 
-        assertThat(context.receivedFile.receivedFile(sample)).doesNotExist();
+        assertThat(context.received.get(sample)).doesNotExist();
 
-        context.receivedFile.removeReceived(sample);
-        context.approvedFile.removeApproved(sample);
+        context.received.remove(sample);
+        context.approved.remove(sample);
     }
 
 //    @Test
@@ -149,7 +149,7 @@ class ApprovalsFolderTest {
 //            .isInstanceOf(AssertionError.class)
 //            .hasMessageContaining("");
 //
-//        customFiles.removeReceived(sample);
-//        customFiles.removeApproved(sample);
+//        customFiles.remove(sample);
+//        customFiles.remove(sample);
 //    }
 }

@@ -57,7 +57,7 @@ class ApprobationContextFolderTest {
         createFile(csv);
 
         //WHEN
-        List<Path> paths = companion.defaultFiles().approvedFile.approvedFilesInFolder();
+        List<Path> paths = companion.defaultFiles().approvedFilesInFolder();
 
         //THEN
         assertThat(paths).containsExactlyInAnyOrder(xml, csv);

@@ -32,14 +32,14 @@ class JUnit5ReporterTest {
     @Test
     void shouldThrowWhenMismatch() {
         ApprovalsFiles context = approbationContext.defaultFiles();
-        context.approvedFile.writeApproved("some text");
+        context.approved.write("some text");
 
         assertThatThrownBy(() -> approvals.verify("other text"))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <some text> but was: <other text>");
 
-        context.approvedFile.removeApproved();
-        context.receivedFile.removeReceived();
+        context.approved.remove();
+        context.received.remove();
     }
 
 
@@ -47,13 +47,13 @@ class JUnit5ReporterTest {
     void shouldThrowWhenMissing() {
         ApprovalsFiles context = approbationContext.defaultFiles();
 
-        context.approvedFile.removeApproved();
+        context.approved.remove();
 
         assertThatThrownBy(() -> approvals.verify("my text"))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <> but was: <my text>");
 
-        context.receivedFile.removeReceived();
-        context.approvedFile.removeApproved();
+        context.received.remove();
+        context.approved.remove();
     }
 }

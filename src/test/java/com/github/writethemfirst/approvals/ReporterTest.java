@@ -34,7 +34,7 @@ class ReporterTest {
     @Test
     void approvalsShouldCallReporterWhenMismatch() {
         ApprovalsFiles context = approbationContext.defaultFiles();
-        context.approvedFile.writeApproved("some text");
+        context.approved.write("some text");
 
         try {
             approvals.verify("different text");
@@ -42,10 +42,10 @@ class ReporterTest {
             // expected
         }
 
-        then(reporter).should().mismatch(context.approvedFile.approvedFile(), context.receivedFile.receivedFile());
+        then(reporter).should().mismatch(context.approved.get(), context.received.get());
 
-        context.approvedFile.removeApproved();
-        context.receivedFile.removeReceived();
+        context.approved.remove();
+        context.received.remove();
     }
 
 
@@ -53,7 +53,7 @@ class ReporterTest {
     void approvalsShouldCallReporterWhenNoApprovedFile() {
         ApprovalsFiles context = approbationContext.defaultFiles();
 
-        context.approvedFile.removeApproved();
+        context.approved.remove();
 
         try {
             approvals.verify("text");
@@ -61,10 +61,10 @@ class ReporterTest {
             // expected
         }
 
-        then(reporter).should().mismatch(context.approvedFile.approvedFile(), context.receivedFile.receivedFile());
+        then(reporter).should().mismatch(context.approved.get(), context.received.get());
 
-        context.approvedFile.removeApproved();
-        context.receivedFile.removeReceived();
+        context.approved.remove();
+        context.received.remove();
     }
 
 }

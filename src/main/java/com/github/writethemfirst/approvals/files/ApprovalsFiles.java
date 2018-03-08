@@ -17,6 +17,8 @@
  */
 package com.github.writethemfirst.approvals.files;
 
+import com.github.writethemfirst.approvals.utils.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,7 +27,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.function.BiPredicate;
 
-import static com.github.writethemfirst.approvals.utils.FileUtils.*;
+import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
+import static com.github.writethemfirst.approvals.utils.FileUtils.silentRemove;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
@@ -65,6 +68,16 @@ public class ApprovalsFiles {
     private final String methodName;
 
     /**
+     * Instance of the {@link ApprovedFile} linked to that {@link ApprovalsFiles} instance.
+     */
+    final public ApprovedFile approved;
+
+    /**
+     * Instance of the {@link ReceivedFile} linked to that {@link ApprovalsFiles} instance.
+     */
+    final public ReceivedFile received;
+
+    /**
      * Constructs an {@link ApprovalsFiles} instance linked to the specified folder and methodName.
      *
      * @param folder     The folder in which the *approved* and *received* files are supposed to be created.
@@ -73,195 +86,297 @@ public class ApprovalsFiles {
     public ApprovalsFiles(final Path folder, final String methodName) {
         this.folder = folder;
         this.methodName = methodName;
+        approved = new ApprovedFile();
+        received = new ReceivedFile();
     }
 
-    public ApprovedFile approvedFile = new ApprovedFile();
-    public ReceivedFile receivedFile = new ReceivedFile();
-
+    /**
+     * Returns the path to a dedicated folder for the current {@link ApprobationContext}.
+     *
+     * That folder may be used for storing multiple files which will later be compared for approval.
+     *
+     * The folder name will be the method name followed by `.Files`.
+     *
+     * @return The path to a folder dedicated to storing the approvals files of the current context.
+     */
     public Path approvalsFolder() {
         final String folderName = format("%s.Files", methodName);
         return folder.resolve(folderName);
     }
 
+    /**
+     * Returns a list of all the *approved* files contained in the current approvals folder. The *approved* files will
+     * be identified by their file extension and will be searched to a maximum depth of 5 folders.
+     *
+     * @return A list of all *approved* files contained in the current approvals folder.
+     */
+    public List<Path> approvedFilesInFolder() {
+        final int MAX_DEPTH = 5;
+        final BiPredicate<Path, BasicFileAttributes> isAnApprovedFile = (path, attributes) ->
+            attributes.isRegularFile() && path.toString().endsWith("." + ApprovedFile.APPROVED_EXTENSION);
+        final Path approvalsFolder = approvalsFolder();
+        try {
+            Files.createDirectories(approvalsFolder);
+            return Files
+                .find(approvalsFolder, MAX_DEPTH, isAnApprovedFile)
+                .collect(toList());
+        } catch (final IOException e) {
+            throw new RuntimeException(format("cannot browse %s for approved files", approvalsFolder), e);
+        }
+    }
+
+    /**
+     * # ApprovedFile
+     *
+     * In *Approval Testing*, the *approved* file is the one containing the reference data to be validated while
+     * computing the tests. It is generated in a first place by the *Program Under Tests* and reviewed by the developer.
+     * Once approved, it must be committed along with the source code of the project since it actually contains all the
+     * data to be used for the tests assertions.
+     *
+     * This class aims at providing all the necessary methods for manipulating a particular *approved* file: from
+     * reading to writing it.
+     *
+     * @author aneveux
+     * @version 1.0
+     * @since 1.1
+     */
     public class ApprovedFile {
-        public Path approvedFile(Path relativeFile) {
-            return approvalsFolder().resolve(relativeFile + ".approved");
+
+        /**
+         * Extension to be used for all approved files.
+         */
+        public static final String APPROVED_EXTENSION = "approved";
+
+        /**
+         * Returns the *approved* file Path linked to the specified `methodName`.
+         *
+         * The Path will be computed by adding the APPROVED_EXTENSION to the provided `methodName` and search for it in
+         * the `folder` associated with the `testClass`.
+         *
+         * @return The Path to the *approved* file linked to the provided `methodName`.
+         */
+        public Path get() {
+            final String fileName = format("%s.%s", methodName, APPROVED_EXTENSION);
+            return folder.resolve(fileName);
         }
 
         /**
-         * Writes the provided content in the *approved* file linked to the current method execution.
+         * Returns the Path of the *approved* file computed from the current approvalsFolder and the provided
+         * relativeFile path. Which means it'll resolve automatically the approvals folder path, and then simply resolve
+         * the relativeFile path within it.
          *
-         * That method will actually retrieve the method from which the call has been made and name the *approved* file
-         * from the `testClass` attribute, but also the parent method calling this one.
+         * @param relativeFile The path of the *approved* file to search for in the current approvals folder
+         * @return The complete path of the *approved* file found in the current approvals folder
+         */
+        public Path get(final Path relativeFile) {
+            return approvalsFolder().resolve(format("%s.%s", relativeFile, APPROVED_EXTENSION));
+        }
+
+        /**
+         * Reads the content of the *approved* file linked to the current {@link ApprobationContext}.
+         *
+         * That method will actually read the file which has been determined by the approbation context and will return
+         * its content.
+         *
+         * If the file doesn't exist, that method will simply display a message in `System.err` but won't fail.
+         *
+         * @return The content of the *approved* file linked to the current {@link ApprobationContext}. An empty String
+         * if the file doesn't exist.
+         */
+        public String read() {
+            return silentRead(get());
+        }
+
+        /**
+         * Reads the content of the custom *approved* file linked to the current {@link ApprobationContext}.
+         *
+         * The custom *approved* file will be retrieved from the approvalsFolder by searching for the provided
+         * relativeFile in it. Once found, its content will be returned.
+         *
+         * If the file doesn't exist, that method will simply display a message in `System.err` but won't fail.
+         *
+         * @return The content of the *approved* file linked to the current {@link ApprobationContext}. An empty String
+         * if the file doesn't exist.
+         */
+        public String read(final Path relativeFile) {
+            return silentRead(get(relativeFile));
+        }
+
+        /**
+         * Writes the provided content in the *approved* file linked to the current {@link ApprobationContext}.
          *
          * If the file doesn't exist, that method will create it in the `src/test/resources` folder.
          *
          * @param content Content to be written in the *approved* file linked to the parent method execution.
          */
-        public void writeApproved(final String content) {
-            final Path approvedFile = approvedFile();
-            write(content, approvedFile);
+        public void write(final String content) {
+            final Path approvedFile = get();
+            FileUtils.write(content, approvedFile);
         }
 
         /**
-         * Writes content to a file relative to the *approved* folder.
+         * Writes the provided content in the custom *approved* file linked to the current {@link ApprobationContext}.
+         *
+         * The custom *approved* file will be retrieved from the approvalsFolder by searching for the provided
+         * relativeFile in it. Once found, the specified content will be written in it.
+         *
+         * If the file doesn't exist, that method will create it in the `src/test/resources` folder.
+         *
+         * @param content Content to be written in the *approved* file linked to the parent method execution.
          */
-        public void writeApproved(final String content, Path relativeFile) {
-            final Path approvedFile = approvedFile(relativeFile);
-            write(content, approvedFile);
+        public void write(final String content, final Path relativeFile) {
+            final Path approvedFile = get(relativeFile);
+            FileUtils.write(content, approvedFile);
         }
 
         /**
-         * Reads from a file relative to the *approved* folder.
-         */
-        public String readApproved(Path relativeFile) {
-            return silentRead(approvedFile(relativeFile));
-        }
-
-        public void removeApproved(Path relativeFile) {
-            silentRemove(approvedFile(relativeFile));
-        }
-
-        /**
-         * Reads the content of the *approved* file linked to the current method execution.
-         *
-         * That method will actually retrieve the method from which the call has been made and read the *approved* file
-         * linked to the `testClass` attribute and the parent method calling this one.
-         *
-         * If the file doesn't exist, that method will simply display a message in `System.err` but won't fail.
-         *
-         * @return The content of the *approved* file linked to the parent method execution. An empty String if the file
-         * doesn't exist.
-         */
-        public String readApproved() {
-            return silentRead(approvedFile());
-        }
-
-        /**
-         * Removes the *approved* file linked to the current method execution.
-         *
-         * That method will actually retrieve the method from which the call has been made and find the *approved* file
-         * linked to the `testClass` attribute and the parent method calling this one.
+         * Removes the *approved* file linked to the current {@link ApprobationContext}.
          *
          * If the file doesn't exist, it won't do anything and won't return any kind of error.
          */
-        public void removeApproved() {
-            silentRemove(approvedFile());
+        public void remove() {
+            silentRemove(get());
         }
 
-        public void createEmptyApprovedFileIfEmpty() {
-            File approvedFile = approvedFile().toFile();
+        /**
+         * Removes the custom *approved* file linked to the current {@link ApprobationContext}.
+         *
+         * The custom *approved* file will be retrieved from the approvalsFolder by searching for the provided
+         * relativeFile in it. Once found, it'll be removed.
+         *
+         * If the file doesn't exist, it won't do anything and won't return any kind of error.
+         */
+        public void remove(final Path relativeFile) {
+            silentRemove(get(relativeFile));
+        }
+
+        /**
+         * Creates an empty *approved* file if it doesn't exist yet.
+         *
+         * If it already exist, that method will do nothing. If there's any issue while creating the *approved* file,
+         * the {@link IOException} will be wrapped in a {@link RuntimeException} and thrown.
+         */
+        public void init() {
+            final File approvedFile = get().toFile();
             if (!approvedFile.exists()) {
                 try {
+                    //noinspection ResultOfMethodCallIgnored
                     approvedFile.createNewFile();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     throw new RuntimeException(format("Could not create empty approved file <%s>", approvedFile), e);
                 }
             }
         }
-
-        public List<Path> approvedFilesInFolder() {
-            int MAX_DEPTH = 5;
-            BiPredicate<Path, BasicFileAttributes> approvedExtension = (path, attributes) ->
-                attributes.isRegularFile() && path.toString().endsWith(".approved");
-            Path approvedFolder = approvalsFolder();
-            try {
-                Files.createDirectories(approvedFolder);
-                return Files
-                    .find(approvedFolder, MAX_DEPTH, approvedExtension)
-                    .collect(toList());
-            } catch (IOException e) {
-                throw new RuntimeException(format("cannot browse %s for approved files", approvedFolder), e);
-            }
-        }
-
-        /**
-         * Returns the *approved* file Path linked to the specified `methodName`.
-         *
-         * The Path will be computed by adding a `.approved` extension to the provided `methodName` and search for it in
-         * the `folder` associated with the `testClass`.
-         *
-         * @return The Path to the *approved* file linked to the provided `methodName`.
-         */
-        public Path approvedFile() {
-            final String fileName = format("%s.approved", methodName);
-            return folder.resolve(fileName);
-        }
     }
 
+    /**
+     * # ReceivedFile
+     *
+     * In *Approval Testing*, the *received* file is a temporary file which is generated from the output of the *Program
+     * Under Test* and used for comparing the results with the reference of the *approved* file. That file will then be
+     * deleted to avoid polluting the codebase. In case of the tests failing, the file will most likely be kept for
+     * further review by the developer.
+     *
+     * This class aims at providing all the necessary methods for manipulating a particular *received* file: from
+     * reading to writing it.
+     *
+     * @author aneveux
+     * @version 1.0
+     * @since 1.1
+     */
     public class ReceivedFile {
-        public void writeReceived(final String content, Path relativeFile) {
-            final Path receivedFile = receivedFile(relativeFile);
-            write(content, receivedFile);
-        }
-
-
-        public void removeReceived(Path relativeFile) {
-            silentRemove(receivedFile(relativeFile));
-        }
-
-
-        public Path receivedFile(Path relativeFile) {
-            return approvalsFolder().resolve(relativeFile + ".received");
-        }
-
 
         /**
-         * Writes the provided content in the *received* file linked to the current method execution.
+         * Extension to be used for all received files.
+         */
+        public static final String RECEIVED_EXTENSION = "received";
+
+        /**
+         * Returns the *received* file Path linked to the specified `methodName`.
          *
-         * That method will actually retrieve the method from which the call has been made and name the *received* file
-         * from the `testClass` attribute, but also the parent method calling this one.
+         * The Path will be computed by adding the RECEIVED_EXTENSION to the provided `methodName` and search for it in
+         * the `folder` associated with the `testClass`.
+         *
+         * @return The Path to the *received* file linked to the provided `methodName`.
+         */
+        public Path get() {
+            final String fileName = format("%s.%s", methodName, RECEIVED_EXTENSION);
+            return folder.resolve(fileName);
+        }
+
+        /**
+         * Returns the Path of the *received* file computed from the current approvalsFolder and the provided
+         * relativeFile path. Which means it'll resolve automatically the approvals folder path, and then simply resolve
+         * the relativeFile path within it.
+         *
+         * @param relativeFile The path of the *received* file to search for in the current approvals folder
+         * @return The complete path of the *received* file found in the current approvals folder
+         */
+        public Path get(final Path relativeFile) {
+            return approvalsFolder().resolve(format("%s.%s", relativeFile, RECEIVED_EXTENSION));
+        }
+
+        /**
+         * Reads the content of the *received* file linked to the current {@link ApprobationContext}.
+         *
+         * That method will actually read the file which has been determined by the approbation context and will return
+         * its content.
+         *
+         * If the file doesn't exist, that method will simply display a message in `System.err` but won't fail.
+         *
+         * @return The content of the *received* file linked to the current {@link ApprobationContext}. An empty String
+         * if the file doesn't exist.
+         */
+        public String read() {
+            return silentRead(get());
+        }
+
+        /**
+         * Writes the provided content in the *received* file linked to the current {@link ApprobationContext}.
          *
          * If the file doesn't exist, that method will create it in the `src/test/resources` folder.
          *
          * @param content Content to be written in the *received* file linked to the parent method execution.
          */
-        public void writeReceived(final String content) {
-            final Path receivedFile = receivedFile();
-            write(content, receivedFile);
+        public void write(final String content) {
+            final Path receivedFile = get();
+            FileUtils.write(content, receivedFile);
         }
 
-
         /**
-         * Reads the content of the *received* file linked to the current method execution.
+         * Writes the provided content in the custom *received* file linked to the current {@link ApprobationContext}.
          *
-         * That method will actually retrieve the method from which the call has been made and read the *received* file
-         * linked to the `testClass` attribute and the parent method calling this one.
+         * The custom *received* file will be retrieved from the approvalsFolder by searching for the provided
+         * relativeFile in it. Once found, the specified content will be written in it.
          *
-         * If the file doesn't exist, that method will simply display a message in `System.err` but won't fail.
+         * If the file doesn't exist, that method will create it in the `src/test/resources` folder.
          *
-         * @return The content of the *received* file linked to the parent method execution. An empty String if the file
-         * doesn't exist.
+         * @param content Content to be written in the *received* file linked to the parent method execution.
          */
-        public String readReceived() {
-            return silentRead(receivedFile());
+        public void write(final String content, final Path relativeFile) {
+            final Path receivedFile = get(relativeFile);
+            FileUtils.write(content, receivedFile);
         }
 
-
         /**
-         * Removes the *received* file linked to the current method execution.
-         *
-         * That method will actually retrieve the method from which the call has been made and find the *received* file
-         * linked to the `testClass` attribute and the parent method calling this one.
+         * Removes the *received* file linked to the current {@link ApprobationContext}.
          *
          * If the file doesn't exist, it won't do anything and won't return any kind of error.
          */
-        public void removeReceived() {
-            silentRemove(receivedFile());
+        public void remove() {
+            silentRemove(get());
         }
 
-
         /**
-         * Returns the *received* file Path linked to the specified `methodName`.
+         * Removes the custom *received* file linked to the current {@link ApprobationContext}.
          *
-         * The Path will be computed by adding a `.received` extension to the provided `methodName` and search for it in
-         * the `folder` associated with the `testClass`.
+         * The custom *received* file will be retrieved from the approvalsFolder by searching for the provided
+         * relativeFile in it. Once found, it'll be removed.
          *
-         * @return The Path to the *received* file linked to the provided `methodName`.
+         * If the file doesn't exist, it won't do anything and won't return any kind of error.
          */
-        public Path receivedFile() {
-            final String fileName = format("%s.received", methodName);
-            return folder.resolve(fileName);
+        public void remove(final Path relativeFile) {
+            silentRemove(get(relativeFile));
         }
     }
 
