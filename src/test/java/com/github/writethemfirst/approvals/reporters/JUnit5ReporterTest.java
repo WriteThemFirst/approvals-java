@@ -17,21 +17,21 @@
  */
 package com.github.writethemfirst.approvals.reporters;
 
+import com.github.writethemfirst.approvals.files.Approbation;
 import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import com.github.writethemfirst.approvals.Approvals;
-import com.github.writethemfirst.approvals.files.ApprobationContext;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JUnit5ReporterTest {
     private Approvals approvals = new Approvals(new JUnit5Reporter());
-    private ApprobationContext approbationContext = new ApprobationContext();
+    private Approbation approbation = new Approbation();
 
 
     @Test
     void shouldThrowWhenMismatch() {
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
         context.approved.write("some text");
 
         assertThatThrownBy(() -> approvals.verify("other text"))
@@ -45,7 +45,7 @@ class JUnit5ReporterTest {
 
     @Test
     void shouldThrowWhenMissing() {
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
 
         context.approved.remove();
 

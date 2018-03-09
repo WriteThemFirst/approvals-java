@@ -17,7 +17,7 @@
  */
 package com.github.writethemfirst.approvals;
 
-import com.github.writethemfirst.approvals.files.ApprobationContext;
+import com.github.writethemfirst.approvals.files.Approbation;
 import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import org.junit.jupiter.api.Test;
 
@@ -28,12 +28,12 @@ import static org.mockito.Mockito.mock;
 class ReporterTest {
     private Reporter reporter = mock(Reporter.class);
     private Approvals approvals = new Approvals(reporter);
-    private ApprobationContext approbationContext = new ApprobationContext();
+    private Approbation approbation = new Approbation();
 
 
     @Test
     void approvalsShouldCallReporterWhenMismatch() {
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
         context.approved.write("some text");
 
         try {
@@ -51,7 +51,7 @@ class ReporterTest {
 
     @Test
     void approvalsShouldCallReporterWhenNoApprovedFile() {
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
 
         context.approved.remove();
 

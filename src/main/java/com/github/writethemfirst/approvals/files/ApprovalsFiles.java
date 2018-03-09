@@ -44,8 +44,8 @@ import static java.util.stream.Collectors.toList;
  * the *Program Under Tests* execution. Those files are then compared to validate the proper behavior of the program.
  *
  * That `ApprovalsFiles` class can be seen as a wrapper of the *approved* and *received* files for a particular {@link
- * ApprobationContext} since they allow to manage both files for a particular class and method. That wrapper class will
- * provide all the necessary methods to manage the approbation files.
+ * Approbation} since they allow to manage both files for a particular class and method. That wrapper class will provide
+ * all the necessary methods to manage the approbation files.
  *
  * `ApprovalsFiles` won't automatically name the files but will only rely on the folder and methodName arguments it
  * received while being created.
@@ -56,18 +56,10 @@ import static java.util.stream.Collectors.toList;
 public class ApprovalsFiles {
 
     /**
-     * The folder in which the *approved* and *received* files are supposed to be created.
-     *
-     * It'll usually match with the test class name.
+     * The context for which the {@link ApprovalsFiles} is used.
      */
     @SuppressWarnings("PackageVisibleField")
-    final Path folder;
-
-    /**
-     * The caller test method name which will be used for naming the *approved* and *received* files.
-     */
-    @SuppressWarnings("PackageVisibleField")
-    final String methodName;
+    final Approbation.ApprobationContext context;
 
     /**
      * Instance of the {@link ApprovedFile} linked to that {@link ApprovalsFiles} instance.
@@ -80,16 +72,14 @@ public class ApprovalsFiles {
     final public ReceivedFile received;
 
     /**
-     * Constructs an {@link ApprovalsFiles} instance linked to the specified folder and methodName.
+     * Constructs an {@link ApprovalsFiles} instance linked to the specified {@link Approbation.ApprobationContext}.
      *
-     * @param folder     The folder in which the *approved* and *received* files are supposed to be created.
-     * @param methodName The caller test method name which will be used for naming the *approved* and *received* files.
+     * @param context The context for which the approval files manager needs to be created
      */
-    public ApprovalsFiles(final Path folder, final String methodName) {
-        this.folder = folder;
-        this.methodName = methodName;
-        approved = new ApprovedFile(folder, methodName);
-        received = new ReceivedFile(folder, methodName);
+    public ApprovalsFiles(final Approbation.ApprobationContext context) {
+        this.context = context;
+        approved = new ApprovedFile(context);
+        received = new ReceivedFile(context);
     }
 
     /**
@@ -114,7 +104,7 @@ public class ApprovalsFiles {
     }
 
     /**
-     * Returns the path to a dedicated folder for the current {@link ApprobationContext}.
+     * Returns the path to a dedicated folder for the current {@link Approbation}.
      *
      * That folder may be used for storing multiple files which will later be compared for approval.
      *
@@ -123,8 +113,8 @@ public class ApprovalsFiles {
      * @return The path to a folder dedicated to storing the approvals files of the current context.
      */
     public Path approvalsFolder() {
-        final String folderName = format("%s.Files", methodName);
-        return folder.resolve(folderName);
+        final String folderName = format("%s.Files", context.fileName);
+        return context.folder.resolve(folderName);
     }
 
     /**
@@ -148,13 +138,12 @@ public class ApprovalsFiles {
      */
     public class ApprovedFile extends ApprovalFile {
         /**
-         * Constructs an approval file for a particular {@link ApprobationContext}
+         * Constructs an approval file for a particular {@link Approbation.ApprobationContext}
          *
-         * @param folder     The folder in which the approval files are supposed to be created
-         * @param methodName The method name to be used for naming the approval files
+         * @param context The context for which the approval file manager needs to be created
          */
-        public ApprovedFile(final Path folder, final String methodName) {
-            super(folder, methodName);
+        ApprovedFile(final Approbation.ApprobationContext context) {
+            super(context);
         }
 
         @Override
@@ -175,13 +164,12 @@ public class ApprovalsFiles {
      */
     public class ReceivedFile extends ApprovalFile {
         /**
-         * Constructs an approval file for a particular {@link ApprobationContext}
+         * Constructs an approval file for a particular {@link Approbation.ApprobationContext}
          *
-         * @param folder     The folder in which the approval files are supposed to be created
-         * @param methodName The method name to be used for naming the approval files
+         * @param context The context for which the approval file manager needs to be created
          */
-        ReceivedFile(final Path folder, final String methodName) {
-            super(folder, methodName);
+        ReceivedFile(final Approbation.ApprobationContext context) {
+            super(context);
         }
 
         @Override
@@ -206,16 +194,10 @@ public class ApprovalsFiles {
     private abstract class ApprovalFile {
 
         /**
-         * The folder in which the *approved* and *received* files are supposed to be created.
-         *
-         * It'll usually match with the test class name.
+         * The context in which the approval file is to be used. That context holds all the necessary information
+         * allowing to identify the file to be used.
          */
-        private final Path folder;
-
-        /**
-         * The caller test method name which will be used for naming the *approved* and *received* files.
-         */
-        private final String methodName;
+        private final Approbation.ApprobationContext context;
 
         /**
          * Returns the proper extension to be used for the current approval file.
@@ -225,14 +207,12 @@ public class ApprovalsFiles {
         public abstract String extension();
 
         /**
-         * Constructs an approval file for a particular {@link ApprobationContext}
+         * Constructs an approval file for a particular {@link Approbation.ApprobationContext}
          *
-         * @param folder     The folder in which the approval files are supposed to be created
-         * @param methodName The method name to be used for naming the approval files
+         * @param context The context for which the approval file manager needs to be created
          */
-        ApprovalFile(final Path folder, final String methodName) {
-            this.folder = folder;
-            this.methodName = methodName;
+        ApprovalFile(final Approbation.ApprobationContext context) {
+            this.context = context;
         }
 
         /**
@@ -244,8 +224,8 @@ public class ApprovalsFiles {
          * @return The Path to the approval file linked to the provided `methodName`.
          */
         public Path get() {
-            final String fileName = String.format("%s.%s", methodName, extension());
-            return folder.resolve(fileName);
+            final String fileName = String.format("%s.%s", context.fileName, extension());
+            return context.folder.resolve(fileName);
         }
 
         /**
@@ -261,34 +241,34 @@ public class ApprovalsFiles {
         }
 
         /**
-         * Reads the content of the approval file linked to the current {@link ApprobationContext}.
+         * Reads the content of the approval file linked to the current {@link Approbation}.
          *
          * If the file doesn't exist, that method will simply display a message in `System.err` but won't fail.
          *
-         * @return The content of the approval file linked to the current {@link ApprobationContext}. An empty String if
-         * the file doesn't exist.
+         * @return The content of the approval file linked to the current {@link Approbation}. An empty String if the
+         * file doesn't exist.
          */
         public String read() {
             return silentRead(get());
         }
 
         /**
-         * Reads the content of the custom approval file linked to the current {@link ApprobationContext}.
+         * Reads the content of the custom approval file linked to the current {@link Approbation}.
          *
          * The custom approval file will be retrieved from the approvalsFolder by searching for the provided
          * relativeFile in it. Once found, its content will be returned.
          *
          * If the file doesn't exist, that method will simply display a message in `System.err` but won't fail.
          *
-         * @return The content of the approval file linked to the current {@link ApprobationContext}. An empty String if
-         * the file doesn't exist.
+         * @return The content of the approval file linked to the current {@link Approbation}. An empty String if the
+         * file doesn't exist.
          */
         public String read(final Path relativeFile) {
             return silentRead(get(relativeFile));
         }
 
         /**
-         * Writes the provided content in the approval file linked to the current {@link ApprobationContext}.
+         * Writes the provided content in the approval file linked to the current {@link Approbation}.
          *
          * If the file doesn't exist, that method will create it in the `src/test/resources` folder.
          *
@@ -299,7 +279,7 @@ public class ApprovalsFiles {
         }
 
         /**
-         * Writes the provided content in the custom approval file linked to the current {@link ApprobationContext}.
+         * Writes the provided content in the custom approval file linked to the current {@link Approbation}.
          *
          * The custom approval file will be retrieved from the approvalsFolder by searching for the provided
          * relativeFile in it. Once found, the specified content will be written in it.
@@ -313,7 +293,7 @@ public class ApprovalsFiles {
         }
 
         /**
-         * Removes the approval file linked to the current {@link ApprobationContext}.
+         * Removes the approval file linked to the current {@link Approbation}.
          *
          * If the file doesn't exist, it won't do anything and won't return any kind of error.
          */
@@ -322,7 +302,7 @@ public class ApprovalsFiles {
         }
 
         /**
-         * Removes the custom approval file linked to the current {@link ApprobationContext}.
+         * Removes the custom approval file linked to the current {@link Approbation}.
          *
          * The custom approval file will be retrieved from the approvalsFolder by searching for the provided
          * relativeFile in it. Once found, it'll be removed.

@@ -17,7 +17,7 @@
  */
 package com.github.writethemfirst.approvals;
 
-import com.github.writethemfirst.approvals.files.ApprobationContext;
+import com.github.writethemfirst.approvals.files.Approbation;
 import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.FileUtils;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.mock;
 
 class ApprovalsFolderTest {
     private Approvals approvals = new Approvals(new ThrowsReporter());
-    private ApprobationContext approbationContext = new ApprobationContext();
+    private Approbation approbation = new Approbation();
     private Path sample = Paths.get("sample.xml");
     private Path sample2 = Paths.get("sample2.xml");
     Reporter reporter = mock(Reporter.class);
@@ -44,7 +44,7 @@ class ApprovalsFolderTest {
     @Test
     void shouldDoNothingWhenBothFoldersAreEmpty() throws IOException {
         //GIVEN
-        Files.createDirectories(approbationContext.defaultFiles().approvalsFolder());
+        Files.createDirectories(approbation.defaultFiles().approvalsFolder());
         Path parent = Files.createTempDirectory("shouldDoNothingWhenBothFoldersAreEmpty");
 
         //WHEN
@@ -81,7 +81,7 @@ class ApprovalsFolderTest {
         Path parent = Files.createTempDirectory("shouldFireReporterOnEachMismatch");
         Files.createFile(parent.resolve(sample));
         Files.createFile(parent.resolve(sample2));
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
 
         try {
             approvals.verifyAgainstMasterFolder(parent);
@@ -103,7 +103,7 @@ class ApprovalsFolderTest {
         Path parent = Files.createTempDirectory("shouldCreateAllReceivedFiles");
         FileUtils.write("actual", parent.resolve("sample.xml"));
         FileUtils.write("actual2", parent.resolve("sample2.xml"));
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
 
         try {
             approvals.verifyAgainstMasterFolder(parent);
@@ -125,7 +125,7 @@ class ApprovalsFolderTest {
 
         Path parent = Files.createTempDirectory("shouldRemoveMatchedReceivedFiles");
         FileUtils.write("actual", parent.resolve("sample.xml"));
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
         context.approved.write("actual", sample);
         context.received.write("actual", sample);
 
@@ -143,7 +143,7 @@ class ApprovalsFolderTest {
 //
 //        Path parent = Files.createTempDirectory("shouldThrowOnReceivedFilesNotExpected");
 //        FileUtils.write("actual", parent.resolve("sample.xml"));
-//        ApprovalsFiles customFiles = approbationContext.defaultFiles();
+//        ApprovalsFiles customFiles = approbation.defaultFiles();
 //
 //        assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
 //            .isInstanceOf(AssertionError.class)

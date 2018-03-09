@@ -29,8 +29,8 @@ import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.createFile;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ApprobationContextFolderTest {
-    private ApprobationContext companion = new ApprobationContext();
+class ApprobationFolderTest {
+    private Approbation companion = new Approbation();
 
 
     @Test
@@ -40,7 +40,7 @@ class ApprobationContextFolderTest {
 
         //THEN
         Path expectedPath = Paths.get("src/test/resources/com/github/writethemfirst/approvals/files" +
-            "/ApprobationContextFolderTest/approvedFolderShouldBeExpectedPath.Files");
+            "/ApprobationFolderTest/approvedFolderShouldBeExpectedPath.Files");
         assertThat(approvedFile).isEqualTo(expectedPath);
     }
 
@@ -48,7 +48,7 @@ class ApprobationContextFolderTest {
     void approvedFolderShouldContainListedFiles() throws IOException {
         //GIVEN
         Path parent = Paths.get("src/test/resources/com/github/writethemfirst/approvals/files" +
-            "/ApprobationContextFolderTest/approvedFolderShouldContainListedFiles.Files");
+            "/ApprobationFolderTest/approvedFolderShouldContainListedFiles.Files");
         silentRecursiveRemove(parent.toFile());
         createDirectories(parent.resolve("sub"));
         Path xml = parent.resolve("sample.xml.approved");

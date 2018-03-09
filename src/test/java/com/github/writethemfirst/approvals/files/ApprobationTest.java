@@ -24,8 +24,8 @@ import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ApprobationContextTest {
-    private ApprobationContext companion = new ApprobationContext();
+class ApprobationTest {
+    private Approbation companion = new Approbation();
 
 
     @Test
@@ -35,7 +35,7 @@ class ApprobationContextTest {
 
         //THEN
         Path expectedPath = Paths.get(
-            "src/test/resources/com/github/writethemfirst/approvals/files/ApprobationContextTest/approvedFileShouldBeCorrect.approved");
+            "src/test/resources/com/github/writethemfirst/approvals/files/ApprobationTest/approvedFileShouldBeCorrect.approved");
         assertThat(approvedFile).isEqualTo(expectedPath);
     }
 

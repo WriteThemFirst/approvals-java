@@ -25,7 +25,7 @@ import static java.lang.String.format;
 import static java.nio.file.Paths.get;
 
 /**
- * # ApprobationContext
+ * # Approbation
  *
  * *Approval Testing* relies on comparing data produced by a *Program Under Tests* and data which has been reviewed and
  * validated by the developer. This validated data is stored in *approved* files along with the project, and is used for
@@ -41,42 +41,89 @@ import static java.nio.file.Paths.get;
  * In order to keep that library compliant with other languages and other test frameworks though (like scalatest, or
  * kotlintest), we can't only rely on the library to detect from where the test has been executed, because in those case
  * it would simply fail and put all the files in an *unknown* folder. For those particular cases, we introduced the
- * {@link ApprobationContext} object which allows to hold the callers of a test (both class and method), and will allow
- * to specify the method name in case of another language for example. This will allow to manage in a smart and
- * effective way the actual ApprovalsFiles.
+ * {@link Approbation} object which allows to hold the callers of a test (both class and method), and will allow to
+ * specify the method name in case of another language for example. This will allow to manage in a smart and effective
+ * way the actual ApprovalsFiles.
  *
- * That {@link ApprobationContext} actually provides a way to retrieve defaultFiles, which will find the proper location
- * of class and methods on its own, and customFiles, which will let the developer specify the exact location on which
- * the files should be located.
+ * That {@link Approbation} actually provides a way to retrieve defaultFiles, which will find the proper location of
+ * class and methods on its own, and customFiles, which will let the developer specify the exact location on which the
+ * files should be located.
  *
  * @author mdaviot / aneveux
- * @version 1.1
+ * @version 1.2
  */
-public class ApprobationContext {
-
-    private final Class<?> testClass;
+public class Approbation {
 
     /**
-     * Constructs an `ApprobationContext` by retrieving automatically the caller class using the {@link
-     * com.github.writethemfirst.approvals.utils.StackUtils#callerClass(Class)}.
+     * # ApprobationContext
+     *
+     * An {@link Approbation} requires 2 information to be computed: the folder in which the approval files are located
+     * for the current execution context, and the actual name of the approval file to search for.
+     *
+     * The {@link ApprobationContext} POJO is only here to store those 2 information so they can later be used for
+     * managing the approval files.
+     *
+     * @author aneveux
+     * @version 1.0
+     * @since 1.2
      */
-    public ApprobationContext() {
-        this(callerClass(ApprobationContext.class));
+    public class ApprobationContext {
+
+        /**
+         * The folder in which the approval files are to be searched for
+         */
+        public final Path folder;
+
+        /**
+         * The fileName to search for while looking after the approval files.
+         *
+         * Warning: this is only the file name, and doesn't contain the extension, which needs to be added depending on
+         * the kind of approval file you want to retrieve.
+         */
+        public final String fileName;
+
+        /**
+         * Constructs an {@link ApprobationContext} which can later be used in order to retrive particular approval
+         * files.
+         *
+         * @param folder   The folder in which the approval files are to be searched for
+         * @param fileName The file name you to search for while looking after the approval files. Warning: shouldn't
+         *                 contain the file extension.
+         */
+        public ApprobationContext(final Path folder, final String fileName) {
+            this.folder = folder;
+            this.fileName = fileName;
+        }
+
     }
 
     /**
-     * Constructs an `ApprobationContext` by specifying manually the caller class.
+     * Stores the test class calling the approval testing library. That information allows to retrieve the folder in
+     * which the approval files are to be found.
+     */
+    private final Class<?> testClass;
+
+    /**
+     * Constructs an `Approbation` by retrieving automatically the caller class using the {@link
+     * com.github.writethemfirst.approvals.utils.StackUtils#callerClass(Class)}.
+     */
+    public Approbation() {
+        this(callerClass(Approbation.class));
+    }
+
+    /**
+     * Constructs an `Approbation` by specifying manually the caller class.
      *
      * @param testClass The test class linked to this instance. Created files will contain that class name in their
      *                  path.
      */
-    public ApprobationContext(final Class<?> testClass) {
+    public Approbation(final Class<?> testClass) {
         this.testClass = testClass;
     }
 
     /**
-     * Returns the default *approved* and *received* files to be used in the current {@link ApprobationContext}. Default
-     * files mean that their names will be computed from the automatically retrieved caller's method name.
+     * Returns the default *approved* and *received* files to be used in the current {@link Approbation}. Default files
+     * mean that their names will be computed from the automatically retrieved caller's method name.
      *
      * Warning: Usage of this method from Scala or Kotlin is discouraged. Please refer to customFiles method instead.
      *
@@ -84,22 +131,22 @@ public class ApprobationContext {
      * method name
      */
     public ApprovalsFiles defaultFiles() {
-        return new ApprovalsFiles(folderForClass(), callerMethodName());
+        return new ApprovalsFiles(new ApprobationContext(folderForClass(), callerMethodName()));
     }
 
     /**
-     * Returns the custom *approved* and *received* files to be used in the current {@link ApprobationContext}. Custom
-     * files mean that their names will be deduced from the provided method name instead of automatically retrieving the
+     * Returns the custom *approved* and *received* files to be used in the current {@link Approbation}. Custom files
+     * mean that their names will be deduced from the provided method name instead of automatically retrieving the
      * caller's method name.
      *
      * Warning: Usage of this method from Java is discouraged. Please refer to defaultFiles method instead.
      *
-     * @param methodName The name of the caller test method which will be used to name the ApprovalsFiles
-     * @return Custom {@link ApprovalsFiles} to be used in the current context. The files' names will be deduced from
-     * the provided method name and not be retrieved automatically.
+     * @param customFileName The name of the approval file which will be used
+     * @return Custom {@link ApprovalsFiles} to be used in the current context. The approval files will be named after
+     * the specified file name instead of being deduced automatically
      */
-    public ApprovalsFiles customFiles(final String methodName) {
-        return new ApprovalsFiles(folderForClass(), methodName);
+    public ApprovalsFiles customFiles(final String customFileName) {
+        return new ApprovalsFiles(new ApprobationContext(folderForClass(), customFileName));
     }
 
     /**

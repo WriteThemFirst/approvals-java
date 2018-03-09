@@ -17,8 +17,8 @@
  */
 package com.github.writethemfirst.approvals;
 
+import com.github.writethemfirst.approvals.files.Approbation;
 import com.github.writethemfirst.approvals.files.ApprovalsFiles;
-import com.github.writethemfirst.approvals.files.ApprobationContext;
 import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.reporters.softwares.Generic;
@@ -65,7 +65,7 @@ import static java.util.stream.Collectors.partitioningBy;
  */
 public class Approvals {
 
-    private final ApprobationContext approbationContext;
+    private final Approbation approbation;
     private final Reporter reporter;
 
     /**
@@ -106,7 +106,7 @@ public class Approvals {
      *                 content.
      */
     public Approvals(final Class<?> clazz, final Reporter reporter) {
-        approbationContext = new ApprobationContext(clazz);
+        approbation = new Approbation(clazz);
         this.reporter = reporter;
     }
 
@@ -128,7 +128,7 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public void verify(final Object output) {
-        verify(output, approbationContext.defaultFiles());
+        verify(output, approbation.defaultFiles());
     }
 
     /**
@@ -152,7 +152,7 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public void verify(final Object output, final String methodName) {
-        verify(output, approbationContext.customFiles(methodName));
+        verify(output, approbation.customFiles(methodName));
     }
 
     private void verify(Object output, ApprovalsFiles context) {
@@ -182,7 +182,7 @@ public class Approvals {
     }
 
     public void verifyAgainstMasterFolder(Path actualFolder) {
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
 
         Path approvedFolder = context.approvalsFolder();
         Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches =

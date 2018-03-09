@@ -17,7 +17,7 @@
  */
 package com.github.writethemfirst.approvals;
 
-import com.github.writethemfirst.approvals.files.ApprobationContext;
+import com.github.writethemfirst.approvals.files.Approbation;
 import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import com.github.writethemfirst.approvals.reporters.CommandReporter;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
@@ -29,14 +29,14 @@ import static org.mockito.Mockito.mock;
 
 class ApprovalsSimpleTest {
     private Approvals approvals = new Approvals(new ThrowsReporter());
-    private ApprobationContext approbationContext = new ApprobationContext();
+    private Approbation approbation = new Approbation();
 
 
     @Test
     void shouldThrowWhenMismatchAndUsingCommandReporter() {
         CommandReporter reporter = mock(CommandReporter.class);
         Approvals approvals = new Approvals(reporter);
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
 
         context.approved.write("approved text");
 
@@ -50,7 +50,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldDoNothingWhenApprovedFileExistsAndIsCorrect() {
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
         context.approved.write("some text");
         approvals.verify("some text");
         context.approved.remove();
@@ -59,7 +59,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldFailWhenApprovedFileExistsAndIsDifferent() {
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
 
         context.approved.write("expected text");
 
@@ -74,7 +74,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldFailWhenApprovedFileDoesNotExist() {
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
 
         context.approved.remove();
 
@@ -89,7 +89,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldKeepReceivedFileWhenApprovedFileDoesNotExist() {
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
         context.approved.remove();
         context.received.remove();
         try {
@@ -105,7 +105,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldKeepReceivedFileWhenApprovedFileMismatch() {
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
         context.approved.write("approved");
         try {
             approvals.verify("text");
@@ -120,7 +120,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldRemoveReceivedFileWhenApprovedFileMatch() {
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
         context.received.write("last content");
         context.approved.write("same");
 
@@ -134,7 +134,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldCreateEmptyApprovedFile() {
-        ApprovalsFiles context = approbationContext.defaultFiles();
+        ApprovalsFiles context = approbation.defaultFiles();
         context.received.remove();
         context.approved.remove();
 
@@ -152,7 +152,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldUseSpecificMethodName() {
-        ApprovalsFiles context = approbationContext.customFiles("myScalaMethod");
+        ApprovalsFiles context = approbation.customFiles("myScalaMethod");
         context.received.remove();
         context.approved.remove();
 
