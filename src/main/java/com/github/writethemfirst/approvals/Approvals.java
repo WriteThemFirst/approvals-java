@@ -141,18 +141,19 @@ public class Approvals {
      * In case of differences found in the output, the {@link Reporter} linked to this `Approvals` instance will be
      * called ({@link Reporter#mismatch(Path, Path)}).
      *
-     * This method is useful for non Java test frameworks (ScalaTest, KotlinTest ...) where methodName cannot be
+     * This method is useful for non Java test frameworks (ScalaTest, KotlinTest ...) where the method name cannot be
      * inferred from the stack.
      *
-     * @param output     Any object with a {@link Object#toString()} representation containing the output of your
-     *                   program. It will be compared to the associated *approved* file.
-     * @param methodName specifies the caller method name, which is used to name the *approved* and *received* files.
+     * @param output         Any object with a {@link Object#toString()} representation containing the output of your
+     *                       program. It will be compared to the associated *approved* file.
+     * @param customFileName specifies the approval test file name which is used for both the *approved* and *received*
+     *                       files.
      * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
      *                          framework like JUnit
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
-    public void verify(final Object output, final String methodName) {
-        verify(output, approbation.customFiles(methodName));
+    public void verify(final Object output, final String customFileName) {
+        verify(output, approbation.customFiles(customFileName));
     }
 
     private void verify(Object output, ApprovalsFiles context) {
