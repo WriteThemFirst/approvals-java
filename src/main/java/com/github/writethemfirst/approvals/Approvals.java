@@ -117,7 +117,6 @@ public class Approvals {
         this.reporter = reporter;
     }
 
-
     /**
      * Compares the actual output of your program (the function's argument) and the content of the *approved* file
      * matching with the test method.
@@ -176,7 +175,7 @@ public class Approvals {
      * @param files  Wrapper allowing to get the approvals files in the current execution context
      */
     private void verify(final Object output, final ApprovalsFiles files) {
-        writeReceivedFile(output, files);
+        files.received.write(output.toString());
         if (files.haveSameContent()) {
             files.received.remove();
         } else {
@@ -185,18 +184,6 @@ public class Approvals {
             new ThrowsReporter().mismatch(files.approved.get(), files.received.get());
         }
     }
-
-    /**
-     * Writes a String representation of the provided output in the *received* file linked to the current test
-     * execution. The `toString` method of the provided object will be used for writting its content in the file.
-     *
-     * @param output Output object of the *Program Under Tests* which will be used to write the *received* file
-     * @param files  Wrapper allowing to get the approvals files in the current execution context
-     */
-    private void writeReceivedFile(final Object output, final ApprovalsFiles files) {
-        files.received.write(output.toString());
-    }
-
 
     public void verifyAgainstMasterFolder(Path actualFolder) {
         ApprovalsFiles context = approbation.defaultFiles();
