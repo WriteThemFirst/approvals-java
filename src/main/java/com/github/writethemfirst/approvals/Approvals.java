@@ -65,7 +65,14 @@ import static java.util.stream.Collectors.partitioningBy;
  */
 public class Approvals {
 
+    /**
+     * Internal object which allows to hold context information and retrieve the approval files for that context.
+     */
     private final Approbation approbation;
+
+    /**
+     * The Reporter to be used to report any mismatches while computing the files comparisons.
+     */
     private final Reporter reporter;
 
     /**
