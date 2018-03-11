@@ -88,7 +88,7 @@ public class StackUtils {
      * cannot be found
      */
     public static Optional<String> callerMethod(final Class<?> referenceClass) {
-        String referenceClassName = referenceClass.getName();
+        final String referenceClassName = referenceClass.getName();
         return stream(currentThread().getStackTrace())
             .filter(e -> e.getClassName().equals(referenceClassName))
             .filter(e -> !e.getMethodName().startsWith("lambda$"))
