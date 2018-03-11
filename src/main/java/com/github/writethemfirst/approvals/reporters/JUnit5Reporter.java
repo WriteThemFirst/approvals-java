@@ -18,6 +18,7 @@
 package com.github.writethemfirst.approvals.reporters;
 
 import com.github.writethemfirst.approvals.Reporter;
+import com.github.writethemfirst.approvals.reporters.windows.CommandReporter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

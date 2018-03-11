@@ -21,7 +21,6 @@ import com.github.writethemfirst.approvals.files.Approbation;
 import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
-import com.github.writethemfirst.approvals.reporters.softwares.Generic;
 import com.github.writethemfirst.approvals.utils.FileUtils;
 
 import java.nio.file.Path;
@@ -83,7 +82,7 @@ public class Approvals {
      * - the {@link com.github.writethemfirst.approvals.utils.StackUtils#callerClass(Class)}.
      */
     public Approvals() {
-        this(Generic.DEFAULT);
+        this(Reporter.DEFAULT);
     }
 
     /**
@@ -102,7 +101,7 @@ public class Approvals {
      * @param clazz The calling test class. It is used in order to compute the *approved* files' names.
      */
     public Approvals(final Class<?> clazz) {
-        this(clazz, Generic.DEFAULT);
+        this(clazz, Reporter.DEFAULT);
     }
 
     /**

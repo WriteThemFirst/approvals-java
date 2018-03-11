@@ -15,14 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals.reporters.softwares;
+package com.github.writethemfirst.approvals.reporters.windows;
 
 import com.github.writethemfirst.approvals.Reporter;
-import com.github.writethemfirst.approvals.reporters.CommandReporter;
 import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
 import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
-import com.github.writethemfirst.approvals.reporters.commands.Command;
 
 
 /**
