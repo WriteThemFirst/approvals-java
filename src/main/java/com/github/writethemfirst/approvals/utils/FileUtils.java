@@ -59,7 +59,6 @@ public class FileUtils {
         }
     }
 
-
     /**
      * Removes the file located at the specified Path if it exists.
      *
@@ -97,7 +96,6 @@ public class FileUtils {
         file.delete();
     }
 
-
     /**
      * Writes the specified `content` in the `file` located at the specified Path.
      *
@@ -125,7 +123,6 @@ public class FileUtils {
             throw new RuntimeException(message, e);
         }
     }
-
 
     /**
      * Copies the content of a file found at a specified Path to another file located at another specified Path.
