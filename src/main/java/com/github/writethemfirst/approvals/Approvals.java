@@ -156,31 +156,40 @@ public class Approvals {
         verify(output, approbation.customFiles(customFileName));
     }
 
-    private void verify(Object output, ApprovalsFiles context) {
-        if (matchesApprovedFile(output, context)) {
-            context.received.remove();
+    /**
+     * That method actually computes the logic behind *Approval Testing*.
+     *
+     * It'll write the output of the *Program Under Test* in a *received* file and then compare it to the existing
+     * *approved* file. If they do match, it'll remove the *received* file and won't do anything. Otherwise, the
+     * *received* file will be kept for later review by the developer, while the reporter will be used in order to
+     * report a mismatch. An empty *approved* file will be intiated as well.
+     *
+     * @param output Output object of the *Program Under Tests* which will be used for comparison with the *approved*
+     *               file
+     * @param files  Wrapper allowing to get the approvals files in the current execution context
+     */
+    private void verify(final Object output, final ApprovalsFiles files) {
+        writeReceivedFile(output, files);
+        if (files.haveSameContent()) {
+            files.received.remove();
         } else {
-            context.approved.init();
-            reporter.mismatch(context.approved.get(), context.received.get());
-            new ThrowsReporter().mismatch(context.approved.get(), context.received.get());
+            files.approved.init();
+            reporter.mismatch(files.approved.get(), files.received.get());
+            new ThrowsReporter().mismatch(files.approved.get(), files.received.get());
         }
     }
 
-
     /**
-     * Compares the *Program Under Tests*' output to the content of the *approved* file and checks for any differences.
+     * Writes a String representation of the provided output in the *received* file linked to the current test
+     * execution. The `toString` method of the provided object will be used for writting its content in the file.
      *
-     * @param output  Any object representing the output of *Program  Under Tests*. A `String` representation of that
-     *                object will be computed using `toString()` and will be used for the comparison with the *approved*
-     *                file's content.
-     * @param context
-     * @return true if the provided output perfectly matches with the existing *approved* file
+     * @param output Output object of the *Program Under Tests* which will be used to write the *received* file
+     * @param files  Wrapper allowing to get the approvals files in the current execution context
      */
-    private boolean matchesApprovedFile(final Object output, ApprovalsFiles context) {
-        final String approvedContent = context.approved.read();
-        context.received.write(output.toString());
-        return approvedContent != null && approvedContent.equals(output.toString());
+    private void writeReceivedFile(final Object output, final ApprovalsFiles files) {
+        files.received.write(output.toString());
     }
+
 
     public void verifyAgainstMasterFolder(Path actualFolder) {
         ApprovalsFiles context = approbation.defaultFiles();
