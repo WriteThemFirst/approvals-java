@@ -2,6 +2,8 @@ package com.github.writethemfirst.approvals.files;
 
 import java.nio.file.Path;
 
+import static java.lang.String.format;
+
 /**
  * # ApprobationContext
  *
@@ -41,6 +43,20 @@ public class ApprobationContext {
     ApprobationContext(final Path folder, final String fileName) {
         this.folder = folder;
         this.fileName = fileName;
+    }
+
+    /**
+     * Returns the path to a dedicated folder for the current {@link Approbation}.
+     *
+     * That folder may be used for storing multiple files which will later be compared for approval.
+     *
+     * The folder name will be the method name followed by `.Files`.
+     *
+     * @return The path to a folder dedicated to storing the approvals files of the current context.
+     */
+    public Path approvalsFolder() {
+        final String folderName = format("%s.Files", fileName);
+        return folder.resolve(folderName);
     }
 
 }

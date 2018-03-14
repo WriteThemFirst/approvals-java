@@ -58,8 +58,7 @@ public class ApprovalsFiles {
     /**
      * The context for which the {@link ApprovalsFiles} is used.
      */
-    @SuppressWarnings("PackageVisibleField")
-    final ApprobationContext context;
+    private final ApprobationContext context;
 
     /**
      * Instance of the {@link ApprovedFile} linked to that {@link ApprovalsFiles} instance.
@@ -113,8 +112,7 @@ public class ApprovalsFiles {
      * @return The path to a folder dedicated to storing the approvals files of the current context.
      */
     public Path approvalsFolder() {
-        final String folderName = format("%s.Files", context.fileName);
-        return context.folder.resolve(folderName);
+        return context.approvalsFolder();
     }
 
     /**
