@@ -59,7 +59,7 @@ public class ApprovalsFiles {
      * The context for which the {@link ApprovalsFiles} is used.
      */
     @SuppressWarnings("PackageVisibleField")
-    final Approbation.ApprobationContext context;
+    final ApprobationContext context;
 
     /**
      * Instance of the {@link ApprovedFile} linked to that {@link ApprovalsFiles} instance.
@@ -72,11 +72,11 @@ public class ApprovalsFiles {
     final public ReceivedFile received;
 
     /**
-     * Constructs an {@link ApprovalsFiles} instance linked to the specified {@link Approbation.ApprobationContext}.
+     * Constructs an {@link ApprovalsFiles} instance linked to the specified {@link ApprobationContext}.
      *
      * @param context The context for which the approval files manager needs to be created
      */
-    public ApprovalsFiles(final Approbation.ApprobationContext context) {
+    public ApprovalsFiles(final ApprobationContext context) {
         this.context = context;
         approved = new ApprovedFile(context);
         received = new ReceivedFile(context);
@@ -138,11 +138,11 @@ public class ApprovalsFiles {
      */
     public class ApprovedFile extends ApprovalFile {
         /**
-         * Constructs an approval file for a particular {@link Approbation.ApprobationContext}
+         * Constructs an approval file for a particular {@link ApprobationContext}
          *
          * @param context The context for which the approval file manager needs to be created
          */
-        ApprovedFile(final Approbation.ApprobationContext context) {
+        ApprovedFile(final ApprobationContext context) {
             super(context);
         }
 
@@ -164,11 +164,11 @@ public class ApprovalsFiles {
      */
     public class ReceivedFile extends ApprovalFile {
         /**
-         * Constructs an approval file for a particular {@link Approbation.ApprobationContext}
+         * Constructs an approval file for a particular {@link ApprobationContext}
          *
          * @param context The context for which the approval file manager needs to be created
          */
-        ReceivedFile(final Approbation.ApprobationContext context) {
+        ReceivedFile(final ApprobationContext context) {
             super(context);
         }
 
@@ -197,7 +197,7 @@ public class ApprovalsFiles {
          * The context in which the approval file is to be used. That context holds all the necessary information
          * allowing to identify the file to be used.
          */
-        private final Approbation.ApprobationContext context;
+        private final ApprobationContext context;
 
         /**
          * Returns the proper extension to be used for the current approval file.
@@ -207,11 +207,11 @@ public class ApprovalsFiles {
         public abstract String extension();
 
         /**
-         * Constructs an approval file for a particular {@link Approbation.ApprobationContext}
+         * Constructs an approval file for a particular {@link ApprobationContext}
          *
          * @param context The context for which the approval file manager needs to be created
          */
-        ApprovalFile(final Approbation.ApprobationContext context) {
+        ApprovalFile(final ApprobationContext context) {
             this.context = context;
         }
 
