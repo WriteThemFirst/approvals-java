@@ -49,7 +49,7 @@ class ApprobationFolderTest {
         //GIVEN
         Path parent = Paths.get("src/test/resources/com/github/writethemfirst/approvals/files" +
             "/ApprobationFolderTest/approvedFolderShouldContainListedFiles.approved");
-        silentRecursiveRemove(parent.toFile());
+        silentRecursiveRemove(parent);
         createDirectories(parent.resolve("sub"));
         Path xml = parent.resolve("sample.xml.approved");
         Path csv = parent.resolve("sub/ref.csv.approved");
@@ -62,7 +62,7 @@ class ApprobationFolderTest {
         //THEN
         assertThat(paths).containsExactlyInAnyOrder(xml, csv);
 
-        silentRecursiveRemove(parent.toFile());
+        silentRecursiveRemove(parent);
     }
 
 }

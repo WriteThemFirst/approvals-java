@@ -101,7 +101,18 @@ public class FileUtils {
      *
      * If the file doesn't exist, nothing will be done.
      *
-     * @param file the file to be removed
+     * @param file the Path to be removed
+     */
+    public static void silentRecursiveRemove(final Path path) {
+        silentRecursiveRemove(path.toFile());
+    }
+
+    /**
+     * Removes recursively all elements if `file` is a directory, then removes `file`.
+     *
+     * If the file doesn't exist, nothing will be done.
+     *
+     * @param file the File to be removed
      */
     public static void silentRecursiveRemove(final File file) {
         if (file.isDirectory()) {
