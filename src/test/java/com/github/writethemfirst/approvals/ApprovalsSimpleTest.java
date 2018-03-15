@@ -34,9 +34,9 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldThrowWhenMismatchAndUsingCommandReporter() {
-        CommandReporter reporter = mock(CommandReporter.class);
-        Approvals approvals = new Approvals(reporter);
-        ApprovalsFiles context = approbation.defaultFiles();
+        final CommandReporter reporter = mock(CommandReporter.class);
+        final Approvals approvals = new Approvals(reporter);
+        final ApprovalsFiles context = approbation.defaultFiles();
 
         context.approved.write("approved text");
 
@@ -50,7 +50,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldDoNothingWhenApprovedFileExistsAndIsCorrect() {
-        ApprovalsFiles context = approbation.defaultFiles();
+        final ApprovalsFiles context = approbation.defaultFiles();
         context.approved.write("some text");
         approvals.verify("some text");
         context.approved.remove();
@@ -59,7 +59,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldFailWhenApprovedFileExistsAndIsDifferent() {
-        ApprovalsFiles context = approbation.defaultFiles();
+        final ApprovalsFiles context = approbation.defaultFiles();
 
         context.approved.write("expected text");
 
@@ -74,7 +74,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldFailWhenApprovedFileDoesNotExist() {
-        ApprovalsFiles context = approbation.defaultFiles();
+        final ApprovalsFiles context = approbation.defaultFiles();
 
         context.approved.remove();
 
@@ -89,13 +89,13 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldKeepReceivedFileWhenApprovedFileDoesNotExist() {
-        ApprovalsFiles context = approbation.defaultFiles();
+        final ApprovalsFiles context = approbation.defaultFiles();
         context.approved.remove();
         context.received.remove();
         try {
             approvals.verify("text");
-        } catch (AssertionError e) {
-            String received = context.received.read();
+        } catch (final AssertionError e) {
+            final String received = context.received.read();
             assertThat(received).isEqualTo("text");
         }
         context.received.remove();
@@ -105,12 +105,12 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldKeepReceivedFileWhenApprovedFileMismatch() {
-        ApprovalsFiles context = approbation.defaultFiles();
+        final ApprovalsFiles context = approbation.defaultFiles();
         context.approved.write("approved");
         try {
             approvals.verify("text");
-        } catch (AssertionError e) {
-            String received = context.received.read();
+        } catch (final AssertionError e) {
+            final String received = context.received.read();
             assertThat(received).isEqualTo("text");
         }
         context.received.remove();
@@ -120,13 +120,13 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldRemoveReceivedFileWhenApprovedFileMatch() {
-        ApprovalsFiles context = approbation.defaultFiles();
+        final ApprovalsFiles context = approbation.defaultFiles();
         context.received.write("last content");
         context.approved.write("same");
 
         approvals.verify("same");
 
-        String received = context.received.read();
+        final String received = context.received.read();
         assertThat(received).isEqualTo("");
 
         context.approved.remove();
@@ -134,13 +134,13 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldCreateEmptyApprovedFile() {
-        ApprovalsFiles context = approbation.defaultFiles();
+        final ApprovalsFiles context = approbation.defaultFiles();
         context.received.remove();
         context.approved.remove();
 
         try {
             approvals.verify("new content");
-        } catch (AssertionError e) {
+        } catch (final AssertionError e) {
             //expected
         }
 
@@ -152,13 +152,13 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldUseSpecificMethodName() {
-        ApprovalsFiles context = approbation.customFiles("myScalaMethod");
+        final ApprovalsFiles context = approbation.customFiles("myScalaMethod");
         context.received.remove();
         context.approved.remove();
 
         try {
             approvals.verify("new content", "myScalaMethod");
-        } catch (AssertionError e) {
+        } catch (final AssertionError e) {
             //expected
         }
 

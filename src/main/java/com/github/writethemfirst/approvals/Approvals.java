@@ -170,10 +170,10 @@ public class Approvals {
         }
     }
 
-    public void verifyAgainstMasterFolder(Path actualFolder) {
-        ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceived(callerMethodName());
+    public void verifyAgainstMasterFolder(final Path actualFolder) {
+        final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceived(callerMethodName());
         searchFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvedAndReceivedPaths.receivedFile));
-        Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches =
+        final Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches =
             searchFiles(approvedAndReceivedPaths.approvedFile)
                 .map(approvedFile -> approvedAndReceived(approvedAndReceivedPaths.receivedFile, approvedAndReceivedPaths.approvedFile, approvedFile))
                 .collect(partitioningBy(ApprovedAndReceivedPaths::haveSameContent));
@@ -184,11 +184,11 @@ public class Approvals {
     }
 
 
-    private ApprovedAndReceivedPaths approvedAndReceived(String methodName) {
+    private ApprovedAndReceivedPaths approvedAndReceived(final String methodName) {
         return new ApprovedAndReceivedPaths(path(methodName, "approved"), path(methodName, "received"));
     }
 
-    private Path path(String methodName, String extension) {
+    private Path path(final String methodName, final String extension) {
         return Paths.get(folder.resolve(methodName) + "." + extension);
     }
 
@@ -203,7 +203,7 @@ public class Approvals {
      * @return The Path to the folder linked to the `testClass` attribute, used for storing the *received* and
      * *approved* files.
      */
-    private static Path folderForClass(Class<?> testClass) {
+    private static Path folderForClass(final Class<?> testClass) {
         final String packageName = testClass.getPackage().getName();
         final Path packageResourcesPath = get("src/test/resources/", packageName.split("\\."));
         return packageResourcesPath.resolve(testClass.getSimpleName());
@@ -226,14 +226,14 @@ public class Approvals {
     }
 
 
-    private void handleMismatches(List<ApprovedAndReceivedPaths> mismatches) {
+    private void handleMismatches(final List<ApprovedAndReceivedPaths> mismatches) {
         mismatches.forEach(mismatch -> reporter.mismatch(mismatch.approvedFile, mismatch.receivedFile));
         mismatches.forEach(mismatch -> new ThrowsReporter().mismatch(mismatch.approvedFile, mismatch.receivedFile));
     }
 
-    private ApprovedAndReceivedPaths approvedAndReceived(Path receivedFolder, Path approvedFolder, Path approvedFile) {
-        Path approvedRelative = approvedFolder.relativize(approvedFile);
-        Path receivedFile = receivedFolder.resolve(approvedRelative);
+    private ApprovedAndReceivedPaths approvedAndReceived(final Path receivedFolder, final Path approvedFolder, final Path approvedFile) {
+        final Path approvedRelative = approvedFolder.relativize(approvedFile);
+        final Path receivedFile = receivedFolder.resolve(approvedRelative);
         return new ApprovedAndReceivedPaths(approvedFile, receivedFile);
     }
 }

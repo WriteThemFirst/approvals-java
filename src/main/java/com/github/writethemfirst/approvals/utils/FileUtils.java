@@ -167,11 +167,11 @@ public class FileUtils {
     }
 
     public static void copyToFolder(final Path sourceFile, final Path targetFolder) {
-        Path targetFile = targetFolder.resolve(sourceFile.getFileName());
+        final Path targetFile = targetFolder.resolve(sourceFile.getFileName());
         copy(sourceFile, targetFile);
     }
 
-    public static Stream<Path> searchFiles(Path start) {
+    public static Stream<Path> searchFiles(final Path start) {
         final int MAX_DEPTH = 5;
         try {
             Files.createDirectories(start);

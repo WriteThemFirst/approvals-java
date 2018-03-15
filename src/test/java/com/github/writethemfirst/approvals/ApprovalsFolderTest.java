@@ -43,7 +43,7 @@ class ApprovalsFolderTest {
     void shouldDoNothingWhenBothFoldersAreEmpty() throws IOException {
         //GIVEN
         Files.createDirectories(folderForClass.resolve("shouldDoNothingWhenBothFoldersAreEmpty.approved"));
-        Path parent = Files.createTempDirectory("shouldDoNothingWhenBothFoldersAreEmpty");
+        final Path parent = Files.createTempDirectory("shouldDoNothingWhenBothFoldersAreEmpty");
 
         //WHEN
         approvals.verifyAgainstMasterFolder(parent);
@@ -53,7 +53,7 @@ class ApprovalsFolderTest {
 
     @Test
     void shouldThrowWhenAFileIsMissing() throws IOException {
-        Path parent = Files.createTempDirectory("shouldThrowWhenAFileIsMissing");
+        final Path parent = Files.createTempDirectory("shouldThrowWhenAFileIsMissing");
 
         assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
             .isInstanceOf(AssertionError.class)
@@ -63,7 +63,7 @@ class ApprovalsFolderTest {
 
     @Test
     void shouldThrowWhenAFileIsDifferent() throws IOException {
-        Path parent = Files.createTempDirectory("shouldThrowWhenAFileIsDifferent");
+        final Path parent = Files.createTempDirectory("shouldThrowWhenAFileIsDifferent");
         Files.createFile(parent.resolve("sample.xml"));
         assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
             .isInstanceOf(AssertionError.class)
@@ -73,17 +73,17 @@ class ApprovalsFolderTest {
 
     @Test
     void shouldFireReporterOnEachMismatch() throws IOException {
-        Approvals approvals = new Approvals(reporter);
+        final Approvals approvals = new Approvals(reporter);
 
-        Path parent = Files.createTempDirectory("shouldFireReporterOnEachMismatch");
+        final Path parent = Files.createTempDirectory("shouldFireReporterOnEachMismatch");
         Files.createFile(parent.resolve(sample));
         Files.createFile(parent.resolve(sample2));
-        Path receivedFolder = folderForClass.resolve("shouldFireReporterOnEachMismatch.received");
-        Path approvedFolder = folderForClass.resolve("shouldFireReporterOnEachMismatch.approved");
+        final Path receivedFolder = folderForClass.resolve("shouldFireReporterOnEachMismatch.received");
+        final Path approvedFolder = folderForClass.resolve("shouldFireReporterOnEachMismatch.approved");
 
         try {
             approvals.verifyAgainstMasterFolder(parent);
-        } catch (AssertionError e) {
+        } catch (final AssertionError e) {
             // expected
         }
 
@@ -99,18 +99,18 @@ class ApprovalsFolderTest {
 
     @Test
     void shouldCreateAllReceivedFiles() throws IOException {
-        Approvals approvals = new Approvals(reporter);
+        final Approvals approvals = new Approvals(reporter);
 
-        Path parent = Files.createTempDirectory("shouldCreateAllReceivedFiles");
+        final Path parent = Files.createTempDirectory("shouldCreateAllReceivedFiles");
         write("actual", parent.resolve("sample.xml"));
         write("actual2", parent.resolve("sample2.xml"));
-        Path receivedFolder = folderForClass.resolve("shouldCreateAllReceivedFiles.received");
-        Path received1 = receivedFolder.resolve("sample.xml");
-        Path received2 = receivedFolder.resolve("sample2.xml");
+        final Path receivedFolder = folderForClass.resolve("shouldCreateAllReceivedFiles.received");
+        final Path received1 = receivedFolder.resolve("sample.xml");
+        final Path received2 = receivedFolder.resolve("sample2.xml");
 
         try {
             approvals.verifyAgainstMasterFolder(parent);
-        } catch (AssertionError e) {
+        } catch (final AssertionError e) {
             // expected
         }
 
@@ -124,12 +124,12 @@ class ApprovalsFolderTest {
 
     @Test
     void shouldRemoveMatchedReceivedFiles() throws IOException {
-        Approvals approvals = new Approvals(reporter);
+        final Approvals approvals = new Approvals(reporter);
 
-        Path receivedFolder = folderForClass.resolve("shouldRemoveMatchedReceivedFiles.received");
-        Path approvedFolder = folderForClass.resolve("shouldRemoveMatchedReceivedFiles.approved");
+        final Path receivedFolder = folderForClass.resolve("shouldRemoveMatchedReceivedFiles.received");
+        final Path approvedFolder = folderForClass.resolve("shouldRemoveMatchedReceivedFiles.approved");
 
-        Path parent = Files.createTempDirectory("shouldRemoveMatchedReceivedFiles");
+        final Path parent = Files.createTempDirectory("shouldRemoveMatchedReceivedFiles");
         write("actual", parent.resolve("sample.xml"));
         write("actual", approvedFolder.resolve("sample.xml"));
         write("actual", receivedFolder.resolve("sample.xml"));

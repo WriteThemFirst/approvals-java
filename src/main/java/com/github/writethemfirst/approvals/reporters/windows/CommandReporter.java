@@ -34,28 +34,28 @@ public class CommandReporter implements Reporter {
     public final static String DEFAULT_ARGUMENTS = "%received% %approved%";
 
 
-    public CommandReporter(Command command) {
+    public CommandReporter(final Command command) {
         this(command, DEFAULT_ARGUMENTS);
     }
 
     /**
      * Constructs the reporter with a single String of arguments, split on spaces.
      */
-    public CommandReporter(Command command, String arguments) {
+    public CommandReporter(final Command command, final String arguments) {
         this(command, arguments.split(" "));
     }
 
-    private CommandReporter(Command command, String... arguments) {
+    private CommandReporter(final Command command, final String... arguments) {
         this.command = command;
         this.arguments = arguments;
     }
 
     @Override
-    public void mismatch(Path approved, Path received) {
+    public void mismatch(final Path approved, final Path received) {
         if (command.isAvailable()) {
             try {
                 command.execute(actualArguments(approved, received));
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -70,13 +70,13 @@ public class CommandReporter implements Reporter {
     /**
      * Prepares the arguments by substituting %approved% and %received% tags with actual files.
      */
-    String[] actualArguments(Path approved, Path received) {
+    String[] actualArguments(final Path approved, final Path received) {
         return stream(arguments)
             .map(elt -> prepareCommandElement(approved, received, elt))
             .toArray(String[]::new);
     }
 
-    private String prepareCommandElement(Path approved, Path received, String elt) {
+    private String prepareCommandElement(final Path approved, final Path received, final String elt) {
         return elt
             .replace("%approved%", approved.toString())
             .replace("%received%", received.toString());

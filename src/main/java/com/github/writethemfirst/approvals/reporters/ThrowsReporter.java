@@ -33,10 +33,10 @@ public class ThrowsReporter implements Reporter {
      * @throws AssertionError if the 2 contents do not match
      */
     @Override
-    public void mismatch(Path approvedPath, Path receivedPath) {
-        String approved = silentRead(approvedPath);
-        String actual = silentRead(receivedPath);
-        String detailMessage = format("expected: <%s> but was: <%s>", approved, actual);
+    public void mismatch(final Path approvedPath, final Path receivedPath) {
+        final String approved = silentRead(approvedPath);
+        final String actual = silentRead(receivedPath);
+        final String detailMessage = format("expected: <%s> but was: <%s>", approved, actual);
         throw new AssertionError(detailMessage);
     }
 

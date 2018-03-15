@@ -29,14 +29,14 @@ public class ApprovedAndReceivedPaths {
     public final Path receivedFile;
 
 
-    public ApprovedAndReceivedPaths(Path approvedFile, Path receivedFile) {
+    public ApprovedAndReceivedPaths(final Path approvedFile, final Path receivedFile) {
         this.approvedFile = approvedFile;
         this.receivedFile = receivedFile;
     }
 
     public boolean haveSameContent() {
-        String receivedContent = silentRead(receivedFile);
-        String approvedContent = silentRead(approvedFile);
+        final String receivedContent = silentRead(receivedFile);
+        final String approvedContent = silentRead(approvedFile);
         return receivedContent.equals(approvedContent);
     }
 }

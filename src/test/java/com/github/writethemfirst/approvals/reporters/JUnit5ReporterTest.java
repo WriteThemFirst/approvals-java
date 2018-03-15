@@ -31,7 +31,7 @@ class JUnit5ReporterTest {
 
     @Test
     void shouldThrowWhenMismatch() {
-        ApprovalsFiles context = approbation.defaultFiles();
+        final ApprovalsFiles context = approbation.defaultFiles();
         context.approved.write("some text");
 
         assertThatThrownBy(() -> approvals.verify("other text"))
@@ -45,7 +45,7 @@ class JUnit5ReporterTest {
 
     @Test
     void shouldThrowWhenMissing() {
-        ApprovalsFiles context = approbation.defaultFiles();
+        final ApprovalsFiles context = approbation.defaultFiles();
 
         context.approved.remove();
 

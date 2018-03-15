@@ -30,16 +30,16 @@ import static org.mockito.Mockito.when;
 class FirstWorkingReporterTest {
     @Test
     void shouldUseFirstWorkingReporter() {
-        Reporter reporter1 = mock(Reporter.class);
-        Reporter reporter2 = mock(Reporter.class);
-        Reporter reporter3 = mock(Reporter.class);
-        Path a = Paths.get("a");
-        Path b = Paths.get("b");
+        final Reporter reporter1 = mock(Reporter.class);
+        final Reporter reporter2 = mock(Reporter.class);
+        final Reporter reporter3 = mock(Reporter.class);
+        final Path a = Paths.get("a");
+        final Path b = Paths.get("b");
         when(reporter1.isAvailable()).thenReturn(false);
         when(reporter2.isAvailable()).thenReturn(true);
         when(reporter3.isAvailable()).thenReturn(true);
 
-        FirstWorkingReporter firstWorkingReporter = new FirstWorkingReporter(reporter1, reporter2, reporter3);
+        final FirstWorkingReporter firstWorkingReporter = new FirstWorkingReporter(reporter1, reporter2, reporter3);
 
         firstWorkingReporter.mismatch(a, b);
 
@@ -49,12 +49,12 @@ class FirstWorkingReporterTest {
 
     @Test
     void shouldIgnoreWhenNoReporterIsAvailable() {
-        Reporter reporter1 = mock(Reporter.class);
-        Path a = Paths.get("a");
-        Path b = Paths.get("b");
+        final Reporter reporter1 = mock(Reporter.class);
+        final Path a = Paths.get("a");
+        final Path b = Paths.get("b");
         when(reporter1.isAvailable()).thenReturn(false);
 
-        FirstWorkingReporter firstWorkingReporter = new FirstWorkingReporter(reporter1);
+        final FirstWorkingReporter firstWorkingReporter = new FirstWorkingReporter(reporter1);
 
         firstWorkingReporter.mismatch(a, b); // should not throw
     }

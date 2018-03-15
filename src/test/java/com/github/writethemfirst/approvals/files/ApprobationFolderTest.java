@@ -36,10 +36,10 @@ class ApprobationFolderTest {
     @Test
     void approvedFolderShouldBeExpectedPath() {
         //WHEN
-        Path approvedFile = companion.defaultFiles().approvalsFolder();
+        final Path approvedFile = companion.defaultFiles().approvalsFolder();
 
         //THEN
-        Path expectedPath = Paths.get("src/test/resources/com/github/writethemfirst/approvals/files" +
+        final Path expectedPath = Paths.get("src/test/resources/com/github/writethemfirst/approvals/files" +
             "/ApprobationFolderTest/approvedFolderShouldBeExpectedPath.approved");
         assertThat(approvedFile).isEqualTo(expectedPath);
     }
@@ -47,17 +47,17 @@ class ApprobationFolderTest {
     @Test
     void approvedFolderShouldContainListedFiles() throws IOException {
         //GIVEN
-        Path parent = Paths.get("src/test/resources/com/github/writethemfirst/approvals/files" +
+        final Path parent = Paths.get("src/test/resources/com/github/writethemfirst/approvals/files" +
             "/ApprobationFolderTest/approvedFolderShouldContainListedFiles.approved");
         silentRecursiveRemove(parent);
         createDirectories(parent.resolve("sub"));
-        Path xml = parent.resolve("sample.xml.approved");
-        Path csv = parent.resolve("sub/ref.csv.approved");
+        final Path xml = parent.resolve("sample.xml.approved");
+        final Path csv = parent.resolve("sub/ref.csv.approved");
         createFile(xml);
         createFile(csv);
 
         //WHEN
-        List<Path> paths = companion.defaultFiles().approvedFilesInFolder();
+        final List<Path> paths = companion.defaultFiles().approvedFilesInFolder();
 
         //THEN
         assertThat(paths).containsExactlyInAnyOrder(xml, csv);

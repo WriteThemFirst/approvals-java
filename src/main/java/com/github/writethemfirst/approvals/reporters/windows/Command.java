@@ -55,14 +55,14 @@ public class Command {
      * Represents the latest version of the executable found by scanning subfolders of path. The path will have
      * %programFiles% replaced by the actual value in the environment variable `ProgramFiles`.
      */
-    public Command(String path, String executable) {
+    public Command(final String path, final String executable) {
         this(path, executable, getRuntime(), getenv());
     }
 
     /**
      * Only use this constructor from test code so the environment Map and Runtime can be mocked.
      */
-    Command(String path, String executable, Runtime runtime, Map<String, String> env) {
+    Command(final String path, final String executable, final Runtime runtime, final Map<String, String> env) {
         this.path = path;
         this.executable = executable;
         this.runtime = runtime;
@@ -75,8 +75,8 @@ public class Command {
     /**
      * Runs the executable outside the JVM by calling Runtime.exec().
      */
-    public void execute(String... arguments) throws IOException {
-        String[] cmdArray = concat(
+    public void execute(final String... arguments) throws IOException {
+        final String[] cmdArray = concat(
             of(pathToLatestExe().get()),
             stream(arguments))
             .toArray(String[]::new);
@@ -103,32 +103,32 @@ public class Command {
     }
 
     private Optional<String> searchForExe() {
-        Stream<Path> programFilesFolders = concat(replaced(programFilesFolder), replaced(programFilesX86Folder));
-        Stream<Path> possiblePaths = concat(programFilesFolders, notReplaced());
+        final Stream<Path> programFilesFolders = concat(replaced(programFilesFolder), replaced(programFilesX86Folder));
+        final Stream<Path> possiblePaths = concat(programFilesFolders, notReplaced());
         return possiblePaths
             .flatMap(this::matchingCommandInPath)
             .map(Path::toString)
             .max(naturalOrder());
     }
 
-    private Stream<Path> matchingCommandInPath(Path possiblePath) {
+    private Stream<Path> matchingCommandInPath(final Path possiblePath) {
         try {
             return Files.find(
                 possiblePath,
                 MAX_FOLDERS_DEPTH,
                 (p, a) -> p.endsWith(executable),
                 FOLLOW_LINKS);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             System.err.println(e);
             return Stream.empty();
         }
     }
 
-    private Stream<Path> replaced(String folder) {
+    private Stream<Path> replaced(final String folder) {
         if (folder == null) {
             return Stream.empty();
         } else {
-            Path path = get(this.path.replace(PROGRAM_FILES_KEY, folder));
+            final Path path = get(this.path.replace(PROGRAM_FILES_KEY, folder));
             return path.toFile().isDirectory()
                 ? of(path)
                 : Stream.empty();
@@ -139,7 +139,7 @@ public class Command {
         if (path.contains(PROGRAM_FILES_KEY)) {
             return Stream.empty();
         } else {
-            Path pat = get(path);
+            final Path pat = get(path);
             return pat.toFile().isDirectory()
                 ? of(pat)
                 : Stream.empty();

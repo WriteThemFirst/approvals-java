@@ -31,10 +31,10 @@ class ApprobationTest {
     @Test
     void approvedFileShouldBeExpectedPath() {
         //WHEN
-        Path approvedFile = companion.customFiles("approvedFileShouldBeCorrect").approved.get();
+        final Path approvedFile = companion.customFiles("approvedFileShouldBeCorrect").approved.get();
 
         //THEN
-        Path expectedPath = Paths.get(
+        final Path expectedPath = Paths.get(
             "src/test/resources/com/github/writethemfirst/approvals/files/ApprobationTest/approvedFileShouldBeCorrect.approved");
         assertThat(approvedFile).isEqualTo(expectedPath);
     }
@@ -42,13 +42,13 @@ class ApprobationTest {
 
     @Test
     void approvedFileShouldBeReadAfterWritten() {
-        ApprovalsFiles context = companion.defaultFiles();
+        final ApprovalsFiles context = companion.defaultFiles();
         //WHEN
-        String content = "some content\non 2 lines";
+        final String content = "some content\non 2 lines";
         context.approved.write(content);
 
         //THEN
-        String actualContent = context.approved.read();
+        final String actualContent = context.approved.read();
         assertThat(actualContent).isEqualTo(content);
 
         //CLEANUP
@@ -57,14 +57,14 @@ class ApprobationTest {
 
     @Test
     void approvedFileInFolderShouldBeReadAfterWritten() {
-        ApprovalsFiles context = companion.defaultFiles();
+        final ApprovalsFiles context = companion.defaultFiles();
         //WHEN
-        Path file = Paths.get("subfolder/file.txt");
-        String content = "some content\non 2 lines";
+        final Path file = Paths.get("subfolder/file.txt");
+        final String content = "some content\non 2 lines";
         context.approved.write(content, file);
 
         //THEN
-        String actualContent = context.approved.read(file);
+        final String actualContent = context.approved.read(file);
         assertThat(actualContent).isEqualTo(content);
 
         //CLEANUP
@@ -74,14 +74,14 @@ class ApprobationTest {
 
     @Test
     void receivedFileShouldBeReadAfterWritten() {
-        ApprovalsFiles context = companion.defaultFiles();
+        final ApprovalsFiles context = companion.defaultFiles();
 
         //WHEN
-        String content = "some content\non 2 lines";
+        final String content = "some content\non 2 lines";
         context.received.write(content);
 
         //THEN
-        String actualContent = context.received.read();
+        final String actualContent = context.received.read();
         assertThat(actualContent).isEqualTo(content);
 
         //CLEANUP
@@ -91,13 +91,13 @@ class ApprobationTest {
 
     @Test
     void readApprovedShouldBeEmptyWhenFileMissing() {
-        ApprovalsFiles context = companion.defaultFiles();
+        final ApprovalsFiles context = companion.defaultFiles();
 
         //GIVEN
         context.approved.remove();
 
         //WHEN
-        String read = context.approved.read();
+        final String read = context.approved.read();
 
         //THEN
         assertThat(read).isEqualTo("");

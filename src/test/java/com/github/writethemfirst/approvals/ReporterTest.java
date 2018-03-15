@@ -33,12 +33,12 @@ class ReporterTest {
 
     @Test
     void approvalsShouldCallReporterWhenMismatch() {
-        ApprovalsFiles context = approbation.defaultFiles();
+        final ApprovalsFiles context = approbation.defaultFiles();
         context.approved.write("some text");
 
         try {
             approvals.verify("different text");
-        } catch (AssertionError e) {
+        } catch (final AssertionError e) {
             // expected
         }
 
@@ -51,13 +51,13 @@ class ReporterTest {
 
     @Test
     void approvalsShouldCallReporterWhenNoApprovedFile() {
-        ApprovalsFiles context = approbation.defaultFiles();
+        final ApprovalsFiles context = approbation.defaultFiles();
 
         context.approved.remove();
 
         try {
             approvals.verify("text");
-        } catch (AssertionError e) {
+        } catch (final AssertionError e) {
             // expected
         }
 

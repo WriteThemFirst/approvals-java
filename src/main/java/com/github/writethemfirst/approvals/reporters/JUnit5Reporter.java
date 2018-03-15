@@ -41,15 +41,15 @@ public class JUnit5Reporter implements Reporter {
      *                          you checked {@link #isAvailable()} first)
      */
     @Override
-    public void mismatch(Path approved, Path received) {
+    public void mismatch(final Path approved, final Path received) {
         try {
-            Class<?> testCaseClass = Class.forName(JUNIT5_ASSERTIONS);
-            Method assertEquals = testCaseClass.getMethod("assertEquals", Object.class, Object.class, String.class);
+            final Class<?> testCaseClass = Class.forName(JUNIT5_ASSERTIONS);
+            final Method assertEquals = testCaseClass.getMethod("assertEquals", Object.class, Object.class, String.class);
             assertEquals.invoke(null,
                 silentRead(approved),
                 silentRead(received),
                 format("%s differs from %s", received, approved));
-        } catch (InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             throw (AssertionError) e.getCause();
         } catch (NoSuchMethodException | IllegalAccessException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -61,7 +61,7 @@ public class JUnit5Reporter implements Reporter {
         try {
             Class.forName(JUNIT5_ASSERTIONS);
             return true;
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             return false;
         }
     }
