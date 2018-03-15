@@ -23,6 +23,9 @@ import com.github.writethemfirst.approvals.reporters.windows.CommandReporter;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
@@ -30,6 +33,7 @@ import static org.mockito.Mockito.mock;
 class ApprovalsSimpleTest {
     private Approvals approvals = new Approvals(new ThrowsReporter());
     private Approbation approbation = new Approbation();
+    final Path folderForClass = Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsFolderTest");
 
 
     @Test

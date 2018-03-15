@@ -18,170 +18,146 @@
 package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
-import com.github.writethemfirst.approvals.utils.FileUtils;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import static com.github.writethemfirst.approvals.utils.FileUtils.silentRecursiveRemove;
-import static com.github.writethemfirst.approvals.utils.FileUtils.write;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
 class ApprovalsFolderTest {
-    private Approvals approvals = new Approvals(new ThrowsReporter());
-    private Path sample = Paths.get("sample.xml");
-    private Path sample2 = Paths.get("sample2.xml");
-    Reporter reporter = mock(Reporter.class);
-    Path folderForClass = Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsFolderTest");
+    private final Approvals approvals = new Approvals(new ThrowsReporter());
+    final Reporter mockReporter = mock(Reporter.class);
 
     @Test
     void shouldDoNothingWhenBothFoldersAreEmpty() throws IOException {
         //GIVEN
-        Files.createDirectories(folderForClass.resolve("shouldDoNothingWhenBothFoldersAreEmpty.approved"));
-        final Path parent = Files.createTempDirectory("shouldDoNothingWhenBothFoldersAreEmpty");
+        final FolderTestUtils testUtils = new FolderTestUtils("shouldDoNothingWhenBothFoldersAreEmpty");
 
         //WHEN
-        approvals.verifyAgainstMasterFolder(parent);
+        approvals.verifyAgainstMasterFolder(testUtils.actual);
 
         //THEN no exception should be thrown
+
+        testUtils.cleanupPaths();
     }
 
     @Test
     void shouldThrowWhenAFileIsMissing() throws IOException {
-        final Path parent = Files.createTempDirectory("shouldThrowWhenAFileIsMissing");
+        final FolderTestUtils testUtils = new FolderTestUtils("shouldThrowWhenAFileIsMissing");
+        testUtils.writeApproved("some content", "someFile.txt");
 
-        assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
+        assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <some content> but was: <>");
 
+        testUtils.cleanupPaths();
     }
 
     @Test
     void shouldThrowWhenAFileIsDifferent() throws IOException {
-        final Path parent = Files.createTempDirectory("shouldThrowWhenAFileIsDifferent");
-        Files.createFile(parent.resolve("sample.xml"));
+        final FolderTestUtils testUtils = new FolderTestUtils("shouldThrowWhenAFileIsDifferent");
+        testUtils.writeApproved("expected content", "sample.xml");
 
-        final Path approvedFolder = folderForClass.resolve("shouldThrowWhenAFileIsDifferent.approved");
-        write("expected content", approvedFolder.resolve("sample.xml"));
-        assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
+        assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <expected content> but was: <>");
 
-        silentRecursiveRemove(approvedFolder);
+        testUtils.cleanupPaths();
     }
 
     @Test
     void shouldFireReporterOnEachMismatch() throws IOException {
-        final Approvals approvals = new Approvals(reporter);
+        final Approvals approvals = new Approvals(mockReporter);
+        final FolderTestUtils testUtils = new FolderTestUtils("shouldFireReporterOnEachMismatch");
 
-        final Path parent = Files.createTempDirectory("shouldFireReporterOnEachMismatch");
-        Files.createFile(parent.resolve(sample));
-        Files.createFile(parent.resolve(sample2));
-        final Path receivedFolder = folderForClass.resolve("shouldFireReporterOnEachMismatch.received");
-        final Path approvedFolder = folderForClass.resolve("shouldFireReporterOnEachMismatch.approved");
+        testUtils.writeApproved("approved1", "sample.xml");
+        testUtils.writeApproved("approved2", "sample2.xml");
 
         try {
-            approvals.verifyAgainstMasterFolder(parent);
+            approvals.verifyAgainstMasterFolder(testUtils.actual);
         } catch (final AssertionError e) {
             // expected
         }
 
-        then(reporter).should().mismatch(
-            approvedFolder.resolve("sample.xml"),
-            receivedFolder.resolve("sample.xml"));
-        then(reporter).should().mismatch(
-            approvedFolder.resolve("sample2.xml"),
-            receivedFolder.resolve("sample2.xml"));
+        then(mockReporter).should().mismatch(
+            testUtils.approved.resolve("sample.xml"),
+            testUtils.received.resolve("sample.xml"));
+        then(mockReporter).should().mismatch(
+            testUtils.approved.resolve("sample2.xml"),
+            testUtils.received.resolve("sample2.xml"));
 
-        silentRecursiveRemove(receivedFolder);
+        testUtils.cleanupPaths();
     }
 
     @Test
     void shouldCreateAllReceivedFiles() throws IOException {
-        final Approvals approvals = new Approvals(reporter);
+        FolderTestUtils testUtils = new FolderTestUtils("shouldCreateAllReceivedFiles");
 
-        final Path parent = Files.createTempDirectory("shouldCreateAllReceivedFiles");
-        write("actual", parent.resolve("sample.xml"));
-        write("actual2", parent.resolve("sample2.xml"));
-        final Path receivedFolder = folderForClass.resolve("shouldCreateAllReceivedFiles.received");
-        final Path received1 = receivedFolder.resolve("sample.xml");
-        final Path received2 = receivedFolder.resolve("sample2.xml");
+        final Approvals approvals = new Approvals(mockReporter);
+
+        testUtils.writeActual("actual", "sample.xml");
+        testUtils.writeActual("actual2", "sample2.xml");
 
         try {
-            approvals.verifyAgainstMasterFolder(parent);
+            approvals.verifyAgainstMasterFolder(testUtils.actual);
         } catch (final AssertionError e) {
             // expected
         }
 
 
-        assertThat(received1).hasContent("actual");
-        assertThat(received2).hasContent("actual2");
+        assertThat(testUtils.received.resolve("sample.xml")).hasContent("actual");
+        assertThat(testUtils.received.resolve("sample2.xml")).hasContent("actual2");
 
-        silentRecursiveRemove(receivedFolder);
+        testUtils.cleanupPaths();
     }
 
 
     @Test
     void shouldRemoveMatchedReceivedFiles() throws IOException {
-        final Approvals approvals = new Approvals(reporter);
+        final Approvals approvals = new Approvals(mockReporter);
 
-        final Path receivedFolder = folderForClass.resolve("shouldRemoveMatchedReceivedFiles.received");
-        final Path approvedFolder = folderForClass.resolve("shouldRemoveMatchedReceivedFiles.approved");
+        FolderTestUtils testUtils = new FolderTestUtils("shouldRemoveMatchedReceivedFiles");
+        testUtils.writeActual("actual", "sample.xml");
+        testUtils.writeApproved("actual", "sample.xml");
+        testUtils.writeReceived("actual", "sample.xml");
 
-        final Path parent = Files.createTempDirectory("shouldRemoveMatchedReceivedFiles");
-        write("actual", parent.resolve("sample.xml"));
-        write("actual", approvedFolder.resolve("sample.xml"));
-        write("actual", receivedFolder.resolve("sample.xml"));
+        approvals.verifyAgainstMasterFolder(testUtils.actual);
 
-        approvals.verifyAgainstMasterFolder(parent);
+        assertThat(testUtils.received.resolve("sample.xml")).doesNotExist();
 
-        assertThat(receivedFolder.resolve(sample)).doesNotExist();
-
-        silentRecursiveRemove(receivedFolder);
-        silentRecursiveRemove(approvedFolder);
+        testUtils.cleanupPaths();
     }
+
 
     @Test
     void shouldThrowOnReceivedFilesNotExpected() throws IOException {
-        final Path receivedFolder = folderForClass.resolve("shouldThrowOnReceivedFilesNotExpected.received");
-        final Path approvedFolder = folderForClass.resolve("shouldThrowOnReceivedFilesNotExpected.approved");
-        silentRecursiveRemove(receivedFolder);
-        silentRecursiveRemove(approvedFolder);
-        final Path parent = Files.createTempDirectory("shouldThrowOnReceivedFilesNotExpected");
-        write("actual", parent.resolve("sample.xml"));
+        FolderTestUtils testUtils = new FolderTestUtils("shouldThrowOnReceivedFilesNotExpected");
+        testUtils.cleanupPaths();
+        testUtils.writeActual("actual", "sample.xml");
 
-        assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
+        assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <> but was: <actual>");
 
-        silentRecursiveRemove(receivedFolder);
-        silentRecursiveRemove(approvedFolder);
-
+        testUtils.cleanupPaths();
     }
 
     @Test
     void shouldCreateEmptyApprovedFiles() throws IOException {
-        final Path parent = Files.createTempDirectory("shouldThrowOnReceivedFilesNotExpected");
-        write("actual", parent.resolve("sample.xml"));
-        final Path approvedFolder = folderForClass.resolve("shouldCreateEmptyApprovedFiles.approved");
-        final Path receivedFolder = folderForClass.resolve("shouldCreateEmptyApprovedFiles.received");
+        FolderTestUtils testUtils = new FolderTestUtils("shouldCreateEmptyApprovedFiles");
+        testUtils.writeActual("actual", "sample.xml");
 
         try {
-            approvals.verifyAgainstMasterFolder(parent);
+            approvals.verifyAgainstMasterFolder(testUtils.actual);
         } catch (AssertionError e) {
             // expected
         }
 
-        assertThat(approvedFolder.resolve("sample.xml")).exists().hasContent("");
+        assertThat(testUtils.approved.resolve("sample.xml")).exists().hasContent("");
 
-        silentRecursiveRemove(approvedFolder);
-        silentRecursiveRemove(receivedFolder);
+        testUtils.cleanupPaths();
     }
 }
