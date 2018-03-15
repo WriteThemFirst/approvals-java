@@ -20,15 +20,21 @@ package org.demo.simple;
 import com.github.writethemfirst.approvals.Approvals;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Paths;
-
-
-class ApproveFolder {
+class ApproveString {
     private Approvals approvals = new Approvals();
 
     @Test
-    void verifyFolder() {
-        approvals.verifyAgainstMasterFolder(Paths.get("src\\test\\resources\\org\\demo\\simple\\ApproveFolder\\verifyFolder.actual"));
+    void verifySimpleString() {
+        approvals.verify("my string");
     }
 
+    @Test
+    void verifyWithLineFeed() {
+        approvals.verify("line1\nline2");
+    }
+
+    @Test
+    void verifyWithCarriageReturnLineFeed() {
+        approvals.verify("line1\r\nline2");
+    }
 }

@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
@@ -174,15 +175,21 @@ public class Approvals {
     public void verifyAgainstMasterFolder(final Path actualFolder) {
         final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceived(callerMethodName());
         searchFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvedAndReceivedPaths.received));
-        final Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches = Stream
+        List<ApprovedAndReceivedPaths> allFilesToCheck = Stream
             .concat(
                 searchFiles(approvedAndReceivedPaths.approved).map(approvedAndReceivedPaths::forApprovedFile),
                 searchFiles(approvedAndReceivedPaths.received).map(approvedAndReceivedPaths::forReceivedFile)
             )
             .distinct()
+            .collect(Collectors.toList());
+        allFilesToCheck.stream().map(paths -> paths.approved).forEach(FileUtils::init);
+        final Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches = allFilesToCheck.stream()
             .collect(partitioningBy(ApprovedAndReceivedPaths::filesHaveSameContent));
 
         matchesAndMismatches.get(true).forEach(ar -> silentRemove(ar.received));
+        if (matchesAndMismatches.get(false).isEmpty()) {
+            silentRecursiveRemove(approvedAndReceivedPaths.received);
+        }
         matchesAndMismatches.get(false).forEach(mismatch -> reporter.mismatch(mismatch.approved, mismatch.received));
     }
 

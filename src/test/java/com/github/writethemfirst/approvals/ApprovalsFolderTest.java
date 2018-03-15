@@ -155,4 +155,23 @@ class ApprovalsFolderTest {
         FileUtils.silentRecursiveRemove(receivedFolder);
 
     }
+
+    @Test
+    void shouldCreateEmptyApprovedFiles() throws IOException {
+        final Path parent = Files.createTempDirectory("shouldThrowOnReceivedFilesNotExpected");
+        FileUtils.write("actual", parent.resolve("sample.xml"));
+        final Path approvedFolder = folderForClass.resolve("shouldCreateEmptyApprovedFiles.approved");
+        final Path receivedFolder = folderForClass.resolve("shouldCreateEmptyApprovedFiles.received");
+
+        try {
+            approvals.verifyAgainstMasterFolder(parent);
+        } catch (AssertionError e) {
+            // expected
+        }
+
+        assertThat(approvedFolder.resolve("sample.xml")).exists().hasContent("");
+
+        FileUtils.silentRecursiveRemove(approvedFolder);
+        FileUtils.silentRecursiveRemove(receivedFolder);
+    }
 }

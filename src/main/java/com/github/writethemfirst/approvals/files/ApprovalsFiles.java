@@ -90,7 +90,7 @@ public class ApprovalsFiles {
      *
      * @return The path to a folder dedicated to storing the approvals files of the current context.
      */
-    public Path approvalsFolder() {
+    private Path approvalsFolder() {
         return context.approvalsFolder();
     }
 
