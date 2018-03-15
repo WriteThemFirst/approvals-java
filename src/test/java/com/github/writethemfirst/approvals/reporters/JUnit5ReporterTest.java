@@ -17,43 +17,38 @@
  */
 package com.github.writethemfirst.approvals.reporters;
 
-import com.github.writethemfirst.approvals.files.Approbation;
-import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import com.github.writethemfirst.approvals.Approvals;
+import com.github.writethemfirst.approvals.SimpleTestUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JUnit5ReporterTest {
     private Approvals approvals = new Approvals(new JUnit5Reporter());
-    private Approbation approbation = new Approbation();
 
 
     @Test
     void shouldThrowWhenMismatch() {
-        final ApprovalsFiles context = approbation.defaultFiles();
-        context.approved.write("some text");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldThrowWhenMismatch", getClass());
+        testUtils.writeApproved("some text");
 
         assertThatThrownBy(() -> approvals.verify("other text"))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <some text> but was: <other text>");
 
-        context.approved.remove();
-        context.received.remove();
+        testUtils.cleanupPaths();
     }
 
 
     @Test
     void shouldThrowWhenMissing() {
-        final ApprovalsFiles context = approbation.defaultFiles();
-
-        context.approved.remove();
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldThrowWhenMismatch", getClass());
+        testUtils.cleanupPaths();
 
         assertThatThrownBy(() -> approvals.verify("my text"))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <> but was: <my text>");
 
-        context.received.remove();
-        context.approved.remove();
+        testUtils.cleanupPaths();
     }
 }

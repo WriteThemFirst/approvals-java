@@ -17,8 +17,6 @@
  */
 package com.github.writethemfirst.approvals;
 
-import com.github.writethemfirst.approvals.files.Approbation;
-import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.BDDMockito.then;
@@ -28,7 +26,6 @@ import static org.mockito.Mockito.mock;
 class ReporterTest {
     private Reporter reporter = mock(Reporter.class);
     private Approvals approvals = new Approvals(reporter);
-    private Approbation approbation = new Approbation();
 
 
     @Test
@@ -63,5 +60,4 @@ class ReporterTest {
 
         testUtils.cleanupPaths();
     }
-
 }
