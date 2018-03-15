@@ -17,14 +17,9 @@
  */
 package com.github.writethemfirst.approvals;
 
-import com.github.writethemfirst.approvals.files.Approbation;
-import com.github.writethemfirst.approvals.files.ApprovalsFiles;
-import com.github.writethemfirst.approvals.reporters.windows.CommandReporter;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
+import com.github.writethemfirst.approvals.reporters.windows.CommandReporter;
 import org.junit.jupiter.api.Test;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -32,115 +27,107 @@ import static org.mockito.Mockito.mock;
 
 class ApprovalsSimpleTest {
     private Approvals approvals = new Approvals(new ThrowsReporter());
-    private Approbation approbation = new Approbation();
-    final Path folderForClass = Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsFolderTest");
 
 
     @Test
     void shouldThrowWhenMismatchAndUsingCommandReporter() {
         final CommandReporter reporter = mock(CommandReporter.class);
         final Approvals approvals = new Approvals(reporter);
-        final ApprovalsFiles context = approbation.defaultFiles();
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldThrowWhenMismatchAndUsingCommandReporter");
 
-        context.approved.write("approved text");
+        testUtils.writeApproved("approved text");
 
         assertThatThrownBy(() -> approvals.verify("actual text"))
             .isInstanceOf(AssertionError.class)
             .hasMessage("expected: <approved text> but was: <actual text>");
 
-        context.approved.remove();
-        context.received.remove();
+        testUtils.cleanupPaths();
     }
 
     @Test
     void shouldDoNothingWhenApprovedFileExistsAndIsCorrect() {
-        final ApprovalsFiles context = approbation.defaultFiles();
-        context.approved.write("some text");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldDoNothingWhenApprovedFileExistsAndIsCorrect");
+        testUtils.writeApproved("some text");
+
         approvals.verify("some text");
-        context.approved.remove();
+
+        testUtils.cleanupPaths();
     }
 
 
     @Test
     void shouldFailWhenApprovedFileExistsAndIsDifferent() {
-        final ApprovalsFiles context = approbation.defaultFiles();
-
-        context.approved.write("expected text");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldFailWhenApprovedFileExistsAndIsDifferent");
+        testUtils.writeApproved("expected text");
 
         assertThatThrownBy(() -> approvals.verify("actual text"))
             .isInstanceOf(AssertionError.class)
             .hasMessage("expected: <expected text> but was: <actual text>");
 
-        context.approved.remove();
-        context.received.remove();
+        testUtils.cleanupPaths();
     }
 
 
     @Test
     void shouldFailWhenApprovedFileDoesNotExist() {
-        final ApprovalsFiles context = approbation.defaultFiles();
-
-        context.approved.remove();
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldFailWhenApprovedFileDoesNotExist");
+        testUtils.cleanupPaths();
 
         assertThatThrownBy(() -> approvals.verify("text"))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <> but was: <text>");
 
-        context.received.remove();
-        context.approved.remove();
+        testUtils.cleanupPaths();
     }
 
 
     @Test
     void shouldKeepReceivedFileWhenApprovedFileDoesNotExist() {
-        final ApprovalsFiles context = approbation.defaultFiles();
-        context.approved.remove();
-        context.received.remove();
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldKeepReceivedFileWhenApprovedFileDoesNotExist");
+        testUtils.cleanupPaths();
+
         try {
             approvals.verify("text");
         } catch (final AssertionError e) {
-            final String received = context.received.read();
-            assertThat(received).isEqualTo("text");
+            assertThat(testUtils.readReceived()).isEqualTo("text");
         }
-        context.received.remove();
-        context.approved.remove();
+
+        testUtils.cleanupPaths();
     }
 
 
     @Test
     void shouldKeepReceivedFileWhenApprovedFileMismatch() {
-        final ApprovalsFiles context = approbation.defaultFiles();
-        context.approved.write("approved");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldKeepReceivedFileWhenApprovedFileMismatch");
+        testUtils.writeApproved("approved");
+
         try {
             approvals.verify("text");
         } catch (final AssertionError e) {
-            final String received = context.received.read();
-            assertThat(received).isEqualTo("text");
+            assertThat(testUtils.readReceived()).isEqualTo("text");
         }
-        context.received.remove();
-        context.approved.remove();
+
+        testUtils.cleanupPaths();
     }
 
 
     @Test
     void shouldRemoveReceivedFileWhenApprovedFileMatch() {
-        final ApprovalsFiles context = approbation.defaultFiles();
-        context.received.write("last content");
-        context.approved.write("same");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldRemoveReceivedFileWhenApprovedFileMatch");
+        testUtils.writeReceived("last content");
+        testUtils.writeApproved("same");
 
         approvals.verify("same");
 
-        final String received = context.received.read();
-        assertThat(received).isEqualTo("");
+        assertThat(testUtils.readReceived()).isEqualTo("");
 
-        context.approved.remove();
+        testUtils.cleanupPaths();
     }
 
     @Test
     void shouldCreateEmptyApprovedFile() {
-        final ApprovalsFiles context = approbation.defaultFiles();
-        context.received.remove();
-        context.approved.remove();
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldCreateEmptyApprovedFile");
+        testUtils.cleanupPaths();
 
         try {
             approvals.verify("new content");
@@ -148,17 +135,15 @@ class ApprovalsSimpleTest {
             //expected
         }
 
-        assertThat(context.approved.get()).exists();
+        assertThat(testUtils.approved).exists().hasContent("");
 
-        context.received.remove();
-        context.approved.remove();
+        testUtils.cleanupPaths();
     }
 
     @Test
     void shouldUseSpecificMethodName() {
-        final ApprovalsFiles context = approbation.customFiles("myScalaMethod");
-        context.received.remove();
-        context.approved.remove();
+        final SimpleTestUtils testUtils = new SimpleTestUtils("myScalaMethod");
+        testUtils.cleanupPaths();
 
         try {
             approvals.verify("new content", "myScalaMethod");
@@ -166,10 +151,8 @@ class ApprovalsSimpleTest {
             //expected
         }
 
-        assertThat(context.received.get()).hasContent("new content");
+        assertThat(testUtils.received).hasContent("new content");
 
-        context.received.remove();
-        context.approved.remove();
+        testUtils.cleanupPaths();
     }
-
 }
