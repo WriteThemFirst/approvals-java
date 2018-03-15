@@ -159,9 +159,19 @@ public class Approvals {
         verify(output, approvedAndReceived(customFileName));
     }
 
+    private void verify(final Object output, final ApprovedAndReceivedPaths files) {
+        write(output.toString(), files.receivedFile);
+        init(files.approvedFile);
+        if (files.haveSameContent()) {
+            silentRemove(files.receivedFile);
+        } else {
+            reporter.mismatch(files.approvedFile, files.receivedFile);
+            new ThrowsReporter().mismatch(files.approvedFile, files.receivedFile);
+        }
+    }
+
     public void verifyAgainstMasterFolder(Path actualFolder) {
         ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceived(callerMethodName());
-
         Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches =
             approvedAndReceivedPaths.approvedFilesInFolder()
                 .stream()
@@ -173,16 +183,6 @@ public class Approvals {
         handleMismatches(matchesAndMismatches.get(false));
     }
 
-    private void verify(final Object output, final ApprovedAndReceivedPaths files) {
-        write(output.toString(), files.receivedFile);
-        init(files.approvedFile);
-        if (files.haveSameContent()) {
-            silentRemove(files.receivedFile);
-        } else {
-            reporter.mismatch(files.approvedFile, files.receivedFile);
-            new ThrowsReporter().mismatch(files.approvedFile, files.receivedFile);
-        }
-    }
 
     private ApprovedAndReceivedPaths approvedAndReceived(String methodName) {
         return new ApprovedAndReceivedPaths(path(methodName, "approved"), path(methodName, "received"));
@@ -224,7 +224,6 @@ public class Approvals {
     private String callerMethodName() {
         return callerMethod(testClass).orElse("unknown_method");
     }
-
 
 
     private void handleMismatches(List<ApprovedAndReceivedPaths> mismatches) {

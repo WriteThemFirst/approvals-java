@@ -17,16 +17,12 @@
  */
 package com.github.writethemfirst.approvals.files;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
-import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
 
+import static com.github.writethemfirst.approvals.utils.FileUtils.searchFiles;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
-import static java.lang.String.format;
-import static java.util.stream.Collectors.toList;
 
 public class ApprovedAndReceivedPaths {
     public final Path approvedFile;
@@ -51,16 +47,9 @@ public class ApprovedAndReceivedPaths {
      * @return A list of all *approved* files contained in the current approvals folder.
      */
     public List<Path> approvedFilesInFolder() {
-        final int MAX_DEPTH = 5;
-        final BiPredicate<Path, BasicFileAttributes> isAnApprovedFile = (path, attributes) ->
-            attributes.isRegularFile() && path.toString().endsWith(".approved");
-        try {
-            Files.createDirectories(approvedFile);
-            return Files
-                .find(approvedFile, MAX_DEPTH, isAnApprovedFile)
-                .collect(toList());
-        } catch (final IOException e) {
-            throw new RuntimeException(format("cannot browse %s for approved files", approvedFile), e);
-        }
+        return searchFiles(approvedFile)
+            .filter(path -> path.toString().endsWith(".approved"))
+            .collect(Collectors.toList());
     }
+
 }

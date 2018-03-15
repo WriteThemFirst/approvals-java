@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static java.nio.file.Files.*;
@@ -146,7 +146,7 @@ public class FileUtils {
      * Copies the content of a file found at a specified Path to another file located at another specified Path.
      *
      * It'll swallow all errors while reading the source file and only produce exceptions in case of errors while
-     * writting the new file.
+     * writing the new file.
      *
      * @param source      The path from which the source file should be read (data to be copied)
      * @param destination The path to which the destination file should be written (containing the read data)
@@ -154,4 +154,15 @@ public class FileUtils {
     public static void copy(final Path source, final Path destination) {
         write(silentRead(source), destination);
     }
+
+    public static Stream<Path> searchFiles(Path start) {
+        final int MAX_DEPTH = 5;
+        try {
+            Files.createDirectories(start);
+            return Files.find(start, MAX_DEPTH, (path, attributes) -> attributes.isRegularFile());
+        } catch (final IOException e) {
+            throw new RuntimeException(format("cannot browse %s for approved files", start), e);
+        }
+    }
+
 }
