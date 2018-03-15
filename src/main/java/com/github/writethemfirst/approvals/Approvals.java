@@ -175,7 +175,7 @@ public class Approvals {
     public void verifyAgainstMasterFolder(final Path actualFolder) {
         final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceived(callerMethodName());
         searchFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvedAndReceivedPaths.received));
-        List<ApprovedAndReceivedPaths> allFilesToCheck = Stream
+        final List<ApprovedAndReceivedPaths> allFilesToCheck = Stream
             .concat(
                 searchFiles(approvedAndReceivedPaths.approved).map(approvedAndReceivedPaths::forApprovedFile),
                 searchFiles(approvedAndReceivedPaths.received).map(approvedAndReceivedPaths::forReceivedFile)
