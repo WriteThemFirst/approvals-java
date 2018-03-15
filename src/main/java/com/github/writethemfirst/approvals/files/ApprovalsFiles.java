@@ -75,32 +75,10 @@ public class ApprovalsFiles {
      *
      * @param context The context for which the approval files manager needs to be created
      */
-    public ApprovalsFiles(final ApprobationContext context) {
+    ApprovalsFiles(final ApprobationContext context) {
         this.context = context;
         approved = new ApprovedFile(context);
         received = new ReceivedFile(context);
-    }
-
-    /**
-     * Returns a list of all the *approved* files contained in the current approvals folder. The *approved* files will
-     * be identified by their file extension and will be searched to a maximum depth of 5 folders.
-     *
-     * @return A list of all *approved* files contained in the current approvals folder.
-     */
-    //TODO: can be removed
-    public List<Path> approvedFilesInFolder() {
-        final int MAX_DEPTH = 5;
-        final BiPredicate<Path, BasicFileAttributes> isAnApprovedFile = (path, attributes) ->
-            attributes.isRegularFile() && path.toString().endsWith(".approved");
-        final Path approvalsFolder = approvalsFolder();
-        try {
-            Files.createDirectories(approvalsFolder);
-            return Files
-                .find(approvalsFolder, MAX_DEPTH, isAnApprovedFile)
-                .collect(toList());
-        } catch (final IOException e) {
-            throw new RuntimeException(format("cannot browse %s for approved files", approvalsFolder), e);
-        }
     }
 
     /**
