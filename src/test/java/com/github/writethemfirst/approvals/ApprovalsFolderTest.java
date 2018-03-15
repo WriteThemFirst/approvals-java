@@ -21,11 +21,13 @@ import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.FileUtils;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.github.writethemfirst.approvals.utils.FileUtils.silentRecursiveRemove;
 import static com.github.writethemfirst.approvals.utils.FileUtils.write;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -65,10 +67,14 @@ class ApprovalsFolderTest {
     void shouldThrowWhenAFileIsDifferent() throws IOException {
         final Path parent = Files.createTempDirectory("shouldThrowWhenAFileIsDifferent");
         Files.createFile(parent.resolve("sample.xml"));
+
+        final Path approvedFolder = folderForClass.resolve("shouldThrowWhenAFileIsDifferent.approved");
+        write("expected content", approvedFolder.resolve("sample.xml"));
         assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <expected content> but was: <>");
 
+        silentRecursiveRemove(approvedFolder);
     }
 
     @Test
@@ -94,7 +100,7 @@ class ApprovalsFolderTest {
             approvedFolder.resolve("sample2.xml"),
             receivedFolder.resolve("sample2.xml"));
 
-        FileUtils.silentRecursiveRemove(receivedFolder);
+        silentRecursiveRemove(receivedFolder);
     }
 
     @Test
@@ -118,7 +124,7 @@ class ApprovalsFolderTest {
         assertThat(received1).hasContent("actual");
         assertThat(received2).hasContent("actual2");
 
-        FileUtils.silentRecursiveRemove(receivedFolder);
+        silentRecursiveRemove(receivedFolder);
     }
 
 
@@ -138,28 +144,32 @@ class ApprovalsFolderTest {
 
         assertThat(receivedFolder.resolve(sample)).doesNotExist();
 
-        FileUtils.silentRecursiveRemove(receivedFolder);
-        FileUtils.silentRecursiveRemove(approvedFolder);
+        silentRecursiveRemove(receivedFolder);
+        silentRecursiveRemove(approvedFolder);
     }
 
     @Test
     void shouldThrowOnReceivedFilesNotExpected() throws IOException {
+        final Path receivedFolder = folderForClass.resolve("shouldThrowOnReceivedFilesNotExpected.received");
+        final Path approvedFolder = folderForClass.resolve("shouldThrowOnReceivedFilesNotExpected.approved");
+        silentRecursiveRemove(receivedFolder);
+        silentRecursiveRemove(approvedFolder);
         final Path parent = Files.createTempDirectory("shouldThrowOnReceivedFilesNotExpected");
-        FileUtils.write("actual", parent.resolve("sample.xml"));
+        write("actual", parent.resolve("sample.xml"));
 
         assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <> but was: <actual>");
 
-        final Path receivedFolder = folderForClass.resolve("shouldThrowOnReceivedFilesNotExpected.received");
-        FileUtils.silentRecursiveRemove(receivedFolder);
+        silentRecursiveRemove(receivedFolder);
+        silentRecursiveRemove(approvedFolder);
 
     }
 
     @Test
     void shouldCreateEmptyApprovedFiles() throws IOException {
         final Path parent = Files.createTempDirectory("shouldThrowOnReceivedFilesNotExpected");
-        FileUtils.write("actual", parent.resolve("sample.xml"));
+        write("actual", parent.resolve("sample.xml"));
         final Path approvedFolder = folderForClass.resolve("shouldCreateEmptyApprovedFiles.approved");
         final Path receivedFolder = folderForClass.resolve("shouldCreateEmptyApprovedFiles.received");
 
@@ -171,7 +181,7 @@ class ApprovalsFolderTest {
 
         assertThat(approvedFolder.resolve("sample.xml")).exists().hasContent("");
 
-        FileUtils.silentRecursiveRemove(approvedFolder);
-        FileUtils.silentRecursiveRemove(receivedFolder);
+        silentRecursiveRemove(approvedFolder);
+        silentRecursiveRemove(receivedFolder);
     }
 }
