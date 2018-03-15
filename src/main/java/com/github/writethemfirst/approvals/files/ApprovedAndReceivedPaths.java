@@ -37,10 +37,42 @@ public class ApprovedAndReceivedPaths {
         return receivedContent.equals(approvedContent);
     }
 
-    public  ApprovedAndReceivedPaths approvedAndReceived(final Path approvedFile) {
+    /**
+     * When `this` represents a pairs of folders, returns a pair of files in these folders.
+     *
+     * @param approvedFile a file in the `approved` folder
+     */
+    public ApprovedAndReceivedPaths forApprovedFile(final Path approvedFile) {
         final Path approvedRelative = approved.relativize(approvedFile);
         final Path receivedFile = received.resolve(approvedRelative);
         return new ApprovedAndReceivedPaths(approvedFile, receivedFile);
     }
 
+    /**
+     * When `this` represents a pairs of folders, returns a pair of files in these folders.
+     *
+     * @param receivedFile a file in the `received` folder
+     */
+    public ApprovedAndReceivedPaths forReceivedFile(final Path receivedFile) {
+        final Path receivedRelative = received.relativize(receivedFile);
+        final Path approvedFile = approved.resolve(receivedRelative);
+        return new ApprovedAndReceivedPaths(approvedFile, receivedFile);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final ApprovedAndReceivedPaths that = (ApprovedAndReceivedPaths) o;
+
+        return approved.equals(that.approved) && received.equals(that.received);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = approved.hashCode();
+        result = 31 * result + received.hashCode();
+        return result;
+    }
 }

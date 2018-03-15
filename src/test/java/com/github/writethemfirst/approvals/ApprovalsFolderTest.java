@@ -17,10 +17,8 @@
  */
 package com.github.writethemfirst.approvals;
 
-import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.FileUtils;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -145,14 +143,13 @@ class ApprovalsFolderTest {
     }
 
     @Test
-    @Disabled
     void shouldThrowOnReceivedFilesNotExpected() throws IOException {
         final Path parent = Files.createTempDirectory("shouldThrowOnReceivedFilesNotExpected");
         FileUtils.write("actual", parent.resolve("sample.xml"));
 
         assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
             .isInstanceOf(AssertionError.class)
-            .hasMessageContaining("");
+            .hasMessageContaining("expected: <> but was: <actual>");
 
         final Path receivedFolder = folderForClass.resolve("shouldThrowOnReceivedFilesNotExpected.received");
         FileUtils.silentRecursiveRemove(receivedFolder);

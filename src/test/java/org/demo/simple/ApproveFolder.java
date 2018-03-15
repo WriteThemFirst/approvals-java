@@ -18,6 +18,7 @@
 package org.demo.simple;
 
 import com.github.writethemfirst.approvals.Approvals;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
@@ -27,6 +28,7 @@ class ApproveFolder {
     private Approvals approvals = new Approvals();
 
     @Test
+    @Disabled
     void verifyFolder() {
         approvals.verifyAgainstMasterFolder(Paths.get("src/test/java/org/demo/simple"));
     }

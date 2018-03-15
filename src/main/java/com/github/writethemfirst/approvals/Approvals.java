@@ -174,15 +174,16 @@ public class Approvals {
     public void verifyAgainstMasterFolder(final Path actualFolder) {
         final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceived(callerMethodName());
         searchFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvedAndReceivedPaths.received));
-        Stream<ApprovedAndReceivedPaths> approvedStream = searchFiles(approvedAndReceivedPaths.approved)
-            .map(approvedAndReceivedPaths::approvedAndReceived);
-        final Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches =
-            approvedStream
-                .collect(partitioningBy(ApprovedAndReceivedPaths::filesHaveSameContent));
+        final Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches = Stream
+            .concat(
+                searchFiles(approvedAndReceivedPaths.approved).map(approvedAndReceivedPaths::forApprovedFile),
+                searchFiles(approvedAndReceivedPaths.received).map(approvedAndReceivedPaths::forReceivedFile)
+            )
+            .distinct()
+            .collect(partitioningBy(ApprovedAndReceivedPaths::filesHaveSameContent));
 
         matchesAndMismatches.get(true).forEach(ar -> silentRemove(ar.received));
-
-        handleMismatches(matchesAndMismatches.get(false));
+        matchesAndMismatches.get(false).forEach(mismatch -> reporter.mismatch(mismatch.approved, mismatch.received));
     }
 
 
@@ -227,10 +228,5 @@ public class Approvals {
         return callerMethod(testClass).orElse("unknown_method");
     }
 
-
-    private void handleMismatches(final List<ApprovedAndReceivedPaths> mismatches) {
-        mismatches.forEach(mismatch -> reporter.mismatch(mismatch.approved, mismatch.received));
-        mismatches.forEach(mismatch -> new ThrowsReporter().mismatch(mismatch.approved, mismatch.received));
-    }
 
 }
