@@ -15,48 +15,48 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals;
+package com.github.writethemfirst.approvals.testutils;
 
 import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
-import static com.github.writethemfirst.approvals.utils.FileUtils.*;
-import static java.nio.file.Paths.get;
+import static com.github.writethemfirst.approvals.utils.FileUtils.silentRecursiveRemove;
+import static com.github.writethemfirst.approvals.utils.FileUtils.write;
 
-public class SimpleTestUtils {
-    private final Path folderForClass;
-    final Path received;
-    final Path approved;
+public class FolderTestUtils {
+    private final Path folderForClass = Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsFolderTest");
+    public final Path received;
+    public final Path approved;
+    public final Path actual;
 
-    public SimpleTestUtils(final String methodName, final Class<?> testClass) {
-        final String className = testClass.getSimpleName();
-        final Path packageResourcesPath = get("src/test/resources/", testClass.getPackage().getName().split("\\."));
-        folderForClass = packageResourcesPath.resolve(className);
+    public FolderTestUtils(final String methodName) throws IOException {
         final ApprovedAndReceivedPaths approvedAndReceivedPaths = new ApprovedAndReceivedPaths(
             path(methodName, "approved"),
             path(methodName, "received"));
         received = approvedAndReceivedPaths.received;
         approved = approvedAndReceivedPaths.approved;
+        actual = Files.createTempDirectory(methodName);
     }
 
-    void writeReceived(final String content) {
-        write(content, received);
+    public void writeActual(final String content, final String fileName) {
+        write(content, actual.resolve(fileName));
     }
 
-    String readReceived() {
-        return silentRead(received);
+    public void writeApproved(final String content, final String fileName) {
+        write(content, approved.resolve(fileName));
     }
 
-    public void writeApproved(final String content) {
-        write(content, approved);
+    public void writeReceived(final String content, final String fileName) {
+        write(content, received.resolve(fileName));
     }
 
     public void cleanupPaths() {
-        silentRemove(received);
-        silentRemove(approved);
+        silentRecursiveRemove(received);
+        silentRecursiveRemove(approved);
     }
 
 
