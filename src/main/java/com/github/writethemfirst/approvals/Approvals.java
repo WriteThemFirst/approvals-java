@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
@@ -160,25 +161,26 @@ public class Approvals {
     }
 
     private void verify(final Object output, final ApprovedAndReceivedPaths files) {
-        write(output.toString(), files.receivedFile);
-        init(files.approvedFile);
-        if (files.haveSameContent()) {
-            silentRemove(files.receivedFile);
+        write(output.toString(), files.received);
+        init(files.approved);
+        if (files.filesHaveSameContent()) {
+            silentRemove(files.received);
         } else {
-            reporter.mismatch(files.approvedFile, files.receivedFile);
-            new ThrowsReporter().mismatch(files.approvedFile, files.receivedFile);
+            reporter.mismatch(files.approved, files.received);
+            new ThrowsReporter().mismatch(files.approved, files.received);
         }
     }
 
     public void verifyAgainstMasterFolder(final Path actualFolder) {
         final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceived(callerMethodName());
-        searchFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvedAndReceivedPaths.receivedFile));
+        searchFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvedAndReceivedPaths.received));
+        Stream<ApprovedAndReceivedPaths> approvedStream = searchFiles(approvedAndReceivedPaths.approved)
+            .map(approvedAndReceivedPaths::approvedAndReceived);
         final Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches =
-            searchFiles(approvedAndReceivedPaths.approvedFile)
-                .map(approvedFile -> approvedAndReceived(approvedAndReceivedPaths.receivedFile, approvedAndReceivedPaths.approvedFile, approvedFile))
-                .collect(partitioningBy(ApprovedAndReceivedPaths::haveSameContent));
+            approvedStream
+                .collect(partitioningBy(ApprovedAndReceivedPaths::filesHaveSameContent));
 
-        matchesAndMismatches.get(true).forEach(ar -> silentRemove(ar.receivedFile));
+        matchesAndMismatches.get(true).forEach(ar -> silentRemove(ar.received));
 
         handleMismatches(matchesAndMismatches.get(false));
     }
@@ -227,13 +229,8 @@ public class Approvals {
 
 
     private void handleMismatches(final List<ApprovedAndReceivedPaths> mismatches) {
-        mismatches.forEach(mismatch -> reporter.mismatch(mismatch.approvedFile, mismatch.receivedFile));
-        mismatches.forEach(mismatch -> new ThrowsReporter().mismatch(mismatch.approvedFile, mismatch.receivedFile));
+        mismatches.forEach(mismatch -> reporter.mismatch(mismatch.approved, mismatch.received));
+        mismatches.forEach(mismatch -> new ThrowsReporter().mismatch(mismatch.approved, mismatch.received));
     }
 
-    private ApprovedAndReceivedPaths approvedAndReceived(final Path receivedFolder, final Path approvedFolder, final Path approvedFile) {
-        final Path approvedRelative = approvedFolder.relativize(approvedFile);
-        final Path receivedFile = receivedFolder.resolve(approvedRelative);
-        return new ApprovedAndReceivedPaths(approvedFile, receivedFile);
-    }
 }

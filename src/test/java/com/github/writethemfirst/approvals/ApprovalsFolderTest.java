@@ -17,8 +17,10 @@
  */
 package com.github.writethemfirst.approvals;
 
+import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.FileUtils;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -142,19 +144,18 @@ class ApprovalsFolderTest {
         FileUtils.silentRecursiveRemove(approvedFolder);
     }
 
-//    @Test
-//    void shouldThrowOnReceivedFilesNotExpected() throws IOException {
-//        Approvals approvals = new Approvals(new ThrowsReporter());
-//
-//        Path parent = Files.createTempDirectory("shouldThrowOnReceivedFilesNotExpected");
-//        FileUtils.write("actual", parent.resolve("sample.xml"));
-//        ApprovalsFiles customFiles = approbation.defaultFiles();
-//
-//        assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
-//            .isInstanceOf(AssertionError.class)
-//            .hasMessageContaining("");
-//
-//        customFiles.remove(sample);
-//        customFiles.remove(sample);
-//    }
+    @Test
+    @Disabled
+    void shouldThrowOnReceivedFilesNotExpected() throws IOException {
+        final Path parent = Files.createTempDirectory("shouldThrowOnReceivedFilesNotExpected");
+        FileUtils.write("actual", parent.resolve("sample.xml"));
+
+        assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(parent))
+            .isInstanceOf(AssertionError.class)
+            .hasMessageContaining("");
+
+        final Path receivedFolder = folderForClass.resolve("shouldThrowOnReceivedFilesNotExpected.received");
+        FileUtils.silentRecursiveRemove(receivedFolder);
+
+    }
 }

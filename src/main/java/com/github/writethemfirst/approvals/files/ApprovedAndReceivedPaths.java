@@ -18,25 +18,29 @@
 package com.github.writethemfirst.approvals.files;
 
 import java.nio.file.Path;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.github.writethemfirst.approvals.utils.FileUtils.searchFiles;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 
 public class ApprovedAndReceivedPaths {
-    public final Path approvedFile;
-    public final Path receivedFile;
+    public final Path approved;
+    public final Path received;
 
 
-    public ApprovedAndReceivedPaths(final Path approvedFile, final Path receivedFile) {
-        this.approvedFile = approvedFile;
-        this.receivedFile = receivedFile;
+    public ApprovedAndReceivedPaths(final Path approved, final Path received) {
+        this.approved = approved;
+        this.received = received;
     }
 
-    public boolean haveSameContent() {
-        final String receivedContent = silentRead(receivedFile);
-        final String approvedContent = silentRead(approvedFile);
+    public boolean filesHaveSameContent() {
+        final String receivedContent = silentRead(received);
+        final String approvedContent = silentRead(approved);
         return receivedContent.equals(approvedContent);
     }
+
+    public  ApprovedAndReceivedPaths approvedAndReceived(final Path approvedFile) {
+        final Path approvedRelative = approved.relativize(approvedFile);
+        final Path receivedFile = received.resolve(approvedRelative);
+        return new ApprovedAndReceivedPaths(approvedFile, receivedFile);
+    }
+
 }
