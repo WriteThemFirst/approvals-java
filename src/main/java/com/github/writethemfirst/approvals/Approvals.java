@@ -28,8 +28,10 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.writethemfirst.approvals.utils.FileUtils.silentRemove;
+import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
+import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
+import static java.nio.file.Paths.get;
 import static java.util.stream.Collectors.partitioningBy;
 
 /**
@@ -73,6 +75,8 @@ public class Approvals {
      * The Reporter to be used to report any mismatches while computing the files comparisons.
      */
     private final Reporter reporter;
+    private final Path folder;
+    private final Class<?> testClass;
 
     /**
      * Constructs an `Approvals` object using
@@ -112,6 +116,8 @@ public class Approvals {
      *                 content.
      */
     public Approvals(final Class<?> clazz, final Reporter reporter) {
+        this.testClass = clazz;
+        folder = folderForClass(clazz);
         approbation = new Approbation(clazz);
         this.reporter = reporter;
     }
@@ -133,7 +139,7 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public void verify(final Object output) {
-        verify(output, approbation.defaultFiles());
+        verify(output, approvedAndReceived(callerMethodName()));
     }
 
     /**
@@ -158,30 +164,59 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public void verify(final Object output, final String customFileName) {
-        verify(output, approbation.customFiles(customFileName));
+        verify(output, approvedAndReceived(customFileName));
+    }
+
+    private void verify(final Object output, final ApprovedAndReceivedPaths files) {
+        write(output.toString(), files.receivedFile);
+        init(files.approvedFile);
+        if (files.haveSameContent()) {
+            silentRemove(files.receivedFile);
+        } else {
+            reporter.mismatch(files.approvedFile, files.receivedFile);
+            new ThrowsReporter().mismatch(files.approvedFile, files.receivedFile);
+        }
+    }
+
+    private ApprovedAndReceivedPaths approvedAndReceived(String methodName) {
+        return new ApprovedAndReceivedPaths(path(methodName, "approved"), path(methodName, "received"));
+    }
+
+    private Path path(String methodName, String extension) {
+        return Paths.get(folder.resolve(methodName) + "." + extension);
     }
 
     /**
-     * That method actually computes the logic behind *Approval Testing*.
+     * Computes and returns the Path to the folder to be used for storing the *approved* and *received* files linked to
+     * the `testClass` instance.
      *
-     * It'll write the output of the *Program Under Test* in a *received* file and then compare it to the existing
-     * *approved* file. If they do match, it'll remove the *received* file and won't do anything. Otherwise, the
-     * *received* file will be kept for later review by the developer, while the reporter will be used in order to
-     * report a mismatch. An empty *approved* file will be intiated as well.
+     * The folder will be created under `src/test/resources` in the really same project, and will be named after the
+     * package name of the `testClass`, followed by the name of the `testClass` itself. That folder will later contain
+     * one pair of files (*approved* and *received*) for each method to be tested.
      *
-     * @param output Output object of the *Program Under Tests* which will be used for comparison with the *approved*
-     *               file
-     * @param files  Wrapper allowing to get the approvals files in the current execution context
+     * @return The Path to the folder linked to the `testClass` attribute, used for storing the *received* and
+     * *approved* files.
      */
-    private void verify(final Object output, final ApprovalsFiles files) {
-        files.received.write(output.toString());
-        if (files.haveSameContent()) {
-            files.received.remove();
-        } else {
-            files.approved.init();
-            reporter.mismatch(files.approved.get(), files.received.get());
-            new ThrowsReporter().mismatch(files.approved.get(), files.received.get());
-        }
+    private static Path folderForClass(Class<?> testClass) {
+        final String packageName = testClass.getPackage().getName();
+        final Path packageResourcesPath = get("src/test/resources/", packageName.split("\\."));
+        return packageResourcesPath.resolve(testClass.getSimpleName());
+    }
+
+
+    /**
+     * Returns the caller method name using {@link com.github.writethemfirst.approvals.utils.StackUtils}.
+     *
+     * It returns `unknown_method` in case the caller method cannot be retrieved automatically.
+     *
+     * Info: It doesn't return an option or null or an empty string, so the generated files are located in a visible
+     * *unknown* file, which encourages the developer to solve the actual issue.
+     *
+     * @return the caller method name found by {@link com.github.writethemfirst.approvals.utils.StackUtils} or
+     * `unknown_method` otherwise.
+     */
+    private String callerMethodName() {
+        return callerMethod(testClass).orElse("unknown_method");
     }
 
     public void verifyAgainstMasterFolder(Path actualFolder) {

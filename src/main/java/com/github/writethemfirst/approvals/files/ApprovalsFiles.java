@@ -116,15 +116,6 @@ public class ApprovalsFiles {
     }
 
     /**
-     * Checks if the *received* file's content matches with the *approved* file's content.
-     *
-     * @return true if *approved* and *received* file have the exact same content. False otherwise.
-     */
-    public boolean haveSameContent() {
-        return received.match(approved);
-    }
-
-    /**
      * # ApprovedFile
      *
      * That class allows to manipulate *approved* files.
@@ -309,38 +300,6 @@ public class ApprovalsFiles {
          */
         public void remove(final Path relativeFile) {
             silentRemove(get(relativeFile));
-        }
-
-        /**
-         * Creates an empty approval file if it doesn't exist yet.
-         *
-         * If it already exist, that method will do nothing. If there's any issue while creating the approval file, the
-         * {@link IOException} will be wrapped in a {@link RuntimeException} and thrown.
-         */
-        public void init() {
-            final File file = get().toFile();
-            if (!file.exists()) {
-                try {
-                    //noinspection ResultOfMethodCallIgnored
-                    file.createNewFile();
-                } catch (final IOException e) {
-                    throw new RuntimeException(format("Could not create empty file <%s>", file), e);
-                }
-            }
-        }
-
-        /**
-         * Reads and compares the current ApprovalFile and the other one provided as an argument.
-         *
-         * All errors while reading the files will be swallowed.
-         *
-         * @param other an approval file to be read and compared to the current one
-         * @return true if both approval file contain the exact same content. False otherwise.
-         */
-        public boolean match(final ApprovalFile other) {
-            final String content = silentRead(get());
-            final String otherContent = silentRead(other.get());
-            return content.equals(otherContent);
         }
     }
 

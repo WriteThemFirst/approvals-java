@@ -60,6 +60,24 @@ public class FileUtils {
     }
 
     /**
+     * Creates an empty approval file if it doesn't exist yet.
+     *
+     * If it already exist, that method will do nothing. If there's any issue while creating the approval file, the
+     * {@link IOException} will be wrapped in a {@link RuntimeException} and thrown.
+     */
+    public static void init(final Path path) {
+        final File file = path.toFile();
+        if (!file.exists()) {
+            try {
+                //noinspection ResultOfMethodCallIgnored
+                file.createNewFile();
+            } catch (final IOException e) {
+                throw new RuntimeException(format("Could not create empty file <%s>", file), e);
+            }
+        }
+    }
+
+    /**
      * Removes the file located at the specified Path if it exists.
      *
      * If the file doesn't exist, nothing will be done.
