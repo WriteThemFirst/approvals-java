@@ -33,8 +33,8 @@ class ReporterTest {
 
     @Test
     void approvalsShouldCallReporterWhenMismatch() {
-        final ApprovalsFiles context = approbation.defaultFiles();
-        context.approved.write("some text");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("approvalsShouldCallReporterWhenMismatch", getClass());
+        testUtils.writeApproved("some text");
 
         try {
             approvals.verify("different text");
@@ -42,18 +42,16 @@ class ReporterTest {
             // expected
         }
 
-        then(reporter).should().mismatch(context.approved.get(), context.received.get());
+        then(reporter).should().mismatch(testUtils.approved, testUtils.received);
 
-        context.approved.remove();
-        context.received.remove();
+        testUtils.cleanupPaths();
     }
 
 
     @Test
     void approvalsShouldCallReporterWhenNoApprovedFile() {
-        final ApprovalsFiles context = approbation.defaultFiles();
-
-        context.approved.remove();
+        final SimpleTestUtils testUtils = new SimpleTestUtils("approvalsShouldCallReporterWhenNoApprovedFile", getClass());
+        testUtils.cleanupPaths();
 
         try {
             approvals.verify("text");
@@ -61,10 +59,9 @@ class ReporterTest {
             // expected
         }
 
-        then(reporter).should().mismatch(context.approved.get(), context.received.get());
+        then(reporter).should().mismatch(testUtils.approved, testUtils.received);
 
-        context.approved.remove();
-        context.received.remove();
+        testUtils.cleanupPaths();
     }
 
 }

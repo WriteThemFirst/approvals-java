@@ -22,16 +22,16 @@ import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
-import static com.github.writethemfirst.approvals.utils.FileUtils.silentRemove;
-import static com.github.writethemfirst.approvals.utils.FileUtils.write;
+import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 
 class SimpleTestUtils {
-    final Path folderForClass = Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsSimpleTest");
+    final Path folderForClass;
     final Path received;
     final Path approved;
 
-    SimpleTestUtils(final String methodName) {
+    SimpleTestUtils(final String methodName, final Class<?> testClass) {
+        final String className = testClass.getSimpleName();
+        folderForClass = Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\" + className);
         final ApprovedAndReceivedPaths approvedAndReceivedPaths = new ApprovedAndReceivedPaths(
             path(methodName, "approved"),
             path(methodName, "received"));
