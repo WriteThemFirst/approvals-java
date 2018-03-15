@@ -87,6 +87,7 @@ public class ApprovalsFiles {
      *
      * @return A list of all *approved* files contained in the current approvals folder.
      */
+    //TODO: can be removed
     public List<Path> approvedFilesInFolder() {
         final int MAX_DEPTH = 5;
         final BiPredicate<Path, BasicFileAttributes> isAnApprovedFile = (path, attributes) ->

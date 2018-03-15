@@ -17,8 +17,6 @@
  */
 package com.github.writethemfirst.approvals;
 
-import com.github.writethemfirst.approvals.files.Approbation;
-import com.github.writethemfirst.approvals.files.ApprovalsFiles;
 import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.FileUtils;
@@ -67,11 +65,6 @@ import static java.util.stream.Collectors.partitioningBy;
 public class Approvals {
 
     /**
-     * Internal object which allows to hold context information and retrieve the approval files for that context.
-     */
-    private final Approbation approbation;
-
-    /**
      * The Reporter to be used to report any mismatches while computing the files comparisons.
      */
     private final Reporter reporter;
@@ -81,7 +74,7 @@ public class Approvals {
     /**
      * Constructs an `Approvals` object using
      *
-     * - the default {@link Reporter} ({@link Generic#DEFAULT})
+     * - the default {@link Reporter} ({@link Reporter#DEFAULT})
      *
      * - the {@link com.github.writethemfirst.approvals.utils.StackUtils#callerClass(Class)}.
      */
@@ -100,7 +93,7 @@ public class Approvals {
     }
 
     /**
-     * Constructs an `Approvals` object using the default {@link Reporter} ({@link Generic#DEFAULT}).
+     * Constructs an `Approvals` object using the default {@link Reporter} ({@link Reporter#DEFAULT}).
      *
      * @param clazz The calling test class. It is used in order to compute the *approved* files' names.
      */
@@ -118,7 +111,6 @@ public class Approvals {
     public Approvals(final Class<?> clazz, final Reporter reporter) {
         this.testClass = clazz;
         folder = folderForClass(clazz);
-        approbation = new Approbation(clazz);
         this.reporter = reporter;
     }
 
@@ -168,15 +160,13 @@ public class Approvals {
     }
 
     public void verifyAgainstMasterFolder(Path actualFolder) {
-        ApprovedAndReceivedPaths approvedAndReceived = approvedAndReceived(callerMethodName());
-        ApprovalsFiles context = approbation.defaultFiles();
+        ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceived(callerMethodName());
 
-        Path approvedFolder = approvedAndReceived.approvedFile;
         Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches =
-            context.approvedFilesInFolder()
+            approvedAndReceivedPaths.approvedFilesInFolder()
                 .stream()
-                .map(approvedFile -> approvedAndReceived(actualFolder, approvedFolder, approvedFile))
-                .collect(partitioningBy(ar -> ar.haveSameContent()));
+                .map(approvedFile -> approvedAndReceived(actualFolder, approvedAndReceivedPaths.approvedFile, approvedFile))
+                .collect(partitioningBy(ApprovedAndReceivedPaths::haveSameContent));
 
         matchesAndMismatches.get(true).forEach(ar -> silentRemove(ar.receivedFile));
 
