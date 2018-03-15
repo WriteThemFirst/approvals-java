@@ -172,10 +172,10 @@ public class Approvals {
 
     public void verifyAgainstMasterFolder(Path actualFolder) {
         ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceived(callerMethodName());
+        searchFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvedAndReceivedPaths.receivedFile));
         Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches =
-            approvedAndReceivedPaths.approvedFilesInFolder()
-                .stream()
-                .map(approvedFile -> approvedAndReceived(actualFolder, approvedAndReceivedPaths.approvedFile, approvedFile))
+            searchFiles(approvedAndReceivedPaths.approvedFile)
+                .map(approvedFile -> approvedAndReceived(approvedAndReceivedPaths.receivedFile, approvedAndReceivedPaths.approvedFile, approvedFile))
                 .collect(partitioningBy(ApprovedAndReceivedPaths::haveSameContent));
 
         matchesAndMismatches.get(true).forEach(ar -> silentRemove(ar.receivedFile));
@@ -231,12 +231,9 @@ public class Approvals {
         mismatches.forEach(mismatch -> new ThrowsReporter().mismatch(mismatch.approvedFile, mismatch.receivedFile));
     }
 
-    private ApprovedAndReceivedPaths approvedAndReceived(Path actualFolder, Path approvedFolder, Path approvedFile) {
+    private ApprovedAndReceivedPaths approvedAndReceived(Path receivedFolder, Path approvedFolder, Path approvedFile) {
         Path approvedRelative = approvedFolder.relativize(approvedFile);
-        Path simplePath = Paths.get(approvedRelative.toString().replace(".approved", ""));
-        Path actualFile = actualFolder.resolve(simplePath);
-        Path receivedFile = approvedFolder.resolve(simplePath + ".received");
-        FileUtils.copy(actualFile, receivedFile);
+        Path receivedFile = receivedFolder.resolve(approvedRelative);
         return new ApprovedAndReceivedPaths(approvedFile, receivedFile);
     }
 }

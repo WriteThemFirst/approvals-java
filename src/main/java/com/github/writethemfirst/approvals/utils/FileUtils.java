@@ -155,6 +155,11 @@ public class FileUtils {
         write(silentRead(source), destination);
     }
 
+    public static void copyToFolder(final Path sourceFile, final Path targetFolder) {
+        Path targetFile = targetFolder.resolve(sourceFile.getFileName());
+        copy(sourceFile, targetFile);
+    }
+
     public static Stream<Path> searchFiles(Path start) {
         final int MAX_DEPTH = 5;
         try {

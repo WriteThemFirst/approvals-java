@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.github.writethemfirst.approvals.utils.FileUtils.write;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.then;
@@ -89,8 +90,12 @@ class ApprovalsFolderTest {
             // expected
         }
 
-        then(reporter).should().mismatch(context.approved.get(sample), context.received.get(sample));
-        then(reporter).should().mismatch(context.approved.get(sample2), context.received.get(sample2));
+        then(reporter).should().mismatch(
+            Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsFolderTest\\shouldFireReporterOnEachMismatch.approved\\sample.xml"),
+            Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsFolderTest\\shouldFireReporterOnEachMismatch.received\\sample.xml"));
+        then(reporter).should().mismatch(
+            Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsFolderTest\\shouldFireReporterOnEachMismatch.approved\\sample2.xml"),
+            Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsFolderTest\\shouldFireReporterOnEachMismatch.received\\sample2.xml"));
 
         context.received.remove(sample);
         context.received.remove(sample2);
@@ -101,9 +106,8 @@ class ApprovalsFolderTest {
         Approvals approvals = new Approvals(reporter);
 
         Path parent = Files.createTempDirectory("shouldCreateAllReceivedFiles");
-        FileUtils.write("actual", parent.resolve("sample.xml"));
-        FileUtils.write("actual2", parent.resolve("sample2.xml"));
-        ApprovalsFiles context = approbation.defaultFiles();
+        write("actual", parent.resolve("sample.xml"));
+        write("actual2", parent.resolve("sample2.xml"));
 
         try {
             approvals.verifyAgainstMasterFolder(parent);
@@ -111,11 +115,15 @@ class ApprovalsFolderTest {
             // expected
         }
 
-        assertThat(context.received.get(sample)).hasContent("actual");
-        assertThat(context.received.get(sample2)).hasContent("actual2");
+        Path approved1 = Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsFolderTest\\shouldCreateAllReceivedFiles.received\\sample.xml");
+        assertThat(approved1)
+            .hasContent("actual");
+        Path approved2 = Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsFolderTest\\shouldCreateAllReceivedFiles.received\\sample2.xml");
+        assertThat(approved2)
+            .hasContent("actual2");
 
-        context.received.remove(sample);
-        context.received.remove(sample2);
+        FileUtils.silentRemove(approved1);
+        FileUtils.silentRemove(approved2);
     }
 
 
@@ -124,10 +132,10 @@ class ApprovalsFolderTest {
         Approvals approvals = new Approvals(reporter);
 
         Path parent = Files.createTempDirectory("shouldRemoveMatchedReceivedFiles");
-        FileUtils.write("actual", parent.resolve("sample.xml"));
+        write("actual", parent.resolve("sample.xml"));
         ApprovalsFiles context = approbation.defaultFiles();
-        context.approved.write("actual", sample);
-        context.received.write("actual", sample);
+        write("actual", Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsFolderTest\\shouldRemoveMatchedReceivedFiles.approved\\sample.xml"));
+        write("actual", Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsFolderTest\\shouldRemoveMatchedReceivedFiles.received\\sample.xml"));
 
         approvals.verifyAgainstMasterFolder(parent);
 

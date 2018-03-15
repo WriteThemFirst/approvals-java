@@ -39,17 +39,4 @@ public class ApprovedAndReceivedPaths {
         String approvedContent = silentRead(approvedFile);
         return receivedContent.equals(approvedContent);
     }
-
-    /**
-     * Returns a list of all the *approved* files contained in the current approvals folder. The *approved* files will
-     * be identified by their file extension and will be searched to a maximum depth of 5 folders.
-     *
-     * @return A list of all *approved* files contained in the current approvals folder.
-     */
-    public List<Path> approvedFilesInFolder() {
-        return searchFiles(approvedFile)
-            .filter(path -> path.toString().endsWith(".approved"))
-            .collect(Collectors.toList());
-    }
-
 }
