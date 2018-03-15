@@ -167,6 +167,22 @@ public class Approvals {
         verify(output, approvedAndReceived(customFileName));
     }
 
+    public void verifyAgainstMasterFolder(Path actualFolder) {
+        ApprovedAndReceivedPaths approvedAndReceived = approvedAndReceived(callerMethodName());
+        ApprovalsFiles context = approbation.defaultFiles();
+
+        Path approvedFolder = approvedAndReceived.approvedFile;
+        Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches =
+            context.approvedFilesInFolder()
+                .stream()
+                .map(approvedFile -> approvedAndReceived(actualFolder, approvedFolder, approvedFile))
+                .collect(partitioningBy(ar -> ar.haveSameContent()));
+
+        matchesAndMismatches.get(true).forEach(ar -> silentRemove(ar.receivedFile));
+
+        handleMismatches(matchesAndMismatches.get(false));
+    }
+
     private void verify(final Object output, final ApprovedAndReceivedPaths files) {
         write(output.toString(), files.receivedFile);
         init(files.approvedFile);
@@ -219,20 +235,7 @@ public class Approvals {
         return callerMethod(testClass).orElse("unknown_method");
     }
 
-    public void verifyAgainstMasterFolder(Path actualFolder) {
-        ApprovalsFiles context = approbation.defaultFiles();
 
-        Path approvedFolder = context.approvalsFolder();
-        Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches =
-            context.approvedFilesInFolder()
-                .stream()
-                .map(approvedFile -> approvedAndReceived(actualFolder, approvedFolder, approvedFile))
-                .collect(partitioningBy(ar -> ar.haveSameContent()));
-
-        matchesAndMismatches.get(true).forEach(ar -> silentRemove(ar.receivedFile));
-
-        handleMismatches(matchesAndMismatches.get(false));
-    }
 
     private void handleMismatches(List<ApprovedAndReceivedPaths> mismatches) {
         mismatches.forEach(mismatch -> reporter.mismatch(mismatch.approvedFile, mismatch.receivedFile));

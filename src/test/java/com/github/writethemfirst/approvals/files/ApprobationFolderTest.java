@@ -40,7 +40,7 @@ class ApprobationFolderTest {
 
         //THEN
         Path expectedPath = Paths.get("src/test/resources/com/github/writethemfirst/approvals/files" +
-            "/ApprobationFolderTest/approvedFolderShouldBeExpectedPath.Files");
+            "/ApprobationFolderTest/approvedFolderShouldBeExpectedPath.approved");
         assertThat(approvedFile).isEqualTo(expectedPath);
     }
 
@@ -48,7 +48,7 @@ class ApprobationFolderTest {
     void approvedFolderShouldContainListedFiles() throws IOException {
         //GIVEN
         Path parent = Paths.get("src/test/resources/com/github/writethemfirst/approvals/files" +
-            "/ApprobationFolderTest/approvedFolderShouldContainListedFiles.Files");
+            "/ApprobationFolderTest/approvedFolderShouldContainListedFiles.approved");
         silentRecursiveRemove(parent.toFile());
         createDirectories(parent.resolve("sub"));
         Path xml = parent.resolve("sample.xml.approved");

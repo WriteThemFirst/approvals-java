@@ -55,7 +55,7 @@ public class ApprobationContext {
      * @return The path to a folder dedicated to storing the approvals files of the current context.
      */
     public Path approvalsFolder() {
-        final String folderName = format("%s.Files", fileName);
+        final String folderName = format("%s.approved", fileName);
         return folder.resolve(folderName);
     }
 
