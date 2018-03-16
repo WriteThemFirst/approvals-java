@@ -18,15 +18,31 @@
 package com.github.writethemfirst.approvals.files;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
+import static com.github.writethemfirst.approvals.utils.FileUtils.searchFiles;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 
+/**
+ * Convenience class to store a pair of *approved* and *received* paths.
+ *
+ * These paths usually point to text files which can be compared with {@link #filesHaveSameContent()}.
+ *
+ * When used by {@link com.github.writethemfirst.approvals.Approvals#verifyAgainstMasterFolder(Path)}, they can also
+ * point either to:
+ *
+ * - the pair of *approved* and *received* folders which are globally compared - a pair of files (with no special
+ * extension this time) in these folders
+ *
+ * {@link #equals(Object)} and {@link #hashCode()} have been overridden so we can filter out duplicates.
+ */
 public class ApprovedAndReceivedPaths {
     public final Path approved;
     public final Path received;
 
 
-    public ApprovedAndReceivedPaths(final Path approved, final Path received) {
+    private ApprovedAndReceivedPaths(final Path approved, final Path received) {
         this.approved = approved;
         this.received = received;
     }
@@ -37,12 +53,25 @@ public class ApprovedAndReceivedPaths {
         return receivedContent.equals(approvedContent);
     }
 
+
+    /**
+     * When `this` is a pair of folders, constructs all pairs of files.
+     */
+    public Stream<ApprovedAndReceivedPaths> allFilesToCheck() {
+        return Stream
+            .concat(
+                searchFiles(approved).map(this::forApprovedFile),
+                searchFiles(received).map(this::forReceivedFile)
+            )
+            .distinct();
+    }
+
     /**
      * When `this` represents a pairs of folders, returns a pair of files in these folders.
      *
      * @param approvedFile a file in the `approved` folder
      */
-    public ApprovedAndReceivedPaths forApprovedFile(final Path approvedFile) {
+    private ApprovedAndReceivedPaths forApprovedFile(final Path approvedFile) {
         final Path approvedRelative = approved.relativize(approvedFile);
         final Path receivedFile = received.resolve(approvedRelative);
         return new ApprovedAndReceivedPaths(approvedFile, receivedFile);
@@ -53,7 +82,7 @@ public class ApprovedAndReceivedPaths {
      *
      * @param receivedFile a file in the `received` folder
      */
-    public ApprovedAndReceivedPaths forReceivedFile(final Path receivedFile) {
+    private ApprovedAndReceivedPaths forReceivedFile(final Path receivedFile) {
         final Path receivedRelative = received.relativize(receivedFile);
         final Path approvedFile = approved.resolve(receivedRelative);
         return new ApprovedAndReceivedPaths(approvedFile, receivedFile);
@@ -75,4 +104,19 @@ public class ApprovedAndReceivedPaths {
         result = 31 * result + received.hashCode();
         return result;
     }
+
+
+    /**
+     * Factory method for standard names.
+     */
+    public static ApprovedAndReceivedPaths approvedAndReceived(final Path folder, final String methodName) {
+        return new ApprovedAndReceivedPaths(
+            path(folder, methodName, "approved"),
+            path(folder, methodName, "received"));
+    }
+
+    private static Path path(final Path folder, final String methodName, final String extension) {
+        return Paths.get(folder.resolve(methodName) + "." + extension);
+    }
+
 }

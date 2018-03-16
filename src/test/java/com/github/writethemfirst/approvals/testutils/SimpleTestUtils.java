@@ -20,24 +20,19 @@ package com.github.writethemfirst.approvals.testutils;
 import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static java.nio.file.Paths.get;
 
 public class SimpleTestUtils {
-    private final Path folderForClass;
     public final Path received;
     public final Path approved;
 
     public SimpleTestUtils(final String methodName, final Class<?> testClass) {
         final String className = testClass.getSimpleName();
         final Path packageResourcesPath = get("src/test/resources/", testClass.getPackage().getName().split("\\."));
-        folderForClass = packageResourcesPath.resolve(className);
-        final ApprovedAndReceivedPaths approvedAndReceivedPaths = new ApprovedAndReceivedPaths(
-            path(methodName, "approved"),
-            path(methodName, "received"));
+        final Path folderForClass = packageResourcesPath.resolve(className);
+        final ApprovedAndReceivedPaths approvedAndReceivedPaths = ApprovedAndReceivedPaths.approvedAndReceived(folderForClass, methodName);
         received = approvedAndReceivedPaths.received;
         approved = approvedAndReceivedPaths.approved;
     }
@@ -58,10 +53,4 @@ public class SimpleTestUtils {
         silentRemove(received);
         silentRemove(approved);
     }
-
-
-    private Path path(final String methodName, final String extension) {
-        return Paths.get(folderForClass.resolve(methodName) + "." + extension);
-    }
-
 }

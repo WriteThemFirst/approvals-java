@@ -28,15 +28,13 @@ import static com.github.writethemfirst.approvals.utils.FileUtils.silentRecursiv
 import static com.github.writethemfirst.approvals.utils.FileUtils.write;
 
 public class FolderTestUtils {
-    private final Path folderForClass = Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsFolderTest");
     public final Path received;
     public final Path approved;
     public final Path actual;
 
     public FolderTestUtils(final String methodName) throws IOException {
-        final ApprovedAndReceivedPaths approvedAndReceivedPaths = new ApprovedAndReceivedPaths(
-            path(methodName, "approved"),
-            path(methodName, "received"));
+        final Path folderForClass = Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsFolderTest");
+        final ApprovedAndReceivedPaths approvedAndReceivedPaths = ApprovedAndReceivedPaths.approvedAndReceived(folderForClass, methodName);
         received = approvedAndReceivedPaths.received;
         approved = approvedAndReceivedPaths.approved;
         actual = Files.createTempDirectory(methodName);
@@ -58,10 +56,4 @@ public class FolderTestUtils {
         silentRecursiveRemove(received);
         silentRecursiveRemove(approved);
     }
-
-
-    private Path path(final String methodName, final String extension) {
-        return Paths.get(folderForClass.resolve(methodName) + "." + extension);
-    }
-
 }
