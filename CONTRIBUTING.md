@@ -113,7 +113,7 @@ We're using the default IntelliJ IDEA Java Formatter with those modifications:
 - Should be updated along with the contributions,
 - Should contain examples and code snippets when required,
 - Should contain references to latest versions of the library,
-- Shoul have an up-to-date table of contents,
+- Should have an up-to-date table of contents,
 
 ## Commits
 
