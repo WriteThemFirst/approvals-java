@@ -22,19 +22,22 @@ import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
+import static com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths.approvedAndReceived;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRecursiveRemove;
 import static com.github.writethemfirst.approvals.utils.FileUtils.write;
+import static java.nio.file.Paths.get;
 
 public class FolderTestUtils {
     public final Path received;
     public final Path approved;
     public final Path actual;
 
-    public FolderTestUtils(final String methodName) throws IOException {
-        final Path folderForClass = Paths.get("src\\test\\resources\\com\\github\\writethemfirst\\approvals\\ApprovalsFolderTest");
-        final ApprovedAndReceivedPaths approvedAndReceivedPaths = ApprovedAndReceivedPaths.approvedAndReceived(folderForClass, methodName);
+    public FolderTestUtils(final String methodName, final Class<?> testClass) throws IOException {
+        final String className = testClass.getSimpleName();
+        final Path packageResourcesPath = get("src/test/resources/", testClass.getPackage().getName().split("\\."));
+        final Path folderForClass = packageResourcesPath.resolve(className);
+        final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceived(folderForClass, methodName);
         received = approvedAndReceivedPaths.received;
         approved = approvedAndReceivedPaths.approved;
         actual = Files.createTempDirectory(methodName);
