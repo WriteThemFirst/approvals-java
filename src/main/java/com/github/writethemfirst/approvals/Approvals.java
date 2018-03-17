@@ -20,7 +20,7 @@ package com.github.writethemfirst.approvals;
 import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.FileUtils;
-import com.github.writethemfirst.approvals.utils.functions.Function1;
+import com.github.writethemfirst.approvals.utils.functions.*;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -231,6 +231,95 @@ public class Approvals {
         verifyAll(Arrays.asList(args1), f);
     }
 
+    public <I1, I2> void verifyAll(
+        final Iterable<I1> args1,
+        final Iterable<I2> args2,
+        final Function2<I1, I2, ?> f) {
+
+        verify(callWithAll(args1, args2, f));
+    }
+
+    public <I1, I2> void verifyAll(
+        final I1[] args1,
+        final I2[] args2,
+        final Function2<I1, I2, ?> f) {
+        verifyAll(
+            Arrays.asList(args1),
+            Arrays.asList(args2),
+            f);
+    }
+
+    public <I1, I2, I3> void verifyAll(
+        final Iterable<I1> args1,
+        final Iterable<I2> args2,
+        final Iterable<I3> args3,
+        final Function3<I1, I2, I3, ?> f) {
+
+        verify(callWithAll(args1, args2, args3, f));
+    }
+
+    public <I1, I2, I3> void verifyAll(
+        final I1[] args1,
+        final I2[] args2,
+        final I3[] args3,
+        final Function3<I1, I2, I3, ?> f) {
+        verifyAll(
+            Arrays.asList(args1),
+            Arrays.asList(args2),
+            Arrays.asList(args3),
+            f);
+    }
+
+    public <I1, I2, I3, I4> void verifyAll(
+        final Iterable<I1> args1,
+        final Iterable<I2> args2,
+        final Iterable<I3> args3,
+        final Iterable<I4> args4,
+        final Function4<I1, I2, I3, I4, ?> f) {
+
+        verify(callWithAll(args1, args2, args3, args4, f));
+    }
+
+    public <I1, I2, I3, I4> void verifyAll(
+        final I1[] args1,
+        final I2[] args2,
+        final I3[] args3,
+        final I4[] args4,
+        final Function4<I1, I2, I3, I4, ?> f) {
+        verifyAll(
+            Arrays.asList(args1),
+            Arrays.asList(args2),
+            Arrays.asList(args3),
+            Arrays.asList(args4),
+            f);
+    }
+
+    public <I1, I2, I3, I4, I5> void verifyAll(
+        final Iterable<I1> args1,
+        final Iterable<I2> args2,
+        final Iterable<I3> args3,
+        final Iterable<I4> args4,
+        final Iterable<I5> args5,
+        final Function5<I1, I2, I3, I4, I5, ?> f) {
+
+        verify(callWithAll(args1, args2, args3, args4, args5, f));
+    }
+
+    public <I1, I2, I3, I4, I5> void verifyAll(
+        final I1[] args1,
+        final I2[] args2,
+        final I3[] args3,
+        final I4[] args4,
+        final I5[] args5,
+        final Function5<I1, I2, I3, I4, I5, ?> f) {
+        verifyAll(
+            Arrays.asList(args1),
+            Arrays.asList(args2),
+            Arrays.asList(args3),
+            Arrays.asList(args4),
+            Arrays.asList(args5),
+            f);
+    }
 
     /**
      * Computes and returns the Path to the folder to be used for storing the *approved* and *received* files linked to

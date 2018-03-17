@@ -20,6 +20,9 @@ package com.github.writethemfirst.approvals;
 import com.github.writethemfirst.approvals.testutils.SimpleTestUtils;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -40,6 +43,53 @@ class ApprovalsVerifyAllTest {
             .contains("(1) => 2")
             .contains("(2) => 3")
             .contains("(3) => 4");
+
+        testUtils.cleanupPaths();
+    }
+
+    @Test
+    void shouldReportMismatchWithTwoArguments() {
+        final Reporter reporter = mock(Reporter.class);
+        final Approvals approvals = new Approvals(reporter);
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithTwoArguments", getClass());
+
+        try {
+            approvals.verifyAll(
+                asList(1, 2),
+                asList(4, 6),
+                (x, y) -> x + y);
+        } catch (final AssertionError e) {
+            // expected
+        }
+
+        assertThat(testUtils.readReceived())
+            .contains("(1,4) => 5")
+            .contains("(2,6) => 8");
+
+        testUtils.cleanupPaths();
+    }
+
+    @Test
+    void shouldReportMismatchWithFiveArguments() {
+        final Reporter reporter = mock(Reporter.class);
+        final Approvals approvals = new Approvals(reporter);
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithFiveArguments", getClass());
+
+        try {
+            approvals.verifyAll(
+                asList(1, 2),
+                asList(3, 4),
+                asList(5, 6),
+                asList(7, 8),
+                asList(9, 10),
+                (x, y, a, b, c) -> x + y + a + b + c);
+        } catch (final AssertionError e) {
+            // expected
+        }
+
+        assertThat(testUtils.readReceived())
+            .contains("(1,4,6,7,9) => 27")
+            .contains("(2,3,6,8,10) => 29");
 
         testUtils.cleanupPaths();
     }
