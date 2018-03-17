@@ -63,8 +63,8 @@ class ApprovalsVerifyAllTest {
         }
 
         assertThat(testUtils.readReceived())
-            .contains("(1,4) => 5")
-            .contains("(2,6) => 8");
+            .contains("(1, 4) => 5")
+            .contains("(2, 6) => 8");
 
         testUtils.cleanupPaths();
     }
@@ -88,8 +88,8 @@ class ApprovalsVerifyAllTest {
         }
 
         assertThat(testUtils.readReceived())
-            .contains("(1,4,6,7,9) => 27")
-            .contains("(2,3,6,8,10) => 29");
+            .contains("(1, 4, 6, 7, 9) => 27")
+            .contains("(2, 3, 6, 8, 10) => 29");
 
         testUtils.cleanupPaths();
     }

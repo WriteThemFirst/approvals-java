@@ -75,7 +75,7 @@ public class FunctionUtils {
                 for (final I3 a3 : args3) {
                     for (final I4 a4 : args4) {
                         for (final I5 a5 : args5) {
-                            results.append(format("%s => ", mkString("(", ",", ")", a1, a2, a3, a4, a5)));
+                            results.append(format("%s => ", mkString("(", ", ", ")", a1, a2, a3, a4, a5)));
                             try {
                                 results.append(f.call(a1, a2, a3, a4, a5));
                             } catch (final Exception e) {
