@@ -20,6 +20,7 @@ package com.github.writethemfirst.approvals;
 import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.FileUtils;
+import com.github.writethemfirst.approvals.utils.functions.Function1;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -29,6 +30,7 @@ import static com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
+import static com.github.writethemfirst.approvals.utils.functions.FunctionUtils.callWithAll;
 import static java.nio.file.Paths.get;
 import static java.util.stream.Collectors.partitioningBy;
 
@@ -218,6 +220,10 @@ public class Approvals {
             .allFilesToCheck()
             .map(paths -> paths.approved)
             .forEach(FileUtils::init);
+    }
+
+    public <I1> void verifyAll(final I1[] args1, final Function1<I1, ?> f) {
+        verify(callWithAll(args1, f));
     }
 
 
