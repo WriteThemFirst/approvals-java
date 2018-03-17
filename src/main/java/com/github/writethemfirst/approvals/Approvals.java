@@ -23,6 +23,7 @@ import com.github.writethemfirst.approvals.utils.FileUtils;
 import com.github.writethemfirst.approvals.utils.functions.Function1;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -222,8 +223,12 @@ public class Approvals {
             .forEach(FileUtils::init);
     }
 
-    public <I1> void verifyAll(final I1[] args1, final Function1<I1, ?> f) {
+    public <I1> void verifyAll(final Iterable<I1> args1, final Function1<I1, ?> f) {
         verify(callWithAll(args1, f));
+    }
+
+    public <I1> void verifyAll(final I1[] args1, final Function1<I1, ?> f) {
+        verifyAll(Arrays.asList(args1), f);
     }
 
 

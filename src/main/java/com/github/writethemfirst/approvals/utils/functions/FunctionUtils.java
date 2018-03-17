@@ -18,55 +18,56 @@
 package com.github.writethemfirst.approvals.utils.functions;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
 public class FunctionUtils {
     private static final Object EMPTY_ENTRY = new Object();
-    private static final Object[] EMPTY = {EMPTY_ENTRY};
+    private static final Iterable<Object> EMPTY = Collections.singletonList(EMPTY_ENTRY);
 
-     public static <I1> String callWithAll(
-        final I1[] args1,
+    public static <I1> String callWithAll(
+        final Iterable<I1> args1,
         final Function1<I1, ?> f) {
 
         return callWithAll(args1, EMPTY, (e1, e2) -> f.call(e1));
     }
 
     public static <I1, I2> String callWithAll(
-        final I1[] args1,
-        final I2[] args2,
+        final Iterable<I1> args1,
+        final Iterable<I2> args2,
         final Function2<I1, I2, ?> f) {
 
         return callWithAll(args1, args2, EMPTY, (e1, e2, e3) -> f.call(e1, e2));
     }
 
-     public static <I1, I2, I3> String callWithAll(
-        final I1[] args1,
-        final I2[] args2,
-        final I3[] args3,
+    public static <I1, I2, I3> String callWithAll(
+        final Iterable<I1> args1,
+        final Iterable<I2> args2,
+        final Iterable<I3> args3,
         final Function3<I1, I2, I3, ?> f) {
 
         return callWithAll(args1, args2, args3, EMPTY, (e1, e2, e3, e4) -> f.call(e1, e2, e3));
 
     }
 
-     public static <I1, I2, I3, I4> String callWithAll(
-        final I1[] args1,
-        final I2[] args2,
-        final I3[] args3,
-        final I4[] args4,
+    public static <I1, I2, I3, I4> String callWithAll(
+        final Iterable<I1> args1,
+        final Iterable<I2> args2,
+        final Iterable<I3> args3,
+        final Iterable<I4> args4,
         final Function4<I1, I2, I3, I4, ?> f) {
 
         return callWithAll(args1, args2, args3, args4, EMPTY, (e1, e2, e3, e4, e5) -> f.call(e1, e2, e3, e4));
     }
 
-     public static <I1, I2, I3, I4, I5> String callWithAll(
-        final I1[] args1,
-        final I2[] args2,
-        final I3[] args3,
-        final I4[] args4,
-        final I5[] args5,
+    public static <I1, I2, I3, I4, I5> String callWithAll(
+        final Iterable<I1> args1,
+        final Iterable<I2> args2,
+        final Iterable<I3> args3,
+        final Iterable<I4> args4,
+        final Iterable<I5> args5,
         final Function5<I1, I2, I3, I4, I5, ?> f) {
         final StringBuilder results = new StringBuilder();
         for (final I1 a1 : args1) {
@@ -89,7 +90,7 @@ public class FunctionUtils {
         return results.toString();
     }
 
-     static String mkString(
+    private static String mkString(
         final String prefix,
         final String delimiter,
         final String suffix,

@@ -21,6 +21,9 @@ import com.github.writethemfirst.approvals.Approvals;
 import com.github.writethemfirst.approvals.utils.functions.FunctionUtils;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static java.lang.String.format;
 
 class FunctionUtilsTest {
@@ -28,8 +31,8 @@ class FunctionUtilsTest {
 
     @Test
     void shouldBeCalledWithAllArguments() {
-        final Integer[] args1 = new Integer[]{10, 20, 30};
-        final Long[] args2 = new Long[]{4L, 5L, 0L};
+        final List<Integer> args1 = Arrays.asList(10, 20, 30);
+        final List<Long> args2 = Arrays.asList(4L, 5L, 0L);
         final String results = FunctionUtils.callWithAll(args1, args2, (a, b) -> a / b);
         approvals.verify(results);
     }
