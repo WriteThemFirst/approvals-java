@@ -177,7 +177,7 @@ Which means you no longer write assertions... You just approve the data which wi
 
 Approvals-Java is a simple Java framework allowing you to compute verifications of what your source code is doing, relying on *Approval Testing* principles.
 
-Instead of writing tons of assertions, you simply call `Approvals.verify(result);`.
+Instead of writing tons of assertions, you simply call `approvals.verify(result);`.
 
 1. The first time `verify` is called, a *received* file is generated with a representation of its argument,
 2. You review the content and *approve* it by renaming the file, *(this step is usually facilitated by a merge tool detected and launched by Approvals-Java)*
@@ -231,7 +231,7 @@ public class GildedRoseApprovalTest {
 }
 ```
 
-The `toString()` of sword is used for representing the data to be stored in the *approved* file.
+The `toString()` of `sword` is used for representing the data to be stored in the *approved* file.
 
 ## Verify each file in a folder
 
@@ -243,16 +243,82 @@ import com.github.writethemfirst.approvals.Approvals;
 public class GildedRoseApprovalTests {
     @Test
     void approvalCopySrcFolder() {
-        final Approvals approvals = new Approvals(getClass());
+        final Approvals approvals = new Approvals();
         
         final Path output = Files.createTempDirectory("src");
         FolderCopy.copyFrom(Paths.get("."), output);
-        approvals.verifyEachFileInDirectory(output.toFile(), f -> f.getName().endsWith(".xml"));
+        approvals.verifyAgainstMasterFolder(output);
     }
 }
 ```
 
 Each file in `output` is checked against the master directory.
+
+## Verify a method with combinations of arguments
+
+This can save you a lot of time instead of manual assertions, and still cover for limit cases
+like those which [mutation testing](http://pitest.org/) detected.
+
+```java
+package com.examples;
+
+import com.github.writethemfirst.approvals.Approvals;
+
+class GildedRoseApprovalTest {
+
+    private Approvals approvals = new Approvals();
+   
+    @Test
+    void updateQuality_pass_shouldEvolve() {
+        approvals.verifyAll(
+            asList("Backstage passes"),
+            asList(-1, 0, 1, 5, 6, 10, 11),
+            asList(-1, 0, 1, 10),
+            this::doTest);
+    }
+
+    private Item doTest(String name, int sellIn, int quality) {
+        Item[] items = new Item[]{new Item(name, sellIn, quality)};
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        return app.items[0];
+    }
+}
+```
+
+Each of the 28 combinations of `name`, `sellIn`, `quality` is used to call `doTest(name, sellIn, quality)`.
+
+The 28 results are stored in the *received* text file and compared with the *approved* text file, which should look like:
+
+    (Backstage passes, -1, -1) => Backstage passes, -2, 0
+    (Backstage passes, -1, 0) => Backstage passes, -2, 0
+    (Backstage passes, -1, 1) => Backstage passes, -2, 0
+    (Backstage passes, -1, 10) => Backstage passes, -2, 0
+    (Backstage passes, 0, -1) => Backstage passes, -1, 0
+    (Backstage passes, 0, 0) => Backstage passes, -1, 0
+    (Backstage passes, 0, 1) => Backstage passes, -1, 0
+    (Backstage passes, 0, 10) => Backstage passes, -1, 0
+    (Backstage passes, 1, -1) => Backstage passes, 0, 2
+    (Backstage passes, 1, 0) => Backstage passes, 0, 3
+    (Backstage passes, 1, 1) => Backstage passes, 0, 4
+    (Backstage passes, 1, 10) => Backstage passes, 0, 13
+    (Backstage passes, 5, -1) => Backstage passes, 4, 2
+    (Backstage passes, 5, 0) => Backstage passes, 4, 3
+    (Backstage passes, 5, 1) => Backstage passes, 4, 4
+    (Backstage passes, 5, 10) => Backstage passes, 4, 13
+    (Backstage passes, 6, -1) => Backstage passes, 5, 1
+    (Backstage passes, 6, 0) => Backstage passes, 5, 2
+    (Backstage passes, 6, 1) => Backstage passes, 5, 3
+    (Backstage passes, 6, 10) => Backstage passes, 5, 12
+    (Backstage passes, 10, -1) => Backstage passes, 9, 1
+    (Backstage passes, 10, 0) => Backstage passes, 9, 2
+    (Backstage passes, 10, 1) => Backstage passes, 9, 3
+    (Backstage passes, 10, 10) => Backstage passes, 9, 12
+    (Backstage passes, 11, -1) => Backstage passes, 10, 0
+    (Backstage passes, 11, 0) => Backstage passes, 10, 1
+    (Backstage passes, 11, 1) => Backstage passes, 10, 2
+    (Backstage passes, 11, 10) => Backstage passes, 10, 11
+
 
 # Advanced documentation
 
@@ -268,13 +334,21 @@ This project is completely open to any contributions! *(and remember: feedbacks 
 
 Do not hesitate to:
 
-1. [Submit issues](https://github.com/WriteThemFirst/approvals-java/issues/new) about any feedbacks you may have about the library,
-2. [Send us a Pull Request](https://github.com/WriteThemFirst/approvals-java/pulls) with any contribution you think about,
-3. [Have a look at open issues](https://github.com/WriteThemFirst/approvals-java/issues) if you want to find a topic to work on,
-4. Do not hesitate to have a look at [good first issues](https://github.com/WriteThemFirst/approvals-java/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3A%2B1%3A+good+first+issue%22) or [help wanted issues](https://github.com/WriteThemFirst/approvals-java/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3Asos%3A+help+wanted%22) if you search for something to start with!
+1. [Submit issues](https://github.com/WriteThemFirst/approvals-java/issues/new) 
+  about any feedbacks you may have about the library,
+2. [Send us a Pull Request](https://github.com/WriteThemFirst/approvals-java/pulls) 
+  with any contribution you think about,
+3. [Have a look at open issues](https://github.com/WriteThemFirst/approvals-java/issues)
+  if you want to find a topic to work on,
+4. Do not hesitate to have a look at 
+  [good first issues](https://github.com/WriteThemFirst/approvals-java/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3A%2B1%3A+good+first+issue%22) 
+  or [help wanted issues](https://github.com/WriteThemFirst/approvals-java/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3Asos%3A+help+wanted%22) 
+  if you search for something to start with!
 5. Get in touch with us to discuss about what you'd like to contribute if you don't feel like starting alone ;)
 
-Before contributing though, please have a look at our [Code of Conduct](CODE_OF_CONDUCT.md) *(because we value humans and their differences)* and to our [Contribution Guide](CONTRIBUTING.md) *(because we think that a few rules allow to work faster and safer)*.
+Before contributing though, please have a look 
+at our [Code of Conduct](CODE_OF_CONDUCT.md) *(because we value humans and their differences)* 
+and to our [Contribution Guide](CONTRIBUTING.md) *(because we think that a few rules allow to work faster and safer)*.
 
 Do not hesitate to discuss anything from those documents if you feel they need any modification though.
 
@@ -282,7 +356,8 @@ Do not hesitate to discuss anything from those documents if you feel they need a
 
 Approvals-Java is inspired by [ApprovalTests](http://approvaltests.sourceforge.net/).
 
-We really liked the idea of approval testing but not so much the Java implementation *([Github](https://github.com/approvals/ApprovalTests.Java))*.
+We really liked the idea of approval testing but not so much the Java implementation 
+([Github](https://github.com/approvals/ApprovalTests.Java)).
 
 Our main concerns were that:
 
@@ -292,7 +367,8 @@ Our main concerns were that:
 
 So we decided to implement quickly a subset of the initial features and deploy the dependency on Maven Central!
 
-Thanks a lot to [all the people behind Approvals](https://github.com/orgs/approvals/people) then, because we surely got the inspiration from their work! 
+Thanks a lot to [all the people behind Approvals](https://github.com/orgs/approvals/people),
+because we got the inspiration from their work! 
 
 Thanks also to all people who created those tools we love:
 
@@ -302,9 +378,12 @@ Thanks also to all people who created those tools we love:
 
 # The team?
 
-[Write Them First!](https://github.com/WriteThemFirst) is just a bunch of french developers who strongly believe that automated tests are extremely important in software development. 
+[Write Them First!](https://github.com/WriteThemFirst) is just a bunch of french developers 
+who strongly believe that automated tests are extremely important in software development. 
 
-Since they also value [TDD](https://en.wikipedia.org/wiki/Test-driven_development) or [BDD](https://en.wikipedia.org/wiki/Behavior-driven_development), they decided to create a few *(at least one)* tools to make those activities easier! 
+Since they also value [TDD](https://en.wikipedia.org/wiki/Test-driven_development) 
+or [BDD](https://en.wikipedia.org/wiki/Behavior-driven_development), 
+they decided to create a few *(at least one)* tools to make those activities easier! 
 
 # License
 
