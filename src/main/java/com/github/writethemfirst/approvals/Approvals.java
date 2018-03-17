@@ -223,14 +223,56 @@ public class Approvals {
             .forEach(FileUtils::init);
     }
 
+    /**
+     * Compares the actual output of your program and the content of the *approved* file matching with the test method
+     * (see {@link #verify(Object)} for details).
+     *
+     * The lambda or method `f` is called for all values of `args1` specified in the {@link Iterable}. Then the results
+     * are stored, one line for each value, in a String, which is used as in the standard {@link #verify(Object)}
+     * method.
+     *
+     * @param args1 all values for the argument of `f` you want to verify
+     * @param f     the lambda or method you want to test
+     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
+     *                          framework like JUnit
+     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
+     */
     public <I1> void verifyAll(final Iterable<I1> args1, final Function1<I1, ?> f) {
         verify(callWithAll(args1, f));
     }
 
+    /**
+     * Compares the actual output of your program and the content of the *approved* file matching with the test method
+     * (see {@link #verify(Object)} for details).
+     *
+     * The lambda or method `f` is called for all values of `args1` specified in the array. Then the results are stored,
+     * one line for each value, in a String, which is used as in the standard {@link #verify(Object)} method.
+     *
+     * @param args1 all values for the argument of `f` you want to verify
+     * @param f     the lambda or method you want to test
+     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
+     *                          framework like JUnit
+     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
+     */
     public <I1> void verifyAll(final I1[] args1, final Function1<I1, ?> f) {
         verifyAll(Arrays.asList(args1), f);
     }
 
+    /**
+     * Compares the actual output of your program and the content of the *approved* file matching with the test method
+     * (see {@link #verify(Object)} for details).
+     *
+     * The lambda or method `f` is called for all values of `args1` and `args2` specified in the {@link Iterable}s. Then
+     * the results are stored, one line for each combination, in a String, which is used as in the standard {@link
+     * #verify(Object)} method.
+     *
+     * @param args1 all values for the first argument of `f` you want to verify
+     * @param args2 all values for the second argument of `f` you want to verify
+     * @param f     the lambda or method you want to test
+     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
+     *                          framework like JUnit
+     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
+     */
     public <I1, I2> void verifyAll(
         final Iterable<I1> args1,
         final Iterable<I2> args2,
@@ -239,6 +281,21 @@ public class Approvals {
         verify(callWithAll(args1, args2, f));
     }
 
+    /**
+     * Compares the actual output of your program and the content of the *approved* file matching with the test method
+     * (see {@link #verify(Object)} for details).
+     *
+     * The lambda or method `f` is called for all values of `args1` and `args2` specified in the arrayss. Then the
+     * results are stored, one line for each combination, in a String, which is used as in the standard {@link
+     * #verify(Object)} method.
+     *
+     * @param args1 all values for the first argument of `f` you want to verify
+     * @param args2 all values for the second argument of `f` you want to verify
+     * @param f     the lambda or method you want to test
+     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
+     *                          framework like JUnit
+     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
+     */
     public <I1, I2> void verifyAll(
         final I1[] args1,
         final I2[] args2,
@@ -249,6 +306,22 @@ public class Approvals {
             f);
     }
 
+    /**
+     * Compares the actual output of your program and the content of the *approved* file matching with the test method
+     * (see {@link #verify(Object)} for details).
+     *
+     * The lambda or method `f` is called for all values of `args1`, `args2` and `args3` specified in the {@link
+     * Iterable}s. Then the results are stored, one line for each combination, in a String, which is used as in the
+     * standard {@link #verify(Object)} method.
+     *
+     * @param args1 all values for the first argument of `f` you want to verify
+     * @param args2 all values for the second argument of `f` you want to verify
+     * @param args3 all values for the third argument of `f` you want to verify
+     * @param f     the lambda or method you want to test
+     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
+     *                          framework like JUnit
+     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
+     */
     public <I1, I2, I3> void verifyAll(
         final Iterable<I1> args1,
         final Iterable<I2> args2,
@@ -258,6 +331,22 @@ public class Approvals {
         verify(callWithAll(args1, args2, args3, f));
     }
 
+    /**
+     * Compares the actual output of your program and the content of the *approved* file matching with the test method
+     * (see {@link #verify(Object)} for details).
+     *
+     * The lambda or method `f` is called for all values of `args1`, `args2` and `args3` specified in the arrays. Then
+     * the results are stored, one line for each combination, in a String, which is used as in the standard {@link
+     * #verify(Object)} method.
+     *
+     * @param args1 all values for the first argument of `f` you want to verify
+     * @param args2 all values for the second argument of `f` you want to verify
+     * @param args3 all values for the third argument of `f` you want to verify
+     * @param f     the lambda or method you want to test
+     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
+     *                          framework like JUnit
+     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
+     */
     public <I1, I2, I3> void verifyAll(
         final I1[] args1,
         final I2[] args2,
@@ -270,6 +359,23 @@ public class Approvals {
             f);
     }
 
+    /**
+     * Compares the actual output of your program and the content of the *approved* file matching with the test method
+     * (see {@link #verify(Object)} for details).
+     *
+     * The lambda or method `f` is called for all values of `args1`, `args2`, `args3` and `args4` specified in the
+     * {@link Iterable}s. Then the results are stored, one line for each combination, in a String, which is used as in
+     * the standard {@link #verify(Object)} method.
+     *
+     * @param args1 all values for the first argument of `f` you want to verify
+     * @param args2 all values for the second argument of `f` you want to verify
+     * @param args3 all values for the third argument of `f` you want to verify
+     * @param args4 all values for the fourth argument of `f` you want to verify
+     * @param f     the lambda or method you want to test
+     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
+     *                          framework like JUnit
+     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
+     */
     public <I1, I2, I3, I4> void verifyAll(
         final Iterable<I1> args1,
         final Iterable<I2> args2,
@@ -280,6 +386,23 @@ public class Approvals {
         verify(callWithAll(args1, args2, args3, args4, f));
     }
 
+    /**
+     * Compares the actual output of your program and the content of the *approved* file matching with the test method
+     * (see {@link #verify(Object)} for details).
+     *
+     * The lambda or method `f` is called for all values of `args1`, `args2`, `args3` and `args4` specified in the
+     * arrays. Then the results are stored, one line for each combination, in a String, which is used as in the standard
+     * {@link #verify(Object)} method.
+     *
+     * @param args1 all values for the first argument of `f` you want to verify
+     * @param args2 all values for the second argument of `f` you want to verify
+     * @param args3 all values for the third argument of `f` you want to verify
+     * @param args4 all values for the fourth argument of `f` you want to verify
+     * @param f     the lambda or method you want to test
+     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
+     *                          framework like JUnit
+     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
+     */
     public <I1, I2, I3, I4> void verifyAll(
         final I1[] args1,
         final I2[] args2,
@@ -294,6 +417,24 @@ public class Approvals {
             f);
     }
 
+    /**
+     * Compares the actual output of your program and the content of the *approved* file matching with the test method
+     * (see {@link #verify(Object)} for details).
+     *
+     * The lambda or method `f` is called for all values of `args1`, `args2`, `args3`, `args4` and `args5` specified in
+     * the {@link Iterable}s. Then the results are stored, one line for each combination, in a String, which is used as
+     * in the standard {@link #verify(Object)} method.
+     *
+     * @param args1 all values for the first argument of `f` you want to verify
+     * @param args2 all values for the second argument of `f` you want to verify
+     * @param args3 all values for the third argument of `f` you want to verify
+     * @param args4 all values for the fourth argument of `f` you want to verify
+     * @param args5 all values for the fifth argument of `f` you want to verify
+     * @param f     the lambda or method you want to test
+     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
+     *                          framework like JUnit
+     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
+     */
     public <I1, I2, I3, I4, I5> void verifyAll(
         final Iterable<I1> args1,
         final Iterable<I2> args2,
@@ -305,6 +446,24 @@ public class Approvals {
         verify(callWithAll(args1, args2, args3, args4, args5, f));
     }
 
+    /**
+     * Compares the actual output of your program and the content of the *approved* file matching with the test method
+     * (see {@link #verify(Object)} for details).
+     *
+     * The lambda or method `f` is called for all values of `args1`, `args2`, `args3`, `args4` and `args5` specified in
+     * the arrays. Then the results are stored, one line for each combination, in a String, which is used as in the
+     * standard {@link #verify(Object)} method.
+     *
+     * @param args1 all values for the first argument of `f` you want to verify
+     * @param args2 all values for the second argument of `f` you want to verify
+     * @param args3 all values for the third argument of `f` you want to verify
+     * @param args4 all values for the fourth argument of `f` you want to verify
+     * @param args5 all values for the fifth argument of `f` you want to verify
+     * @param f     the lambda or method you want to test
+     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
+     *                          framework like JUnit
+     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
+     */
     public <I1, I2, I3, I4, I5> void verifyAll(
         final I1[] args1,
         final I2[] args2,
