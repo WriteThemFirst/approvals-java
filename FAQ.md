@@ -63,6 +63,6 @@ You can define a trait `Approbation` like this:
 import com.github.writethemfirst.approvals.Approvals
 
 trait Approbation {
-  val approvals = new Approvals(getClass)
+  val approvals = new Approvals()
 }
 ```

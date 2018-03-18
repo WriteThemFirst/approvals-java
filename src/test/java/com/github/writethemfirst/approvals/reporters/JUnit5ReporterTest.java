@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JUnit5ReporterTest {
-    private Approvals approvals = new Approvals(new JUnit5Reporter());
+    private final Approvals approvals = new Approvals().reportTo(new JUnit5Reporter());
 
 
     @Test

@@ -27,13 +27,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
 class ApprovalsSimpleTest {
-    private Approvals approvals = new Approvals(new ThrowsReporter());
+    private final Approvals approvals = new Approvals().reportTo(new ThrowsReporter());
 
 
     @Test
     void shouldThrowWhenMismatchAndUsingCommandReporter() {
         final CommandReporter reporter = mock(CommandReporter.class);
-        final Approvals approvals = new Approvals(reporter);
+        final Approvals approvals = new Approvals().reportTo(reporter);
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldThrowWhenMismatchAndUsingCommandReporter", getClass());
 
         testUtils.writeApproved("approved text");
@@ -143,11 +143,13 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldUseSpecificMethodName() {
+        Approvals approvals = new Approvals().writeTo("myScalaMethod").reportTo(new ThrowsReporter());
+
         final SimpleTestUtils testUtils = new SimpleTestUtils("myScalaMethod", getClass());
         testUtils.cleanupPaths();
 
         try {
-            approvals.verify("new content", "myScalaMethod");
+            approvals.verify("new content");
         } catch (final AssertionError e) {
             //expected
         }

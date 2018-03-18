@@ -20,8 +20,6 @@ package com.github.writethemfirst.approvals;
 import com.github.writethemfirst.approvals.testutils.SimpleTestUtils;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -30,7 +28,7 @@ class ApprovalsVerifyAllTest {
     @Test
     void shouldReportMismatchWithSingleArgument() {
         final Reporter reporter = mock(Reporter.class);
-        final Approvals approvals = new Approvals(reporter);
+        final Approvals approvals = new Approvals().reportTo(reporter);
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithSingleArgument", getClass());
 
         try {
@@ -50,7 +48,7 @@ class ApprovalsVerifyAllTest {
     @Test
     void shouldReportMismatchWithTwoArguments() {
         final Reporter reporter = mock(Reporter.class);
-        final Approvals approvals = new Approvals(reporter);
+        final Approvals approvals = new Approvals().reportTo(reporter);
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithTwoArguments", getClass());
 
         try {
@@ -72,7 +70,7 @@ class ApprovalsVerifyAllTest {
     @Test
     void shouldReportMismatchWithFiveArguments() {
         final Reporter reporter = mock(Reporter.class);
-        final Approvals approvals = new Approvals(reporter);
+        final Approvals approvals = new Approvals().reportTo(reporter);
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithFiveArguments", getClass());
 
         try {

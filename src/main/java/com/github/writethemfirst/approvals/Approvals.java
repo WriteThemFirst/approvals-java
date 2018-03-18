@@ -70,51 +70,20 @@ public class Approvals {
     /**
      * The Reporter to be used to report any mismatches while computing the files comparisons.
      */
-    private final Reporter reporter;
-    private final Path folder;
-    private final Class<?> testClass;
+    private Reporter reporter = Reporter.DEFAULT;
+    private String customFileName;
+    private final Class<?> testClass = callerClass(Approvals.class);
+    private final Path folder = folderForClass(testClass);
 
-    /**
-     * Constructs an `Approvals` object using
-     *
-     * - the default {@link Reporter} ({@link Reporter#DEFAULT})
-     *
-     * - the {@link com.github.writethemfirst.approvals.utils.StackUtils#callerClass(Class)}.
-     */
-    public Approvals() {
-        this(Reporter.DEFAULT);
-    }
 
-    /**
-     * Constructs an `Approvals` object using the {@link com.github.writethemfirst.approvals.utils.StackUtils#callerClass(Class)}.
-     *
-     * @param reporter The {@link Reporter} to trigger in case of differences between the output and an approved file's
-     *                 content.
-     */
-    public Approvals(final Reporter reporter) {
-        this(callerClass(Approvals.class), reporter);
-    }
-
-    /**
-     * Constructs an `Approvals` object using the default {@link Reporter} ({@link Reporter#DEFAULT}).
-     *
-     * @param clazz The calling test class. It is used in order to compute the *approved* files' names.
-     */
-    public Approvals(final Class<?> clazz) {
-        this(clazz, Reporter.DEFAULT);
-    }
-
-    /**
-     * Constructs an `Approvals` object.
-     *
-     * @param clazz    The calling test class. It is used in order to compute the *approved* files' names.
-     * @param reporter The {@link Reporter} to trigger in case of differences between the output and an approved file's
-     *                 content.
-     */
-    public Approvals(final Class<?> clazz, final Reporter reporter) {
-        this.testClass = clazz;
-        folder = folderForClass(clazz);
+    public Approvals reportTo(final Reporter reporter) {
         this.reporter = reporter;
+        return this;
+    }
+
+    public Approvals writeTo(final String customFileName) {
+        this.customFileName = customFileName;
+        return this;
     }
 
     /**
@@ -134,33 +103,9 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public void verify(final Object output) {
-        verify(output, approvedAndReceived(folder, callerMethodName()));
+        verify(output, approvedAndReceivedPaths());
     }
 
-    /**
-     * Compares the actual output of your program (the function's argument) and the content of the *approved* file
-     * matching with the test method.
-     *
-     * It'll use a temporary *received* file to store the output of your program. This file will be erased in case the
-     * results are matching. Otherwise, it will be kept for you to review it.
-     *
-     * In case of differences found in the output, the {@link Reporter} linked to this `Approvals` instance will be
-     * called ({@link Reporter#mismatch(Path, Path)}).
-     *
-     * This method is useful for non Java test frameworks (ScalaTest, KotlinTest ...) where the method name cannot be
-     * inferred from the stack.
-     *
-     * @param output         Any object with a {@link Object#toString()} representation containing the output of your
-     *                       program. It will be compared to the associated *approved* file.
-     * @param customFileName specifies the approval test file name which is used for both the *approved* and *received*
-     *                       files.
-     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
-     *                          framework like JUnit
-     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
-     */
-    public void verify(final Object output, final String customFileName) {
-        verify(output, approvedAndReceived(folder, customFileName));
-    }
 
     private void verify(final Object output, final ApprovedAndReceivedPaths files) {
         write(output.toString(), files.received);
@@ -190,7 +135,7 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public void verifyAgainstMasterFolder(final Path actualFolder) {
-        final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceived(folder, callerMethodName());
+        final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceivedPaths();
         prepareFolders(actualFolder, approvedAndReceivedPaths);
         final Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches =
             approvedAndReceivedPaths
@@ -513,5 +458,8 @@ public class Approvals {
         return callerMethod(testClass).orElse("unknown_method");
     }
 
+    private ApprovedAndReceivedPaths approvedAndReceivedPaths() {
+        return approvedAndReceived(folder, customFileName != null ? customFileName : callerMethodName());
+    }
 
 }
