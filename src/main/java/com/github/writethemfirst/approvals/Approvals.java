@@ -140,61 +140,6 @@ public class Approvals {
 
 
     /**
-     * Compares the actual output of your program (files in the folder `actualFolder`) and the content of the *approved*
-     * "Master" folder matching with the test method.
-     *
-     * It'll use a temporary *received* folder to copy the actual files from your program. This folder and its files
-     * will be erased in case the results are matching. Otherwise, they will be kept for you to review it.
-     *
-     * In case of differences found in the output, the {@link Reporter} linked to this `Approvals` instance will be
-     * called ({@link Reporter#mismatch(Path, Path)}) for each mismatched file.
-     *
-     * @param actualFolder the folder containing the output of your program. It will be compared to the associated
-     *                     *approved* folder
-     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
-     *                          framework like JUnit
-     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
-     */
-    public void verifyAllFiles(final Path actualFolder) {
-        final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceivedPaths();
-        prepareFolders(actualFolder, approvedAndReceivedPaths);
-        final Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches =
-            approvedAndReceivedPaths
-                .allFilesToCheck()
-                .collect(partitioningBy(ApprovedAndReceivedPaths::filesHaveSameContent));
-
-        cleanupReceivedFiles(approvedAndReceivedPaths, matchesAndMismatches);
-        reportMismatches(matchesAndMismatches);
-    }
-
-    private void reportMismatches(final Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches) {
-        matchesAndMismatches.get(false).forEach(mismatch -> reporter.mismatch(mismatch.approved, mismatch.received));
-    }
-
-    private void cleanupReceivedFiles(final ApprovedAndReceivedPaths approvedAndReceivedPaths, final Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches) {
-        matchesAndMismatches.get(true).forEach(ar -> silentRemove(ar.received));
-        if (matchesAndMismatches.get(false).isEmpty()) {
-            silentRecursiveRemove(approvedAndReceivedPaths.received);
-        }
-    }
-
-    /**
-     * Copies files from *actual* to *received* folder, and creates missing *approved* files.
-     */
-    private void prepareFolders(final Path actualFolder, final ApprovedAndReceivedPaths approvedAndReceivedPaths) {
-        try {
-            Files.createDirectories(approvedAndReceivedPaths.approved);
-        } catch (final IOException e) {
-            throw new RuntimeException("could not create *approved* folder " + approvedAndReceivedPaths.approved, e);
-        }
-        searchFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvedAndReceivedPaths.received));
-        approvedAndReceivedPaths
-            .allFilesToCheck()
-            .map(paths -> paths.approved)
-            .forEach(FileUtils::silentCreateFile);
-    }
-
-    /**
      * Computes and returns the Path to the folder to be used for storing the *approved* and *received* files linked to
      * the `testClass` instance.
      *
@@ -227,7 +172,7 @@ public class Approvals {
         return callerMethod(testClass).orElse("unknown_method");
     }
 
-    private ApprovedAndReceivedPaths approvedAndReceivedPaths() {
+     ApprovedAndReceivedPaths approvedAndReceivedPaths() {
         return approvedAndReceived(
             folder,
             customFileName != null ? customFileName : callerMethodName(),

@@ -56,7 +56,7 @@ public class CombinationApprovals extends Approvals {
         super(reporter, customFileName, testClass, folder, customExtension, headerWithLineFeed);
     }
 
-    CombinationApprovals header(final String headerWithLineFeed) {
+    private CombinationApprovals header(final String headerWithLineFeed) {
         return new CombinationApprovals(reporter, customFileName, testClass, folder, customExtension, headerWithLineFeed);
     }
 

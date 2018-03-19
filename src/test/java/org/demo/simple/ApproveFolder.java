@@ -17,14 +17,14 @@
  */
 package org.demo.simple;
 
-import com.github.writethemfirst.approvals.Approvals;
+import com.github.writethemfirst.approvals.FolderApprovals;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
 
 
 class ApproveFolder {
-    private Approvals approvals = new Approvals();
+    private final FolderApprovals approvals = new FolderApprovals();
 
     @Test
     void verifyFolder() {
