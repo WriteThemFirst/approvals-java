@@ -37,7 +37,6 @@ import static java.nio.file.Files.*;
  * Methods in that file are static so no instance of `FileUtils` is necessary.
  *
  * @author mdaviot / aneveux
- * @version 1.0
  */
 public class FileUtils {
 

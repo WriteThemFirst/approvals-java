@@ -35,7 +35,6 @@ import static java.util.Arrays.stream;
  * used by the *Approval Files*.
  *
  * @author mdaviot / aneveux
- * @version 1.0
  */
 public class StackUtils {
 

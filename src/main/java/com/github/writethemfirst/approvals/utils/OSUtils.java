@@ -29,7 +29,6 @@ package com.github.writethemfirst.approvals.utils;
  * That class aims at providing helper methods allowing to deal with OS specific operations.
  *
  * @author aneveux
- * @version 1.0
  */
 public class OSUtils {
 

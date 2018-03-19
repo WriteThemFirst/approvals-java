@@ -63,8 +63,7 @@ import static java.util.stream.Collectors.partitioningBy;
  * Approvals#verify(Object)} method, allowing to compute a comparison between an output and some content stored in an
  * *approved* file.
  *
- * @author mdaviot / aneveux //FiXME: remove all
- * @version 1.0
+ * @author mdaviot / aneveux
  * @see Reporter
  */
 public class Approvals {

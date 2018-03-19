@@ -106,7 +106,6 @@ We're using the default IntelliJ IDEA Java Formatter with those modifications:
 
 - Written for all packages (`package-info.java`), classes, and public functions (at least),
 - Written in Markdown, *(it'll be processed by pegdown doclet)*
-- Contains `@version` for classes, usage of `@since` in new methods is advised,
 
 ## Documentation
 

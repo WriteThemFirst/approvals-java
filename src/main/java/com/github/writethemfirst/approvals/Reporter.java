@@ -42,7 +42,6 @@ import java.nio.file.Path;
  * owns and  use them while computing the approvals.
  *
  * @author mdaviot / aneveux
- * @version 1.0
  */
 public interface Reporter {
 
