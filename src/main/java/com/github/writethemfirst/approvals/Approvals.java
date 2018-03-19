@@ -33,7 +33,7 @@ import static com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
-import static com.github.writethemfirst.approvals.utils.functions.FunctionUtils.callWithAll;
+import static com.github.writethemfirst.approvals.utils.functions.FunctionUtils.callWithAllCombinations;
 import static java.nio.file.Paths.get;
 import static java.util.stream.Collectors.partitioningBy;
 
@@ -108,8 +108,7 @@ public class Approvals {
     public void verify(final Object output) {
         final ApprovedAndReceivedPaths files = approvedAndReceivedPaths();
         write(output.toString(), files.received);
-        //FIXME: rename (silentCreate?)
-        init(files.approved);
+        silentCreateFile(files.approved);
         if (files.filesHaveSameContent()) {
             silentRemove(files.received);
         } else {
@@ -135,8 +134,7 @@ public class Approvals {
      *                          framework like JUnit
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
-    //FIXME: verifyFiles
-    public void verifyAgainstMasterFolder(final Path actualFolder) {
+    public void verifyAllFiles(final Path actualFolder) {
         final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceivedPaths();
         prepareFolders(actualFolder, approvedAndReceivedPaths);
         final Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches =
@@ -172,7 +170,7 @@ public class Approvals {
         approvedAndReceivedPaths
             .allFilesToCheck()
             .map(paths -> paths.approved)
-            .forEach(FileUtils::init);
+            .forEach(FileUtils::silentCreateFile);
     }
 
     /**
@@ -189,9 +187,8 @@ public class Approvals {
      *                          framework like JUnit
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
-    //FIXME: verifyCombinations x 5
-    public <I1> void verifyAll(final Iterable<I1> args1, final Function1<I1, ?> f) {
-        verify(callWithAll(args1, f));
+    public <I1> void verifyAllCombinations(final Iterable<I1> args1, final Function1<I1, ?> f) {
+        verify(callWithAllCombinations(args1, f));
     }
 
     /**
@@ -207,8 +204,8 @@ public class Approvals {
      *                          framework like JUnit
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
-    public <I1> void verifyAll(final I1[] args1, final Function1<I1, ?> f) {
-        verifyAll(Arrays.asList(args1), f);
+    public <I1> void verifyAllCombinations(final I1[] args1, final Function1<I1, ?> f) {
+        verifyAllCombinations(Arrays.asList(args1), f);
     }
 
     /**
@@ -226,12 +223,12 @@ public class Approvals {
      *                          framework like JUnit
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
-    public <I1, I2> void verifyAll(
+    public <I1, I2> void verifyAllCombinations(
         final Iterable<I1> args1,
         final Iterable<I2> args2,
         final Function2<I1, I2, ?> f) {
 
-        verify(callWithAll(args1, args2, f));
+        verify(callWithAllCombinations(args1, args2, f));
     }
 
     /**
@@ -249,11 +246,12 @@ public class Approvals {
      *                          framework like JUnit
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
-    public <I1, I2> void verifyAll(
+    public <I1, I2> void verifyAllCombinations(
         final I1[] args1,
         final I2[] args2,
         final Function2<I1, I2, ?> f) {
-        verifyAll(
+
+        verifyAllCombinations(
             Arrays.asList(args1),
             Arrays.asList(args2),
             f);
@@ -275,13 +273,13 @@ public class Approvals {
      *                          framework like JUnit
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
-    public <I1, I2, I3> void verifyAll(
+    public <I1, I2, I3> void verifyAllCombinations(
         final Iterable<I1> args1,
         final Iterable<I2> args2,
         final Iterable<I3> args3,
         final Function3<I1, I2, I3, ?> f) {
 
-        verify(callWithAll(args1, args2, args3, f));
+        verify(callWithAllCombinations(args1, args2, args3, f));
     }
 
     /**
@@ -300,12 +298,13 @@ public class Approvals {
      *                          framework like JUnit
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
-    public <I1, I2, I3> void verifyAll(
+    public <I1, I2, I3> void verifyAllCombinations(
         final I1[] args1,
         final I2[] args2,
         final I3[] args3,
         final Function3<I1, I2, I3, ?> f) {
-        verifyAll(
+
+        verifyAllCombinations(
             Arrays.asList(args1),
             Arrays.asList(args2),
             Arrays.asList(args3),
@@ -329,14 +328,14 @@ public class Approvals {
      *                          framework like JUnit
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
-    public <I1, I2, I3, I4> void verifyAll(
+    public <I1, I2, I3, I4> void verifyAllCombinations(
         final Iterable<I1> args1,
         final Iterable<I2> args2,
         final Iterable<I3> args3,
         final Iterable<I4> args4,
         final Function4<I1, I2, I3, I4, ?> f) {
 
-        verify(callWithAll(args1, args2, args3, args4, f));
+        verify(callWithAllCombinations(args1, args2, args3, args4, f));
     }
 
     /**
@@ -356,13 +355,13 @@ public class Approvals {
      *                          framework like JUnit
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
-    public <I1, I2, I3, I4> void verifyAll(
+    public <I1, I2, I3, I4> void verifyAllCombinations(
         final I1[] args1,
         final I2[] args2,
         final I3[] args3,
         final I4[] args4,
         final Function4<I1, I2, I3, I4, ?> f) {
-        verifyAll(
+        verifyAllCombinations(
             Arrays.asList(args1),
             Arrays.asList(args2),
             Arrays.asList(args3),
@@ -388,7 +387,7 @@ public class Approvals {
      *                          framework like JUnit
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
-    public <I1, I2, I3, I4, I5> void verifyAll(
+    public <I1, I2, I3, I4, I5> void verifyAllCombinations(
         final Iterable<I1> args1,
         final Iterable<I2> args2,
         final Iterable<I3> args3,
@@ -396,7 +395,7 @@ public class Approvals {
         final Iterable<I5> args5,
         final Function5<I1, I2, I3, I4, I5, ?> f) {
 
-        verify(callWithAll(args1, args2, args3, args4, args5, f));
+        verify(callWithAllCombinations(args1, args2, args3, args4, args5, f));
     }
 
     /**
@@ -417,14 +416,14 @@ public class Approvals {
      *                          framework like JUnit
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
-    public <I1, I2, I3, I4, I5> void verifyAll(
+    public <I1, I2, I3, I4, I5> void verifyAllCombinations(
         final I1[] args1,
         final I2[] args2,
         final I3[] args3,
         final I4[] args4,
         final I5[] args5,
         final Function5<I1, I2, I3, I4, I5, ?> f) {
-        verifyAll(
+        verifyAllCombinations(
             Arrays.asList(args1),
             Arrays.asList(args2),
             Arrays.asList(args3),

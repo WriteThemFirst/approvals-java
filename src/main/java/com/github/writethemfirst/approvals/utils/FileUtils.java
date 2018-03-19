@@ -65,7 +65,7 @@ public class FileUtils {
      * If it already exist, that method will do nothing. If there's any issue while creating the approval file, the
      * {@link IOException} will be wrapped in a {@link RuntimeException} and thrown.
      */
-    public static void init(final Path path) {
+    public static void silentCreateFile(final Path path) {
         final File file = path.toFile();
         if (!file.exists()) {
             try {

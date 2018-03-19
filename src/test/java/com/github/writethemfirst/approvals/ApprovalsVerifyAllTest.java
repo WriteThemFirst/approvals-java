@@ -32,7 +32,7 @@ class ApprovalsVerifyAllTest {
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithSingleArgument", getClass());
 
         try {
-            approvals.verifyAll(new Integer[]{1, 2, 3}, x -> x + 1);
+            approvals.verifyAllCombinations(new Integer[]{1, 2, 3}, x -> x + 1);
         } catch (final AssertionError e) {
             // expected
         }
@@ -52,7 +52,7 @@ class ApprovalsVerifyAllTest {
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithTwoArguments", getClass());
 
         try {
-            approvals.verifyAll(
+            approvals.verifyAllCombinations(
                 asList(1, 2),
                 asList(4, 6),
                 (x, y) -> x + y);
@@ -74,7 +74,7 @@ class ApprovalsVerifyAllTest {
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithFiveArguments", getClass());
 
         try {
-            approvals.verifyAll(
+            approvals.verifyAllCombinations(
                 asList(1, 2),
                 asList(3, 4),
                 asList(5, 6),

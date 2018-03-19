@@ -27,7 +27,7 @@ class VerifyAll {
 
     @Test
     void verifyAllWith3Arguments() {
-        approvals.verifyAll(
+        approvals.verifyAllCombinations(
             asList(1, 10, 100),
             asList(2, 20, 200),
             asList(5, 50),

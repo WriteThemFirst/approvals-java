@@ -29,7 +29,7 @@ import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
  *
  * These paths usually point to text files which can be compared with {@link #filesHaveSameContent()}.
  *
- * When used by {@link com.github.writethemfirst.approvals.Approvals#verifyAgainstMasterFolder(Path)}, they can also
+ * When used by {@link com.github.writethemfirst.approvals.Approvals#verifyAllFiles(Path)}, they can also
  * point either to:
  *
  * - the pair of *approved* and *received* folders which are globally compared - a pair of files (with no special

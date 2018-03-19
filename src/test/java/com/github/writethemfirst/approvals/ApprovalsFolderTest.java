@@ -38,7 +38,7 @@ class ApprovalsFolderTest {
         final FolderTestUtils testUtils = new FolderTestUtils("shouldDoNothingWhenBothFoldersAreEmpty", getClass());
 
         //WHEN
-        approvals.verifyAgainstMasterFolder(testUtils.actual);
+        approvals.verifyAllFiles(testUtils.actual);
 
         //THEN no exception should be thrown
 
@@ -50,7 +50,7 @@ class ApprovalsFolderTest {
         final FolderTestUtils testUtils = new FolderTestUtils("shouldThrowWhenAFileIsMissing", getClass());
         testUtils.writeApproved("some content", "someFile.txt");
 
-        assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(testUtils.actual))
+        assertThatThrownBy(() -> approvals.verifyAllFiles(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <some content> but was: <>");
 
@@ -62,7 +62,7 @@ class ApprovalsFolderTest {
         final FolderTestUtils testUtils = new FolderTestUtils("shouldThrowWhenAFileIsDifferent", getClass());
         testUtils.writeApproved("expected content", "sample.xml");
 
-        assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(testUtils.actual))
+        assertThatThrownBy(() -> approvals.verifyAllFiles(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <expected content> but was: <>");
 
@@ -78,7 +78,7 @@ class ApprovalsFolderTest {
         testUtils.writeApproved("approved2", "sample2.xml");
 
         try {
-            approvals.verifyAgainstMasterFolder(testUtils.actual);
+            approvals.verifyAllFiles(testUtils.actual);
         } catch (final AssertionError e) {
             // expected
         }
@@ -103,7 +103,7 @@ class ApprovalsFolderTest {
         testUtils.writeActual("actual2", "sample2.xml");
 
         try {
-            approvals.verifyAgainstMasterFolder(testUtils.actual);
+            approvals.verifyAllFiles(testUtils.actual);
         } catch (final AssertionError e) {
             // expected
         }
@@ -125,7 +125,7 @@ class ApprovalsFolderTest {
         testUtils.writeApproved("actual", "sample.xml");
         testUtils.writeReceived("actual", "sample.xml");
 
-        approvals.verifyAgainstMasterFolder(testUtils.actual);
+        approvals.verifyAllFiles(testUtils.actual);
 
         assertThat(testUtils.received.resolve("sample.xml")).doesNotExist();
 
@@ -139,7 +139,7 @@ class ApprovalsFolderTest {
         testUtils.cleanupPaths();
         testUtils.writeActual("actual", "sample.xml");
 
-        assertThatThrownBy(() -> approvals.verifyAgainstMasterFolder(testUtils.actual))
+        assertThatThrownBy(() -> approvals.verifyAllFiles(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <> but was: <actual>");
 
@@ -152,7 +152,7 @@ class ApprovalsFolderTest {
         testUtils.writeActual("actual", "sample.xml");
 
         try {
-            approvals.verifyAgainstMasterFolder(testUtils.actual);
+            approvals.verifyAllFiles(testUtils.actual);
         } catch (AssertionError e) {
             // expected
         }

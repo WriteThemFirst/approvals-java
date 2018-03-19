@@ -28,7 +28,7 @@ class ApproveFolder {
 
     @Test
     void verifyFolder() {
-        approvals.verifyAgainstMasterFolder(Paths.get("src\\test\\resources\\org\\demo\\simple\\ApproveFolder\\verifyFolder.actual"));
+        approvals.verifyAllFiles(Paths.get("src\\test\\resources\\org\\demo\\simple\\ApproveFolder\\verifyFolder.actual"));
     }
 
 }
