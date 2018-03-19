@@ -161,19 +161,36 @@ public class FileUtils {
         write(silentRead(source), destination);
     }
 
-    public static void copyToFolder(final Path sourceFile, final Path targetFolder) {
-        final Path targetFile = targetFolder.resolve(sourceFile.getFileName());
-        copy(sourceFile, targetFile);
+    /**
+     * Copies the content of a file found at a specified Path to another file located in the specified folder.
+     *
+     * If the file doesn't exist in the specified folder, it'll be created. It'll swallow all errors while reading the
+     * source file and only produce exceptions in case of errors while writing the new file.
+     *
+     * @param source The path from which the source file should be read (data to be copied)
+     * @param folder The path in which the copy of the file should be made (parent folder of the copy then)
+     */
+    public static void copyToFolder(final Path source, final Path folder) {
+        final Path destination = folder.resolve(source.getFileName());
+        copy(source, destination);
     }
 
-    public static Stream<Path> searchFiles(final Path start) {
+    /**
+     * Returns a list of all regular files found in a base directory up to a depth of MAX_DEPTH.
+     *
+     * If the provided baseDirectory isn't actually a directory, it'll return an empty stream instead.
+     *
+     * @param baseDirectory The base directory in which the regular files should be searched for
+     * @return A stream containing all the regular files found in the provided directory
+     */
+    public static Stream<Path> listFiles(final Path baseDirectory) {
         final int MAX_DEPTH = 5;
         try {
-            return start.toFile().isDirectory()
-                ? Files.find(start, MAX_DEPTH, (path, attributes) -> attributes.isRegularFile())
+            return baseDirectory.toFile().isDirectory()
+                ? Files.find(baseDirectory, MAX_DEPTH, ($, attributes) -> attributes.isRegularFile())
                 : Stream.empty();
         } catch (final IOException e) {
-            throw new RuntimeException(format("cannot browse %s for approved files", start), e);
+            throw new RuntimeException(format("cannot browse %s for approved files", baseDirectory), e);
         }
     }
 

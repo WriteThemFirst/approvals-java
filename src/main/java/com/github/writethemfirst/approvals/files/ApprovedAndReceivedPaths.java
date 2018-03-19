@@ -21,7 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-import static com.github.writethemfirst.approvals.utils.FileUtils.searchFiles;
+import static com.github.writethemfirst.approvals.utils.FileUtils.listFiles;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 
 /**
@@ -60,8 +60,8 @@ public class ApprovedAndReceivedPaths {
     public Stream<ApprovedAndReceivedPaths> allFilesToCheck() {
         return Stream
             .concat(
-                searchFiles(approved).map(this::forApprovedFile),
-                searchFiles(received).map(this::forReceivedFile)
+                listFiles(approved).map(this::forApprovedFile),
+                listFiles(received).map(this::forReceivedFile)
             )
             .distinct();
     }

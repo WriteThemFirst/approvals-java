@@ -114,7 +114,7 @@ public class FolderApprovals extends Approvals {
         } catch (final IOException e) {
             throw new RuntimeException("could not create *approved* folder " + approvedAndReceivedPaths.approved, e);
         }
-        searchFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvedAndReceivedPaths.received));
+        listFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvedAndReceivedPaths.received));
         approvedAndReceivedPaths
             .allFilesToCheck()
             .map(paths -> paths.approved)
