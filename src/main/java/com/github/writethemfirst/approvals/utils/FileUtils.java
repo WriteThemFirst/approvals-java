@@ -49,7 +49,7 @@ public class FileUtils {
         try {
             return new String(Files.readAllBytes(file));
         } catch (final IOException e) {
-            System.err.println("Could not read from " + file);
+            System.err.println(format("Can't read the file located at <%s>.", file));
             return "";
         }
     }
@@ -67,7 +67,7 @@ public class FileUtils {
                 //noinspection ResultOfMethodCallIgnored
                 file.createNewFile();
             } catch (final IOException e) {
-                throw new RuntimeException(format("Could not create empty file <%s>", file), e);
+                throw new RuntimeException(format("Can't create an empty file at <%s>.", file), e);
             }
         }
     }
@@ -87,7 +87,7 @@ public class FileUtils {
         try {
             deleteIfExists(file);
         } catch (final IOException e) {
-            System.err.println("Warning: couldn't remove the file located at: " + file);
+            System.err.println(format("Can't remove the file located at <%s>.", file));
         }
     }
 
@@ -137,13 +137,14 @@ public class FileUtils {
         try {
             createDirectories(file.getParent());
         } catch (final IOException e) {
-            System.err.println("Error: cannot create directories for: " + file);
+            System.err.println(format("Can't create directories for the files located at <%s>.", file));
             throw new RuntimeException(e);
         }
         try (BufferedWriter writer = newBufferedWriter(file)) {
             writer.write(content);
         } catch (final IOException e) {
-            final String message = format("Could not write to file %s because of %s", file.toAbsolutePath(), e);
+            final String message = format("Can't write the file located at <%s> because of <%s>.",
+                file.toAbsolutePath(), e.getMessage());
             throw new RuntimeException(message, e);
         }
     }
@@ -190,7 +191,7 @@ public class FileUtils {
                 ? Files.find(baseDirectory, MAX_DEPTH, ($, attributes) -> attributes.isRegularFile())
                 : Stream.empty();
         } catch (final IOException e) {
-            throw new RuntimeException(format("cannot browse %s for approved files", baseDirectory), e);
+            throw new RuntimeException(format("Can't browse the <%s> directory for files.", baseDirectory), e);
         }
     }
 
