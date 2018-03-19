@@ -33,8 +33,6 @@ import static java.nio.file.Files.*;
  *
  * Set of methods to help and ease the manipulation of Files. Most likely adding minor behavior on top of existing Files
  * methods.
- *
- * Methods in that file are static so no instance of `FileUtils` is necessary.
  */
 public class FileUtils {
 
