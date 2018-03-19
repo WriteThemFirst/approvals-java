@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths.approvedAndReceived;
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
@@ -35,6 +36,7 @@ import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
 import static com.github.writethemfirst.approvals.utils.functions.FunctionUtils.callWithAllCombinations;
 import static java.nio.file.Paths.get;
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.partitioningBy;
 
 /**
@@ -75,26 +77,63 @@ public class Approvals {
     private final String customFileName;
     private final Class<?> testClass;
     private final Path folder;
+    private final String customExtension;
+    private final String header;
 
 
     public Approvals() {
-        this(Reporter.DEFAULT, null, callerClass(Approvals.class), folderForClass(callerClass(Approvals.class)));
+        this(Reporter.DEFAULT,
+            null,
+            callerClass(Approvals.class),
+            folderForClass(callerClass(Approvals.class)),
+            "",
+            "");
     }
 
-    private Approvals(Reporter reporter, String customFileName, Class<?> testClass, Path folder) {
+    private Approvals(
+        Reporter reporter,
+        String customFileName,
+        Class<?> testClass,
+        Path folder,
+        String customExtension,
+        String header) {
+
         this.reporter = reporter;
         this.customFileName = customFileName;
         this.testClass = testClass;
         this.folder = folder;
+        this.customExtension = customExtension;
+        this.header = header;
     }
 
     public Approvals reportTo(final Reporter reporter) {
-        return new Approvals(reporter, customFileName, testClass, folder);
+        return new Approvals(reporter, customFileName, testClass, folder, customExtension, header);
     }
 
     public Approvals writeTo(final String customFileName) {
-        return new Approvals(reporter, customFileName, testClass, folder);
+        return new Approvals(reporter, customFileName, testClass, folder, customExtension, header);
     }
+
+    public Approvals header(final String headerWithLineFeed) {
+        return new Approvals(reporter, customFileName, testClass, folder, customExtension, headerWithLineFeed);
+    }
+
+    public Approvals namedArguments(final String... names) {
+        return header(stream(names).collect(Collectors.joining(
+            ", ",
+            "result, ",
+            "\n"
+        )));
+    }
+
+    private Approvals extension(final String extensionWithDot) {
+        return new Approvals(reporter, customFileName, testClass, folder, extensionWithDot, header);
+    }
+
+    private Approvals csv() {
+        return extension(".csv");
+    }
+
 
     /**
      * Compares the actual output of your program (the function's argument) and the content of the *approved* file
@@ -114,7 +153,7 @@ public class Approvals {
      */
     public void verify(final Object output) {
         final ApprovedAndReceivedPaths files = approvedAndReceivedPaths();
-        write(output.toString(), files.received);
+        write(header + output, files.received);
         silentCreateFile(files.approved);
         if (files.filesHaveSameContent()) {
             silentRemove(files.received);
@@ -195,7 +234,7 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public <I1> void verifyAllCombinations(final Iterable<I1> args1, final Function1<I1, ?> f) {
-        verify(callWithAllCombinations(args1, f));
+        csv().verify(callWithAllCombinations(args1, f));
     }
 
     /**
@@ -235,7 +274,7 @@ public class Approvals {
         final Iterable<I2> args2,
         final Function2<I1, I2, ?> f) {
 
-        verify(callWithAllCombinations(args1, args2, f));
+        csv().verify(callWithAllCombinations(args1, args2, f));
     }
 
     /**
@@ -286,7 +325,7 @@ public class Approvals {
         final Iterable<I3> args3,
         final Function3<I1, I2, I3, ?> f) {
 
-        verify(callWithAllCombinations(args1, args2, args3, f));
+        csv().verify(callWithAllCombinations(args1, args2, args3, f));
     }
 
     /**
@@ -342,7 +381,7 @@ public class Approvals {
         final Iterable<I4> args4,
         final Function4<I1, I2, I3, I4, ?> f) {
 
-        verify(callWithAllCombinations(args1, args2, args3, args4, f));
+        csv().verify(callWithAllCombinations(args1, args2, args3, args4, f));
     }
 
     /**
@@ -402,7 +441,7 @@ public class Approvals {
         final Iterable<I5> args5,
         final Function5<I1, I2, I3, I4, I5, ?> f) {
 
-        verify(callWithAllCombinations(args1, args2, args3, args4, args5, f));
+        csv().verify(callWithAllCombinations(args1, args2, args3, args4, args5, f));
     }
 
     /**
@@ -473,7 +512,10 @@ public class Approvals {
     }
 
     private ApprovedAndReceivedPaths approvedAndReceivedPaths() {
-        return approvedAndReceived(folder, customFileName != null ? customFileName : callerMethodName());
+        return approvedAndReceived(
+            folder,
+            customFileName != null ? customFileName : callerMethodName(),
+            customExtension);
     }
 
 }

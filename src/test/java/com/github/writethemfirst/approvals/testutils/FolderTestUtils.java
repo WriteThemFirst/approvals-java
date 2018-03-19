@@ -37,7 +37,7 @@ public class FolderTestUtils {
         final String className = testClass.getSimpleName();
         final Path packageResourcesPath = get("src/test/resources/", testClass.getPackage().getName().split("\\."));
         final Path folderForClass = packageResourcesPath.resolve(className);
-        final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceived(folderForClass, methodName);
+        final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceived(folderForClass, methodName, "");
         received = approvedAndReceivedPaths.received;
         approved = approvedAndReceivedPaths.approved;
         actual = Files.createTempDirectory(methodName);

@@ -23,10 +23,10 @@ import org.junit.jupiter.api.Test;
 import static java.util.Arrays.asList;
 
 class VerifyAll {
-    private final Approvals approvals = new Approvals();
 
     @Test
     void verifyAllWith3Arguments() {
+        final Approvals approvals = new Approvals().namedArguments("a", "b", "c");
         approvals.verifyAllCombinations(
             asList(1, 10, 100),
             asList(2, 20, 200),

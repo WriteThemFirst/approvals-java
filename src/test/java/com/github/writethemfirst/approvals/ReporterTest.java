@@ -31,7 +31,7 @@ class ReporterTest {
 
     @Test
     void approvalsShouldCallReporterWhenMismatch() {
-        final SimpleTestUtils testUtils = new SimpleTestUtils("approvalsShouldCallReporterWhenMismatch", getClass());
+        final SimpleTestUtils testUtils = new SimpleTestUtils("approvalsShouldCallReporterWhenMismatch", getClass(), "");
         testUtils.writeApproved("some text");
 
         try {
@@ -48,7 +48,7 @@ class ReporterTest {
 
     @Test
     void approvalsShouldCallReporterWhenNoApprovedFile() {
-        final SimpleTestUtils testUtils = new SimpleTestUtils("approvalsShouldCallReporterWhenNoApprovedFile", getClass());
+        final SimpleTestUtils testUtils = new SimpleTestUtils("approvalsShouldCallReporterWhenNoApprovedFile", getClass(), "");
         testUtils.cleanupPaths();
 
         try {

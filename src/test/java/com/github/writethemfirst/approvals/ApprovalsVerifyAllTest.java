@@ -29,7 +29,7 @@ class ApprovalsVerifyAllTest {
     void shouldReportMismatchWithSingleArgument() {
         final Reporter reporter = mock(Reporter.class);
         final Approvals approvals = new Approvals().reportTo(reporter);
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithSingleArgument", getClass());
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithSingleArgument", getClass(), ".csv");
 
         try {
             approvals.verifyAllCombinations(new Integer[]{1, 2, 3}, x -> x + 1);
@@ -38,9 +38,9 @@ class ApprovalsVerifyAllTest {
         }
 
         assertThat(testUtils.readReceived())
-            .contains("(1) => 2")
-            .contains("(2) => 3")
-            .contains("(3) => 4");
+            .contains("2 <== , 1")
+            .contains("3 <== , 2")
+            .contains("4 <== , 3");
 
         testUtils.cleanupPaths();
     }
@@ -49,7 +49,7 @@ class ApprovalsVerifyAllTest {
     void shouldReportMismatchWithTwoArguments() {
         final Reporter reporter = mock(Reporter.class);
         final Approvals approvals = new Approvals().reportTo(reporter);
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithTwoArguments", getClass());
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithTwoArguments", getClass(), ".csv");
 
         try {
             approvals.verifyAllCombinations(
@@ -61,8 +61,8 @@ class ApprovalsVerifyAllTest {
         }
 
         assertThat(testUtils.readReceived())
-            .contains("(1, 4) => 5")
-            .contains("(2, 6) => 8");
+            .contains("5 <== , 1, 4")
+            .contains("8 <== , 2, 6");
 
         testUtils.cleanupPaths();
     }
@@ -70,8 +70,9 @@ class ApprovalsVerifyAllTest {
     @Test
     void shouldReportMismatchWithFiveArguments() {
         final Reporter reporter = mock(Reporter.class);
-        final Approvals approvals = new Approvals().reportTo(reporter);
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithFiveArguments", getClass());
+        final Approvals approvals = new Approvals().reportTo(reporter).namedArguments("x", "y", "a", "b", "c");
+        final SimpleTestUtils testUtils =
+            new SimpleTestUtils("shouldReportMismatchWithFiveArguments", getClass(), ".csv");
 
         try {
             approvals.verifyAllCombinations(
@@ -86,8 +87,9 @@ class ApprovalsVerifyAllTest {
         }
 
         assertThat(testUtils.readReceived())
-            .contains("(1, 4, 6, 7, 9) => 27")
-            .contains("(2, 3, 6, 8, 10) => 29");
+            .contains("result, x, y, a, b, c")
+            .contains("27 <== , 1, 4, 6, 7, 9")
+            .contains("29 <== , 2, 3, 6, 8, 10");
 
         testUtils.cleanupPaths();
     }

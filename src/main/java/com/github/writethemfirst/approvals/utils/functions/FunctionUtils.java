@@ -21,8 +21,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
-
 public class FunctionUtils {
     private static final Object EMPTY_ENTRY = new Object();
     private static final Iterable<Object> EMPTY = Collections.singletonList(EMPTY_ENTRY);
@@ -75,13 +73,16 @@ public class FunctionUtils {
                 for (final I3 a3 : args3) {
                     for (final I4 a4 : args4) {
                         for (final I5 a5 : args5) {
-                            results.append(format("%s => ", mkString("(", ", ", ")", a1, a2, a3, a4, a5)));
                             try {
                                 results.append(f.call(a1, a2, a3, a4, a5));
                             } catch (final Exception e) {
                                 results.append(e);
                             }
-                            results.append("\n");
+                            results.append(mkString(
+                                " <== , ",
+                                ", ",
+                                "\n",
+                                a1, a2, a3, a4, a5));
                         }
                     }
                 }

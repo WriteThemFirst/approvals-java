@@ -29,7 +29,7 @@ class JUnit5ReporterTest {
 
     @Test
     void shouldThrowWhenMismatch() {
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldThrowWhenMismatch", getClass());
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldThrowWhenMismatch", getClass(), "");
         testUtils.writeApproved("some text");
 
         assertThatThrownBy(() -> approvals.verify("other text"))
@@ -42,7 +42,7 @@ class JUnit5ReporterTest {
 
     @Test
     void shouldThrowWhenMissing() {
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldThrowWhenMismatch", getClass());
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldThrowWhenMismatch", getClass(), "");
         testUtils.cleanupPaths();
 
         assertThatThrownBy(() -> approvals.verify("my text"))

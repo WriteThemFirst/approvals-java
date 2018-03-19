@@ -29,8 +29,8 @@ import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
  *
  * These paths usually point to text files which can be compared with {@link #filesHaveSameContent()}.
  *
- * When used by {@link com.github.writethemfirst.approvals.Approvals#verifyAllFiles(Path)}, they can also
- * point either to:
+ * When used by {@link com.github.writethemfirst.approvals.Approvals#verifyAllFiles(Path)}, they can also point either
+ * to:
  *
  * - the pair of *approved* and *received* folders which are globally compared - a pair of files (with no special
  * extension this time) in these folders
@@ -109,10 +109,13 @@ public class ApprovedAndReceivedPaths {
     /**
      * Factory method for standard names.
      */
-    public static ApprovedAndReceivedPaths approvedAndReceived(final Path folder, final String methodName) {
+    public static ApprovedAndReceivedPaths approvedAndReceived(
+        final Path folder,
+        final String methodName,
+        final String extensionWithDot) {
         return new ApprovedAndReceivedPaths(
-            path(folder, methodName, "approved"),
-            path(folder, methodName, "received"));
+            path(folder, methodName, "approved" + extensionWithDot),
+            path(folder, methodName, "received" + extensionWithDot));
     }
 
     private static Path path(final Path folder, final String methodName, final String extension) {
