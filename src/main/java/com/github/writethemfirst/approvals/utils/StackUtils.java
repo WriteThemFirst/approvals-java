@@ -33,8 +33,6 @@ import static java.util.Arrays.stream;
  *
  * Those methods allow to retrieve information to be used for generating the default names of files and folders to be
  * used by the *Approval Files*.
- *
- * @author mdaviot / aneveux
  */
 public class StackUtils {
 

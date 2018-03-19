@@ -65,12 +65,8 @@ public class CombinationApprovals extends Approvals {
         )));
     }
 
-    private CombinationApprovals extension(final String extensionWithDot) {
-        return new CombinationApprovals(reporter, customFileName, extensionWithDot, header);
-    }
-
     private CombinationApprovals csv() {
-        return extension(".csv");
+        return new CombinationApprovals(reporter, customFileName, ".csv", header);
     }
 
     @Override

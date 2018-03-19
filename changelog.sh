@@ -8,8 +8,6 @@
 #
 # It will display on the output the changelog that can then be used on GitHub for example.
 #
-# @author: aneveux
-
 # Gather the latest tag in the repository, along with the previous tag
 
 latest_tag=$(git describe --tags --abbrev=0)

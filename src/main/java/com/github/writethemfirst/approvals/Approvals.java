@@ -54,7 +54,6 @@ import static java.nio.file.Paths.get;
  * Approvals#verify(Object)} method, allowing to compute a comparison between an output and some content stored in an
  * *approved* file.
  *
- * @author mdaviot / aneveux
  * @see Reporter
  */
 public class Approvals {
@@ -64,15 +63,13 @@ public class Approvals {
      */
     final Reporter reporter;
     final String customFileName;
-    final Class<?> testClass = callerClass(getClass());
-    final Path folder = folderForClass(testClass);
+    private final Class<?> testClass = callerClass(getClass());
+    private final Path folder = folderForClass(testClass);
     final String customExtension;
 
 
     public Approvals() {
-        this(Reporter.DEFAULT,
-            null,
-            "");
+        this(Reporter.DEFAULT, null, "");
     }
 
     Approvals(
@@ -138,7 +135,7 @@ public class Approvals {
      * @return The Path to the folder linked to the `testClass` attribute, used for storing the *received* and
      * *approved* files.
      */
-    static Path folderForClass(final Class<?> testClass) {
+    private static Path folderForClass(final Class<?> testClass) {
         final String packageName = testClass.getPackage().getName();
         final Path packageResourcesPath = get("src/test/resources/", packageName.split("\\."));
         return packageResourcesPath.resolve(testClass.getSimpleName());

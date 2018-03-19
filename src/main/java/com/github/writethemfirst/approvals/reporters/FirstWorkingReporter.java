@@ -35,8 +35,6 @@ import static java.lang.String.format;
  * classpath or anything like this).
  *
  * It also won't try the reporters, but simply rely on their {@link #isAvailable()} methods.
- *
- * @author mdaviot / aneveux
  */
 public class FirstWorkingReporter implements Reporter {
 

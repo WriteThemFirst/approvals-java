@@ -40,8 +40,6 @@ import java.nio.file.Path;
  *
  * There will be a set of reporters already implemented and provided by the framework, but people can implement their
  * owns and  use them while computing the approvals.
- *
- * @author mdaviot / aneveux
  */
 public interface Reporter {
 
