@@ -18,6 +18,7 @@
 package org.demo.simple;
 
 import com.github.writethemfirst.approvals.FolderApprovals;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
@@ -27,6 +28,7 @@ class ApproveFolder {
     private final FolderApprovals approvals = new FolderApprovals();
 
     @Test
+    @Disabled
     void verifyFolder() {
         approvals.verifyAllFiles(Paths.get("src\\test\\resources\\org\\demo\\simple\\ApproveFolder\\verifyFolder.actual"));
     }
