@@ -30,24 +30,24 @@ import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static java.util.stream.Collectors.partitioningBy;
 
 public class FolderApprovals extends Approvals {
+
     public FolderApprovals() {
     }
 
     public FolderApprovals reportTo(final Reporter reporter) {
-        return new FolderApprovals(reporter, customFileName, customExtension, header);
+        return new FolderApprovals(reporter, customFileName, customExtension);
     }
 
     public FolderApprovals writeTo(final String customFileName) {
-        return new FolderApprovals(reporter, customFileName, customExtension, header);
+        return new FolderApprovals(reporter, customFileName, customExtension);
     }
 
     private FolderApprovals(
         final Reporter reporter,
         final String customFileName,
-        final String customExtension,
-        final String headerWithLineFeed) {
+        final String customExtension) {
 
-        super(reporter, customFileName, customExtension, headerWithLineFeed);
+        super(reporter, customFileName, customExtension);
     }
 
     /**

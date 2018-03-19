@@ -67,34 +67,30 @@ public class Approvals {
     final Class<?> testClass = callerClass(getClass());
     final Path folder = folderForClass(testClass);
     final String customExtension;
-    final String header;
 
 
     public Approvals() {
         this(Reporter.DEFAULT,
             null,
-            "",
             "");
     }
 
     Approvals(
         final Reporter reporter,
         final String customFileName,
-        final String customExtension,
-        final String header) {
+        final String customExtension) {
 
         this.reporter = reporter;
         this.customFileName = customFileName;
         this.customExtension = customExtension;
-        this.header = header;
     }
 
     public Approvals reportTo(final Reporter reporter) {
-        return new Approvals(reporter, customFileName, customExtension, header);
+        return new Approvals(reporter, customFileName, customExtension);
     }
 
     public Approvals writeTo(final String customFileName) {
-        return new Approvals(reporter, customFileName, customExtension, header);
+        return new Approvals(reporter, customFileName, customExtension);
     }
 
 
@@ -116,7 +112,7 @@ public class Approvals {
      */
     public void verify(final Object output) {
         final ApprovedAndReceivedPaths files = approvedAndReceivedPaths();
-        write(header + output, files.received);
+        writeReceivedFile(output, files);
         silentCreateFile(files.approved);
         if (files.filesHaveSameContent()) {
             silentRemove(files.received);
@@ -124,6 +120,10 @@ public class Approvals {
             reporter.mismatch(files.approved, files.received);
             new ThrowsReporter().mismatch(files.approved, files.received);
         }
+    }
+
+    void writeReceivedFile(final Object output, final ApprovedAndReceivedPaths files) {
+        write(output + "", files.received);
     }
 
 
