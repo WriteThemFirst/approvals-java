@@ -22,6 +22,8 @@ import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.FileUtils;
 import com.github.writethemfirst.approvals.utils.functions.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -61,8 +63,7 @@ import static java.util.stream.Collectors.partitioningBy;
  * Approvals#verify(Object)} method, allowing to compute a comparison between an output and some content stored in an
  * *approved* file.
  *
- * @author mdaviot / aneveux
- * //FiXME: remove all
+ * @author mdaviot / aneveux //FiXME: remove all
  * @version 1.0
  * @see Reporter
  */
@@ -162,6 +163,11 @@ public class Approvals {
      * Copies files from *actual* to *received* folder, and creates missing *approved* files.
      */
     private void prepareFolders(final Path actualFolder, final ApprovedAndReceivedPaths approvedAndReceivedPaths) {
+        try {
+            Files.createDirectories(approvedAndReceivedPaths.approved);
+        } catch (IOException e) {
+            throw new RuntimeException("could not create *approved* folder " + approvedAndReceivedPaths.approved, e);
+        }
         searchFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvedAndReceivedPaths.received));
         approvedAndReceivedPaths
             .allFilesToCheck()

@@ -174,9 +174,9 @@ public class FileUtils {
     public static Stream<Path> searchFiles(final Path start) {
         final int MAX_DEPTH = 5;
         try {
-            // FIXME: delete or move
-            Files.createDirectories(start);
-            return Files.find(start, MAX_DEPTH, (path, attributes) -> attributes.isRegularFile());
+            return start.toFile().isDirectory()
+                ? Files.find(start, MAX_DEPTH, (path, attributes) -> attributes.isRegularFile())
+                : Stream.empty();
         } catch (final IOException e) {
             throw new RuntimeException(format("cannot browse %s for approved files", start), e);
         }
