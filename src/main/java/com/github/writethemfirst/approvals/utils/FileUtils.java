@@ -174,6 +174,7 @@ public class FileUtils {
     public static Stream<Path> searchFiles(final Path start) {
         final int MAX_DEPTH = 5;
         try {
+            // FIXME: delete or move
             Files.createDirectories(start);
             return Files.find(start, MAX_DEPTH, (path, attributes) -> attributes.isRegularFile());
         } catch (final IOException e) {

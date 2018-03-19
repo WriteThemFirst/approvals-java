@@ -271,6 +271,7 @@ class GildedRoseApprovalTest {
     @Test
     void updateQuality_pass_shouldEvolve() {
         approvals.verifyAll(
+            //FIXME: no singleton
             asList("Backstage passes"),
             asList(-1, 0, 1, 5, 6, 10, 11),
             asList(-1, 0, 1, 10),

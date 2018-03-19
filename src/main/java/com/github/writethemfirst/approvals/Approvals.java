@@ -62,6 +62,7 @@ import static java.util.stream.Collectors.partitioningBy;
  * *approved* file.
  *
  * @author mdaviot / aneveux
+ * //FiXME: remove all
  * @version 1.0
  * @see Reporter
  */
@@ -76,6 +77,7 @@ public class Approvals {
     private final Path folder = folderForClass(testClass);
 
 
+    //TODO : make immutable (like copy in skotlin)
     public Approvals reportTo(final Reporter reporter) {
         this.reporter = reporter;
         return this;
@@ -103,12 +105,9 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public void verify(final Object output) {
-        verify(output, approvedAndReceivedPaths());
-    }
-
-
-    private void verify(final Object output, final ApprovedAndReceivedPaths files) {
+        final ApprovedAndReceivedPaths files = approvedAndReceivedPaths();
         write(output.toString(), files.received);
+        //FIXME: rename (silentCreate?)
         init(files.approved);
         if (files.filesHaveSameContent()) {
             silentRemove(files.received);
@@ -117,6 +116,7 @@ public class Approvals {
             new ThrowsReporter().mismatch(files.approved, files.received);
         }
     }
+
 
     /**
      * Compares the actual output of your program (files in the folder `actualFolder`) and the content of the *approved*
@@ -134,6 +134,7 @@ public class Approvals {
      *                          framework like JUnit
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
+    //FIXME: verifyFiles
     public void verifyAgainstMasterFolder(final Path actualFolder) {
         final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceivedPaths();
         prepareFolders(actualFolder, approvedAndReceivedPaths);
@@ -182,6 +183,7 @@ public class Approvals {
      *                          framework like JUnit
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
+    //FIXME: verifyCombinations x 5
     public <I1> void verifyAll(final Iterable<I1> args1, final Function1<I1, ?> f) {
         verify(callWithAll(args1, f));
     }
