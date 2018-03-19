@@ -121,7 +121,8 @@ We're using the default IntelliJ IDEA Java Formatter with those modifications:
 
 ## Versions
 
-- Should follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html),
+- Should follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) [![Semver](http://img.shields.io/SemVer/2.0.0.png)](http://semver.org/spec/v2.0.0.html)
+
 
 # Processes and Operations
 
