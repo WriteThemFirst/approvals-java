@@ -98,8 +98,8 @@ public class FileUtils {
      *
      * @param file the Path to be removed
      */
-    public static void silentRecursiveRemove(final Path path) {
-        silentRecursiveRemove(path.toFile());
+    public static void silentRecursiveRemove(final Path file) {
+        silentRecursiveRemove(file.toFile());
     }
 
     /**
