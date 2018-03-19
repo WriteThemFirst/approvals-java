@@ -19,45 +19,35 @@ package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.utils.functions.*;
 
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.functions.FunctionUtils.callWithAllCombinations;
 import static java.util.Arrays.stream;
 
 public class CombinationApprovals extends Approvals {
     public CombinationApprovals() {
-        super(Reporter.DEFAULT,
-            null,
-            callerClass(CombinationApprovals.class),
-            folderForClass(callerClass(CombinationApprovals.class)),
-            "",
-            "");
     }
 
     public CombinationApprovals reportTo(final Reporter reporter) {
-        return new CombinationApprovals(reporter, customFileName, testClass, folder, customExtension, header);
+        return new CombinationApprovals(reporter, customFileName, customExtension, header);
     }
 
     public CombinationApprovals writeTo(final String customFileName) {
-        return new CombinationApprovals(reporter, customFileName, testClass, folder, customExtension, header);
+        return new CombinationApprovals(reporter, customFileName, customExtension, header);
     }
 
     private CombinationApprovals(
         final Reporter reporter,
         final String customFileName,
-        final Class<?> testClass,
-        final Path folder,
         final String customExtension,
         final String headerWithLineFeed) {
 
-        super(reporter, customFileName, testClass, folder, customExtension, headerWithLineFeed);
+        super(reporter, customFileName, customExtension, headerWithLineFeed);
     }
 
     private CombinationApprovals header(final String headerWithLineFeed) {
-        return new CombinationApprovals(reporter, customFileName, testClass, folder, customExtension, headerWithLineFeed);
+        return new CombinationApprovals(reporter, customFileName, customExtension, headerWithLineFeed);
     }
 
     public CombinationApprovals namedArguments(final String... names) {
@@ -69,7 +59,7 @@ public class CombinationApprovals extends Approvals {
     }
 
     private CombinationApprovals extension(final String extensionWithDot) {
-        return new CombinationApprovals(reporter, customFileName, testClass, folder, extensionWithDot, header);
+        return new CombinationApprovals(reporter, customFileName, extensionWithDot, header);
     }
 
     private CombinationApprovals csv() {

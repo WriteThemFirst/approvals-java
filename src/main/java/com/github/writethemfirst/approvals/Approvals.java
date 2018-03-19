@@ -19,20 +19,14 @@ package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
-import com.github.writethemfirst.approvals.utils.FileUtils;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
 
 import static com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths.approvedAndReceived;
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
 import static java.nio.file.Paths.get;
-import static java.util.stream.Collectors.partitioningBy;
 
 /**
  * # Approvals
@@ -70,8 +64,8 @@ public class Approvals {
      */
     final Reporter reporter;
     final String customFileName;
-    final Class<?> testClass;
-    final Path folder;
+    final Class<?> testClass = callerClass(getClass());
+    final Path folder = folderForClass(testClass);
     final String customExtension;
     final String header;
 
@@ -79,8 +73,6 @@ public class Approvals {
     public Approvals() {
         this(Reporter.DEFAULT,
             null,
-            callerClass(Approvals.class),
-            folderForClass(callerClass(Approvals.class)),
             "",
             "");
     }
@@ -88,25 +80,21 @@ public class Approvals {
     Approvals(
         final Reporter reporter,
         final String customFileName,
-        final Class<?> testClass,
-        final Path folder,
         final String customExtension,
         final String header) {
 
         this.reporter = reporter;
         this.customFileName = customFileName;
-        this.testClass = testClass;
-        this.folder = folder;
         this.customExtension = customExtension;
         this.header = header;
     }
 
     public Approvals reportTo(final Reporter reporter) {
-        return new Approvals(reporter, customFileName, testClass, folder, customExtension, header);
+        return new Approvals(reporter, customFileName, customExtension, header);
     }
 
     public Approvals writeTo(final String customFileName) {
-        return new Approvals(reporter, customFileName, testClass, folder, customExtension, header);
+        return new Approvals(reporter, customFileName, customExtension, header);
     }
 
 
@@ -172,7 +160,7 @@ public class Approvals {
         return callerMethod(testClass).orElse("unknown_method");
     }
 
-     ApprovedAndReceivedPaths approvedAndReceivedPaths() {
+    ApprovedAndReceivedPaths approvedAndReceivedPaths() {
         return approvedAndReceived(
             folder,
             customFileName != null ? customFileName : callerMethodName(),

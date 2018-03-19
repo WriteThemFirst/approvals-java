@@ -27,36 +27,27 @@ import java.util.List;
 import java.util.Map;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
-import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static java.util.stream.Collectors.partitioningBy;
 
 public class FolderApprovals extends Approvals {
     public FolderApprovals() {
-        super(Reporter.DEFAULT,
-            null,
-            callerClass(FolderApprovals.class),
-            folderForClass(callerClass(FolderApprovals.class)),
-            "",
-            "");
     }
 
     public FolderApprovals reportTo(final Reporter reporter) {
-        return new FolderApprovals(reporter, customFileName, testClass, folder, customExtension, header);
+        return new FolderApprovals(reporter, customFileName, customExtension, header);
     }
 
     public FolderApprovals writeTo(final String customFileName) {
-        return new FolderApprovals(reporter, customFileName, testClass, folder, customExtension, header);
+        return new FolderApprovals(reporter, customFileName, customExtension, header);
     }
 
     private FolderApprovals(
         final Reporter reporter,
         final String customFileName,
-        final Class<?> testClass,
-        final Path folder,
         final String customExtension,
         final String headerWithLineFeed) {
 
-        super(reporter, customFileName, testClass, folder, customExtension, headerWithLineFeed);
+        super(reporter, customFileName, customExtension, headerWithLineFeed);
     }
 
     /**
