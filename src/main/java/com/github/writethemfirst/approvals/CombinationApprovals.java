@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.write;
-import static com.github.writethemfirst.approvals.utils.functions.FunctionUtils.callWithAllCombinations;
+import static com.github.writethemfirst.approvals.utils.FunctionUtils.callWithAllCombinations;
 import static java.util.Arrays.stream;
 
 /**

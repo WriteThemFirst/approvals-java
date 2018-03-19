@@ -15,9 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals.utils.functions;
+package com.github.writethemfirst.approvals.utils;
 
 import com.github.writethemfirst.approvals.Approvals;
+import com.github.writethemfirst.approvals.utils.FunctionUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
