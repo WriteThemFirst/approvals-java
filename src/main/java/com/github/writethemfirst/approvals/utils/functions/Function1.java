@@ -17,6 +17,21 @@
  */
 package com.github.writethemfirst.approvals.utils.functions;
 
-public interface Function1<In, Out> {
-    Out call(In i);
+/**
+ * # Function1
+ *
+ * Represents a function with one argument.
+ *
+ * @param <IN1> Type of the argument 1 of the function
+ * @param <OUT> Return type of the function
+ */
+@FunctionalInterface
+public interface Function1<IN1, OUT> {
+    /**
+     * Applies the function to the provided argument and returns the result.
+     *
+     * @param arg1 Argument 1
+     * @return The result of function application
+     */
+    OUT apply(final IN1 arg1);
 }

@@ -64,8 +64,8 @@ public class Approvals {
     final String customExtension;
 
     /**
-     * Standard approvals, with default {@link Reporter} and file name detected from the test class used to call the
-     * constructor and the test method used to call a {@link #verify(Object)} method.
+     * Standard approvals, with default {@link Reporter} and file name detected from the test class used to apply the
+     * constructor and the test method used to apply a {@link #verify(Object)} method.
      */
     public Approvals() {
         this(Reporter.DEFAULT, null, "");

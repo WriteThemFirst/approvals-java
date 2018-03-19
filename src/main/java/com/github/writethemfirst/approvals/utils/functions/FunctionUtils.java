@@ -29,7 +29,7 @@ public class FunctionUtils {
         final Iterable<I1> args1,
         final Function1<I1, ?> f) {
 
-        return callWithAllCombinations(args1, EMPTY, (e1, e2) -> f.call(e1));
+        return callWithAllCombinations(args1, EMPTY, (e1, e2) -> f.apply(e1));
     }
 
     public static <I1, I2> String callWithAllCombinations(
