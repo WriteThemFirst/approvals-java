@@ -71,21 +71,29 @@ public class Approvals {
     /**
      * The Reporter to be used to report any mismatches while computing the files comparisons.
      */
-    private Reporter reporter = Reporter.DEFAULT;
-    private String customFileName;
-    private final Class<?> testClass = callerClass(Approvals.class);
-    private final Path folder = folderForClass(testClass);
+    private final Reporter reporter;
+    private final String customFileName;
+    private final Class<?> testClass;
+    private final Path folder;
 
 
-    //TODO : make immutable (like copy in skotlin)
-    public Approvals reportTo(final Reporter reporter) {
+    public Approvals() {
+        this(Reporter.DEFAULT, null, callerClass(Approvals.class), folderForClass(callerClass(Approvals.class)));
+    }
+
+    private Approvals(Reporter reporter, String customFileName, Class<?> testClass, Path folder) {
         this.reporter = reporter;
-        return this;
+        this.customFileName = customFileName;
+        this.testClass = testClass;
+        this.folder = folder;
+    }
+
+    public Approvals reportTo(final Reporter reporter) {
+        return new Approvals(reporter, customFileName, testClass, folder);
     }
 
     public Approvals writeTo(final String customFileName) {
-        this.customFileName = customFileName;
-        return this;
+        return new Approvals(reporter, customFileName, testClass, folder);
     }
 
     /**
