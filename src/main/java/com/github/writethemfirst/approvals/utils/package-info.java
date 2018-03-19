@@ -16,8 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * Contains *Utils* classes to be used internally by the framework.
+ * # Utils Package
  *
- * Classes inside that folder aren't meant to be used by the end-user.
+ * That package contains utilities classes that are to be used internally by the framework.
+ *
+ * That package isn't supposed to contain any logical behavior or any particular data, but simply helper methods easier
+ * the writting and reading of the code written within the framework.
  */
 package com.github.writethemfirst.approvals.utils;
