@@ -57,7 +57,7 @@ public class FunctionUtils {
         final Iterable<I4> args4,
         final Function4<I1, I2, I3, I4, ?> f) {
 
-        return callWithAllCombinations(args1, args2, args3, args4, EMPTY, (e1, e2, e3, e4, e5) -> f.call(e1, e2, e3, e4));
+        return callWithAllCombinations(args1, args2, args3, args4, EMPTY, (e1, e2, e3, e4, e5) -> f.apply(e1, e2, e3, e4));
     }
 
     public static <I1, I2, I3, I4, I5> String callWithAllCombinations(

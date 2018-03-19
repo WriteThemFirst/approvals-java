@@ -17,6 +17,27 @@
  */
 package com.github.writethemfirst.approvals.utils.functions;
 
-public interface Function4<In1, In2, In3, In4, Out> {
-    Out call(In1 a, In2 b, In3 c, In4 d);
+/**
+ * # Function4
+ *
+ * Represents a function with four arguments.
+ *
+ * @param <IN1> Type of the argument 1 of the function
+ * @param <IN2> Type of the argument 2 of the function
+ * @param <IN3> Type of the argument 3 of the function
+ * @param <IN4> Type of the argument 4 of the function
+ * @param <OUT> Return type of the function
+ */
+@FunctionalInterface
+public interface Function4<IN1, IN2, IN3, IN4, OUT> {
+    /**
+     * Applies the function to the provided arguments and returns the result.
+     *
+     * @param arg1 Argument 1
+     * @param arg2 Argument 2
+     * @param arg3 Argument 3
+     * @param arg4 Argument 4
+     * @return The result of function application
+     */
+    OUT apply(final IN1 arg1, final IN2 arg2, final IN3 arg3, final IN4 arg4);
 }
