@@ -57,21 +57,23 @@ import static java.nio.file.Paths.get;
  * @see Reporter
  */
 public class Approvals {
-
-    /**
-     * The Reporter to be used to report any mismatches while computing the files comparisons.
-     */
-    final Reporter reporter;
-    final String customFileName;
     private final Class<?> testClass = callerClass(getClass());
     private final Path folder = folderForClass(testClass);
+    final Reporter reporter;
+    final String customFileName;
     final String customExtension;
 
-
+    /**
+     * Standard approvals, with default {@link Reporter} and file name detected from the test class used to call the
+     * constructor and the test method used to call a {@link #verify(Object)} method.
+     */
     public Approvals() {
         this(Reporter.DEFAULT, null, "");
     }
 
+    /**
+     * Protected constructor used by the "copy" methods.
+     */
     Approvals(
         final Reporter reporter,
         final String customFileName,
@@ -82,10 +84,20 @@ public class Approvals {
         this.customExtension = customExtension;
     }
 
+    /**
+     * Specifies the reporter used to report mismatches.
+     *
+     * @return a copy of this Approvals
+     */
     public Approvals reportTo(final Reporter reporter) {
         return new Approvals(reporter, customFileName, customExtension);
     }
 
+    /**
+     * Specifies the name to use for *approved* and *received* files.
+     *
+     * @return a copy of this Approvals
+     */
     public Approvals writeTo(final String customFileName) {
         return new Approvals(reporter, customFileName, customExtension);
     }
@@ -119,6 +131,7 @@ public class Approvals {
         }
     }
 
+    //Can be overridden to add a header to the file.
     void writeReceivedFile(final Object output, final ApprovedAndReceivedPaths files) {
         write(output + "", files.received);
     }

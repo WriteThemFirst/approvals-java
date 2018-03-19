@@ -29,15 +29,31 @@ import java.util.Map;
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static java.util.stream.Collectors.partitioningBy;
 
+/**
+ * Approves a folder. See {@link #verifyAllFiles(Path)}.
+ */
 public class FolderApprovals extends Approvals {
 
+    /**
+     * Standard FolderApprovals.
+     */
     public FolderApprovals() {
     }
 
+    /**
+     * Specifies the reporter used to report mismatches.
+     *
+     * @return a copy of this FolderApprovals
+     */
     public FolderApprovals reportTo(final Reporter reporter) {
         return new FolderApprovals(reporter, customFileName, customExtension);
     }
 
+    /**
+     * Specifies the name to use for *approved* and *received* files.
+     *
+     * @return a copy of this FolderApprovals
+     */
     public FolderApprovals writeTo(final String customFileName) {
         return new FolderApprovals(reporter, customFileName, customExtension);
     }

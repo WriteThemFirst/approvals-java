@@ -27,20 +27,51 @@ import static com.github.writethemfirst.approvals.utils.FileUtils.write;
 import static com.github.writethemfirst.approvals.utils.functions.FunctionUtils.callWithAllCombinations;
 import static java.util.Arrays.stream;
 
+/**
+ * Approves a function by calling it with combinations of parameters. See {@link #verifyAllCombinations(Object[],
+ * Object[], Object[], Function3)}.
+ */
 public class CombinationApprovals extends Approvals {
-    final String header;
+    private final String header;
 
     public CombinationApprovals() {
         super();
         header = "";
     }
 
+    /**
+     * Specifies the reporter used to report mismatches.
+     *
+     * @return a copy of this CombinationApprovals
+     */
+    @Override
     public CombinationApprovals reportTo(final Reporter reporter) {
         return new CombinationApprovals(reporter, customFileName, customExtension, header);
     }
 
+    /**
+     * Specifies the name to use for *approved* and *received* files.
+     *
+     * @return a copy of this CombinationApprovals
+     */
+    @Override
     public CombinationApprovals writeTo(final String customFileName) {
         return new CombinationApprovals(reporter, customFileName, customExtension, header);
+    }
+
+    /**
+     * Specifies a header naming the arguments of the function under test. This header prefixes the *approved* and
+     * *received* CSV files.
+     *
+     * @param names one name for each argument
+     * @return a copy of the {@link CombinationApprovals}
+     */
+    public CombinationApprovals namedArguments(final String... names) {
+        return header(stream(names).collect(Collectors.joining(
+            ", ",
+            "result, ",
+            "\n"
+        )));
     }
 
     private CombinationApprovals(
@@ -53,21 +84,16 @@ public class CombinationApprovals extends Approvals {
         this.header = headerWithLineFeed;
     }
 
-    private CombinationApprovals header(final String headerWithLineFeed) {
-        return new CombinationApprovals(reporter, customFileName, customExtension, headerWithLineFeed);
-    }
-
-    public CombinationApprovals namedArguments(final String... names) {
-        return header(stream(names).collect(Collectors.joining(
-            ", ",
-            "result, ",
-            "\n"
-        )));
-    }
 
     private CombinationApprovals csv() {
         return new CombinationApprovals(reporter, customFileName, ".csv", header);
     }
+
+
+    private CombinationApprovals header(final String headerWithLineFeed) {
+        return new CombinationApprovals(reporter, customFileName, customExtension, headerWithLineFeed);
+    }
+
 
     @Override
     void writeReceivedFile(final Object output, final ApprovedAndReceivedPaths files) {
