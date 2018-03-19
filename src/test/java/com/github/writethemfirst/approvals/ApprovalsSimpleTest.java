@@ -143,7 +143,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldUseSpecificMethodName() {
-        Approvals approvals = new Approvals().writeTo("myScalaMethod").reportTo(new ThrowsReporter());
+        final Approvals approvals = new Approvals().writeTo("myScalaMethod").reportTo(new ThrowsReporter());
 
         final SimpleTestUtils testUtils = new SimpleTestUtils("myScalaMethod", getClass(), "");
         testUtils.cleanupPaths();

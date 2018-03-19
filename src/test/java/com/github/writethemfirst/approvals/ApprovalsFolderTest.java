@@ -95,7 +95,7 @@ class ApprovalsFolderTest {
 
     @Test
     void shouldCreateAllReceivedFiles() throws IOException {
-        FolderTestUtils testUtils = new FolderTestUtils("shouldCreateAllReceivedFiles", getClass());
+        final FolderTestUtils testUtils = new FolderTestUtils("shouldCreateAllReceivedFiles", getClass());
 
         final Approvals approvals = new Approvals().reportTo(mockReporter);
 
@@ -120,7 +120,7 @@ class ApprovalsFolderTest {
     void shouldRemoveMatchedReceivedFiles() throws IOException {
         final Approvals approvals = new Approvals().reportTo(mockReporter);
 
-        FolderTestUtils testUtils = new FolderTestUtils("shouldRemoveMatchedReceivedFiles", getClass());
+        final FolderTestUtils testUtils = new FolderTestUtils("shouldRemoveMatchedReceivedFiles", getClass());
         testUtils.writeActual("actual", "sample.xml");
         testUtils.writeApproved("actual", "sample.xml");
         testUtils.writeReceived("actual", "sample.xml");
@@ -135,7 +135,7 @@ class ApprovalsFolderTest {
 
     @Test
     void shouldThrowOnReceivedFilesNotExpected() throws IOException {
-        FolderTestUtils testUtils = new FolderTestUtils("shouldThrowOnReceivedFilesNotExpected", getClass());
+        final FolderTestUtils testUtils = new FolderTestUtils("shouldThrowOnReceivedFilesNotExpected", getClass());
         testUtils.cleanupPaths();
         testUtils.writeActual("actual", "sample.xml");
 
@@ -148,12 +148,12 @@ class ApprovalsFolderTest {
 
     @Test
     void shouldCreateEmptyApprovedFiles() throws IOException {
-        FolderTestUtils testUtils = new FolderTestUtils("shouldCreateEmptyApprovedFiles", getClass());
+        final FolderTestUtils testUtils = new FolderTestUtils("shouldCreateEmptyApprovedFiles", getClass());
         testUtils.writeActual("actual", "sample.xml");
 
         try {
             approvals.verifyAllFiles(testUtils.actual);
-        } catch (AssertionError e) {
+        } catch (final AssertionError e) {
             // expected
         }
 

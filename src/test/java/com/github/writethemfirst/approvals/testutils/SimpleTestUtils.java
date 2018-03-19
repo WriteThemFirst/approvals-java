@@ -29,7 +29,7 @@ public class SimpleTestUtils {
     public final Path received;
     public final Path approved;
 
-    public SimpleTestUtils(final String methodName, final Class<?> testClass, String extensionWithDot) {
+    public SimpleTestUtils(final String methodName, final Class<?> testClass, final String extensionWithDot) {
         final String className = testClass.getSimpleName();
         final Path packageResourcesPath = get("src/test/resources/", testClass.getPackage().getName().split("\\."));
         final Path folderForClass = packageResourcesPath.resolve(className);

@@ -17,7 +17,7 @@
  */
 package org.demo.simple;
 
-import com.github.writethemfirst.approvals.Approvals;
+import com.github.writethemfirst.approvals.CombinationApprovals;
 import org.junit.jupiter.api.Test;
 
 import static java.util.Arrays.asList;
@@ -26,7 +26,7 @@ class VerifyAll {
 
     @Test
     void verifyAllWith3Arguments() {
-        final Approvals approvals = new Approvals().namedArguments("a", "b", "c");
+        final CombinationApprovals approvals = new CombinationApprovals().namedArguments("a", "b", "c");
         approvals.verifyAllCombinations(
             asList(1, 10, 100),
             asList(2, 20, 200),

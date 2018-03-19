@@ -20,23 +20,18 @@ package com.github.writethemfirst.approvals;
 import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.FileUtils;
-import com.github.writethemfirst.approvals.utils.functions.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths.approvedAndReceived;
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
-import static com.github.writethemfirst.approvals.utils.functions.FunctionUtils.callWithAllCombinations;
 import static java.nio.file.Paths.get;
-import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.partitioningBy;
 
 /**
@@ -73,12 +68,12 @@ public class Approvals {
     /**
      * The Reporter to be used to report any mismatches while computing the files comparisons.
      */
-    private final Reporter reporter;
-    private final String customFileName;
-    private final Class<?> testClass;
-    private final Path folder;
-    private final String customExtension;
-    private final String header;
+    final Reporter reporter;
+    final String customFileName;
+    final Class<?> testClass;
+    final Path folder;
+    final String customExtension;
+    final String header;
 
 
     public Approvals() {
@@ -90,13 +85,13 @@ public class Approvals {
             "");
     }
 
-    private Approvals(
-        Reporter reporter,
-        String customFileName,
-        Class<?> testClass,
-        Path folder,
-        String customExtension,
-        String header) {
+    Approvals(
+        final Reporter reporter,
+        final String customFileName,
+        final Class<?> testClass,
+        final Path folder,
+        final String customExtension,
+        final String header) {
 
         this.reporter = reporter;
         this.customFileName = customFileName;
@@ -112,26 +107,6 @@ public class Approvals {
 
     public Approvals writeTo(final String customFileName) {
         return new Approvals(reporter, customFileName, testClass, folder, customExtension, header);
-    }
-
-    public Approvals header(final String headerWithLineFeed) {
-        return new Approvals(reporter, customFileName, testClass, folder, customExtension, headerWithLineFeed);
-    }
-
-    public Approvals namedArguments(final String... names) {
-        return header(stream(names).collect(Collectors.joining(
-            ", ",
-            "result, ",
-            "\n"
-        )));
-    }
-
-    private Approvals extension(final String extensionWithDot) {
-        return new Approvals(reporter, customFileName, testClass, folder, extensionWithDot, header);
-    }
-
-    private Approvals csv() {
-        return extension(".csv");
     }
 
 
@@ -209,7 +184,7 @@ public class Approvals {
     private void prepareFolders(final Path actualFolder, final ApprovedAndReceivedPaths approvedAndReceivedPaths) {
         try {
             Files.createDirectories(approvedAndReceivedPaths.approved);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException("could not create *approved* folder " + approvedAndReceivedPaths.approved, e);
         }
         searchFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvedAndReceivedPaths.received));
@@ -217,265 +192,6 @@ public class Approvals {
             .allFilesToCheck()
             .map(paths -> paths.approved)
             .forEach(FileUtils::silentCreateFile);
-    }
-
-    /**
-     * Compares the actual output of your program and the content of the *approved* file matching with the test method
-     * (see {@link #verify(Object)} for details).
-     *
-     * The lambda or method `f` is called for all values of `args1` specified in the {@link Iterable}. Then the results
-     * are stored, one line for each value, in a String, which is used as in the standard {@link #verify(Object)}
-     * method.
-     *
-     * @param args1 all values for the argument of `f` you want to verify
-     * @param f     the lambda or method you want to test
-     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
-     *                          framework like JUnit
-     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
-     */
-    public <I1> void verifyAllCombinations(final Iterable<I1> args1, final Function1<I1, ?> f) {
-        csv().verify(callWithAllCombinations(args1, f));
-    }
-
-    /**
-     * Compares the actual output of your program and the content of the *approved* file matching with the test method
-     * (see {@link #verify(Object)} for details).
-     *
-     * The lambda or method `f` is called for all values of `args1` specified in the array. Then the results are stored,
-     * one line for each value, in a String, which is used as in the standard {@link #verify(Object)} method.
-     *
-     * @param args1 all values for the argument of `f` you want to verify
-     * @param f     the lambda or method you want to test
-     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
-     *                          framework like JUnit
-     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
-     */
-    public <I1> void verifyAllCombinations(final I1[] args1, final Function1<I1, ?> f) {
-        verifyAllCombinations(Arrays.asList(args1), f);
-    }
-
-    /**
-     * Compares the actual output of your program and the content of the *approved* file matching with the test method
-     * (see {@link #verify(Object)} for details).
-     *
-     * The lambda or method `f` is called for all values of `args1` and `args2` specified in the {@link Iterable}s. Then
-     * the results are stored, one line for each combination, in a String, which is used as in the standard {@link
-     * #verify(Object)} method.
-     *
-     * @param args1 all values for the first argument of `f` you want to verify
-     * @param args2 all values for the second argument of `f` you want to verify
-     * @param f     the lambda or method you want to test
-     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
-     *                          framework like JUnit
-     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
-     */
-    public <I1, I2> void verifyAllCombinations(
-        final Iterable<I1> args1,
-        final Iterable<I2> args2,
-        final Function2<I1, I2, ?> f) {
-
-        csv().verify(callWithAllCombinations(args1, args2, f));
-    }
-
-    /**
-     * Compares the actual output of your program and the content of the *approved* file matching with the test method
-     * (see {@link #verify(Object)} for details).
-     *
-     * The lambda or method `f` is called for all values of `args1` and `args2` specified in the arrayss. Then the
-     * results are stored, one line for each combination, in a String, which is used as in the standard {@link
-     * #verify(Object)} method.
-     *
-     * @param args1 all values for the first argument of `f` you want to verify
-     * @param args2 all values for the second argument of `f` you want to verify
-     * @param f     the lambda or method you want to test
-     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
-     *                          framework like JUnit
-     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
-     */
-    public <I1, I2> void verifyAllCombinations(
-        final I1[] args1,
-        final I2[] args2,
-        final Function2<I1, I2, ?> f) {
-
-        verifyAllCombinations(
-            Arrays.asList(args1),
-            Arrays.asList(args2),
-            f);
-    }
-
-    /**
-     * Compares the actual output of your program and the content of the *approved* file matching with the test method
-     * (see {@link #verify(Object)} for details).
-     *
-     * The lambda or method `f` is called for all values of `args1`, `args2` and `args3` specified in the {@link
-     * Iterable}s. Then the results are stored, one line for each combination, in a String, which is used as in the
-     * standard {@link #verify(Object)} method.
-     *
-     * @param args1 all values for the first argument of `f` you want to verify
-     * @param args2 all values for the second argument of `f` you want to verify
-     * @param args3 all values for the third argument of `f` you want to verify
-     * @param f     the lambda or method you want to test
-     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
-     *                          framework like JUnit
-     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
-     */
-    public <I1, I2, I3> void verifyAllCombinations(
-        final Iterable<I1> args1,
-        final Iterable<I2> args2,
-        final Iterable<I3> args3,
-        final Function3<I1, I2, I3, ?> f) {
-
-        csv().verify(callWithAllCombinations(args1, args2, args3, f));
-    }
-
-    /**
-     * Compares the actual output of your program and the content of the *approved* file matching with the test method
-     * (see {@link #verify(Object)} for details).
-     *
-     * The lambda or method `f` is called for all values of `args1`, `args2` and `args3` specified in the arrays. Then
-     * the results are stored, one line for each combination, in a String, which is used as in the standard {@link
-     * #verify(Object)} method.
-     *
-     * @param args1 all values for the first argument of `f` you want to verify
-     * @param args2 all values for the second argument of `f` you want to verify
-     * @param args3 all values for the third argument of `f` you want to verify
-     * @param f     the lambda or method you want to test
-     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
-     *                          framework like JUnit
-     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
-     */
-    public <I1, I2, I3> void verifyAllCombinations(
-        final I1[] args1,
-        final I2[] args2,
-        final I3[] args3,
-        final Function3<I1, I2, I3, ?> f) {
-
-        verifyAllCombinations(
-            Arrays.asList(args1),
-            Arrays.asList(args2),
-            Arrays.asList(args3),
-            f);
-    }
-
-    /**
-     * Compares the actual output of your program and the content of the *approved* file matching with the test method
-     * (see {@link #verify(Object)} for details).
-     *
-     * The lambda or method `f` is called for all values of `args1`, `args2`, `args3` and `args4` specified in the
-     * {@link Iterable}s. Then the results are stored, one line for each combination, in a String, which is used as in
-     * the standard {@link #verify(Object)} method.
-     *
-     * @param args1 all values for the first argument of `f` you want to verify
-     * @param args2 all values for the second argument of `f` you want to verify
-     * @param args3 all values for the third argument of `f` you want to verify
-     * @param args4 all values for the fourth argument of `f` you want to verify
-     * @param f     the lambda or method you want to test
-     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
-     *                          framework like JUnit
-     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
-     */
-    public <I1, I2, I3, I4> void verifyAllCombinations(
-        final Iterable<I1> args1,
-        final Iterable<I2> args2,
-        final Iterable<I3> args3,
-        final Iterable<I4> args4,
-        final Function4<I1, I2, I3, I4, ?> f) {
-
-        csv().verify(callWithAllCombinations(args1, args2, args3, args4, f));
-    }
-
-    /**
-     * Compares the actual output of your program and the content of the *approved* file matching with the test method
-     * (see {@link #verify(Object)} for details).
-     *
-     * The lambda or method `f` is called for all values of `args1`, `args2`, `args3` and `args4` specified in the
-     * arrays. Then the results are stored, one line for each combination, in a String, which is used as in the standard
-     * {@link #verify(Object)} method.
-     *
-     * @param args1 all values for the first argument of `f` you want to verify
-     * @param args2 all values for the second argument of `f` you want to verify
-     * @param args3 all values for the third argument of `f` you want to verify
-     * @param args4 all values for the fourth argument of `f` you want to verify
-     * @param f     the lambda or method you want to test
-     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
-     *                          framework like JUnit
-     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
-     */
-    public <I1, I2, I3, I4> void verifyAllCombinations(
-        final I1[] args1,
-        final I2[] args2,
-        final I3[] args3,
-        final I4[] args4,
-        final Function4<I1, I2, I3, I4, ?> f) {
-        verifyAllCombinations(
-            Arrays.asList(args1),
-            Arrays.asList(args2),
-            Arrays.asList(args3),
-            Arrays.asList(args4),
-            f);
-    }
-
-    /**
-     * Compares the actual output of your program and the content of the *approved* file matching with the test method
-     * (see {@link #verify(Object)} for details).
-     *
-     * The lambda or method `f` is called for all values of `args1`, `args2`, `args3`, `args4` and `args5` specified in
-     * the {@link Iterable}s. Then the results are stored, one line for each combination, in a String, which is used as
-     * in the standard {@link #verify(Object)} method.
-     *
-     * @param args1 all values for the first argument of `f` you want to verify
-     * @param args2 all values for the second argument of `f` you want to verify
-     * @param args3 all values for the third argument of `f` you want to verify
-     * @param args4 all values for the fourth argument of `f` you want to verify
-     * @param args5 all values for the fifth argument of `f` you want to verify
-     * @param f     the lambda or method you want to test
-     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
-     *                          framework like JUnit
-     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
-     */
-    public <I1, I2, I3, I4, I5> void verifyAllCombinations(
-        final Iterable<I1> args1,
-        final Iterable<I2> args2,
-        final Iterable<I3> args3,
-        final Iterable<I4> args4,
-        final Iterable<I5> args5,
-        final Function5<I1, I2, I3, I4, I5, ?> f) {
-
-        csv().verify(callWithAllCombinations(args1, args2, args3, args4, args5, f));
-    }
-
-    /**
-     * Compares the actual output of your program and the content of the *approved* file matching with the test method
-     * (see {@link #verify(Object)} for details).
-     *
-     * The lambda or method `f` is called for all values of `args1`, `args2`, `args3`, `args4` and `args5` specified in
-     * the arrays. Then the results are stored, one line for each combination, in a String, which is used as in the
-     * standard {@link #verify(Object)} method.
-     *
-     * @param args1 all values for the first argument of `f` you want to verify
-     * @param args2 all values for the second argument of `f` you want to verify
-     * @param args3 all values for the third argument of `f` you want to verify
-     * @param args4 all values for the fourth argument of `f` you want to verify
-     * @param args5 all values for the fifth argument of `f` you want to verify
-     * @param f     the lambda or method you want to test
-     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
-     *                          framework like JUnit
-     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
-     */
-    public <I1, I2, I3, I4, I5> void verifyAllCombinations(
-        final I1[] args1,
-        final I2[] args2,
-        final I3[] args3,
-        final I4[] args4,
-        final I5[] args5,
-        final Function5<I1, I2, I3, I4, I5, ?> f) {
-        verifyAllCombinations(
-            Arrays.asList(args1),
-            Arrays.asList(args2),
-            Arrays.asList(args3),
-            Arrays.asList(args4),
-            Arrays.asList(args5),
-            f);
     }
 
     /**
@@ -489,7 +205,7 @@ public class Approvals {
      * @return The Path to the folder linked to the `testClass` attribute, used for storing the *received* and
      * *approved* files.
      */
-    private static Path folderForClass(final Class<?> testClass) {
+    static Path folderForClass(final Class<?> testClass) {
         final String packageName = testClass.getPackage().getName();
         final Path packageResourcesPath = get("src/test/resources/", packageName.split("\\."));
         return packageResourcesPath.resolve(testClass.getSimpleName());
