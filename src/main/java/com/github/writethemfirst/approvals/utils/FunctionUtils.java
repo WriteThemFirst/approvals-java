@@ -23,7 +23,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+/**
+ * # FunctionUtils
+ *
+ * Set of static methods allowing to ease the manipulation of functions applications.
+ *
+ * This particular class aims at allowing the application of functions on combinations of parameter values by looping
+ * over all values and producing the result. Since the result is to be used for *Approval Testing*, the applied
+ * functions will return String values.
+ */
 public class FunctionUtils {
+
     private static final Object EMPTY_ENTRY = new Object();
     private static final Iterable<Object> EMPTY = Collections.singletonList(EMPTY_ENTRY);
 
