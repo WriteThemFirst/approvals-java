@@ -16,6 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 /**
+ * # Approvals Package
+ *
  * That package contains all the root objects to be used while working with *Approvals-Java*.
  *
  * Those objects are the main ones to be manipulated by developers, and should allow to directly trigger actions to be
