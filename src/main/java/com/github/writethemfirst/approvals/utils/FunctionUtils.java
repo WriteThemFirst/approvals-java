@@ -34,67 +34,143 @@ import java.util.stream.Collectors;
  */
 public class FunctionUtils {
 
+    /**
+     * Simple marker to distinguish arguments which are not specified while calling the function.
+     *
+     * Using a dummy object allows to filter the valid arguments from the non valid ones.
+     */
     private static final Object UNSPECIFIED_ENTRY = new Object();
+
+    /**
+     * Simple wrapper for unspecified arguments. This list actually only contains a dummy object allowing to filter the
+     * valid arguments from the non valid ones.
+     */
     private static final Iterable<Object> UNSPECIFIED = Collections.singletonList(UNSPECIFIED_ENTRY);
 
-    public static <I1> String callWithAllCombinations(
-        final Iterable<I1> args1,
-        final Function1<I1, ?> f) {
-
-        return callWithAllCombinations(args1, UNSPECIFIED, (e1, e2) -> f.apply(e1));
+    /**
+     * Applies the provided function to all combinations of all the provided arguments for the function, and returns the
+     * produced results as a String.
+     *
+     * The produced String will contain both the provided arguments and the computed value, and can later be used for
+     * writting the *approvals files*.
+     *
+     * @param args1    A collection of all the arguments 1 to apply the function to
+     * @param function The function to apply on the combinations of provided arguments
+     * @param <IN1>    Type of the argument 1
+     * @return A String containing all the combinations of provided arguments, and the result produced by the function
+     * application
+     */
+    public static <IN1> String applyCombinations(final Iterable<IN1> args1, final Function1<IN1, ?> function) {
+        return applyCombinations(args1, UNSPECIFIED, (arg1, arg2) -> function.apply(arg1));
     }
 
-    public static <I1, I2> String callWithAllCombinations(
-        final Iterable<I1> args1,
-        final Iterable<I2> args2,
-        final Function2<I1, I2, ?> f) {
-
-        return callWithAllCombinations(args1, args2, UNSPECIFIED, (e1, e2, e3) -> f.apply(e1, e2));
+    /**
+     * Applies the provided function to all combinations of all the provided arguments for the function, and returns the
+     * produced results as a String.
+     *
+     * The produced String will contain both the provided arguments and the computed value, and can later be used for
+     * writting the *approvals files*.
+     *
+     * @param args1    A collection of all the arguments 1 to apply the function to
+     * @param args2    A collection of all the arguments 2 to apply the function to
+     * @param function The function to apply on the combinations of provided arguments
+     * @param <IN1>    Type of the argument 1
+     * @param <IN2>    Type of the argument 2
+     * @return A String containing all the combinations of provided arguments, and the result produced by the function
+     * application
+     */
+    public static <IN1, IN2> String applyCombinations(final Iterable<IN1> args1, final Iterable<IN2> args2,
+                                                      final Function2<IN1, IN2, ?> function) {
+        return applyCombinations(args1, args2, UNSPECIFIED, (arg1, arg2, arg3) -> function.apply(arg1, arg2));
     }
 
-    public static <I1, I2, I3> String callWithAllCombinations(
-        final Iterable<I1> args1,
-        final Iterable<I2> args2,
-        final Iterable<I3> args3,
-        final Function3<I1, I2, I3, ?> f) {
-
-        return callWithAllCombinations(args1, args2, args3, UNSPECIFIED, (e1, e2, e3, e4) -> f.apply(e1, e2, e3));
-
+    /**
+     * Applies the provided function to all combinations of all the provided arguments for the function, and returns the
+     * produced results as a String.
+     *
+     * The produced String will contain both the provided arguments and the computed value, and can later be used for
+     * writting the *approvals files*.
+     *
+     * @param args1    A collection of all the arguments 1 to apply the function to
+     * @param args2    A collection of all the arguments 2 to apply the function to
+     * @param args3    A collection of all the arguments 3 to apply the function to
+     * @param function The function to apply on the combinations of provided arguments
+     * @param <IN1>    Type of the argument 1
+     * @param <IN2>    Type of the argument 2
+     * @param <IN3>    Type of the argument 3
+     * @return A String containing all the combinations of provided arguments, and the result produced by the function
+     * application
+     */
+    public static <IN1, IN2, IN3> String applyCombinations
+    (final Iterable<IN1> args1, final Iterable<IN2> args2, final Iterable<IN3> args3,
+     final Function3<IN1, IN2, IN3, ?> function) {
+        return applyCombinations(args1, args2, args3, UNSPECIFIED,
+            (arg1, arg2, arg3, arg4) -> function.apply(arg1, arg2, arg3));
     }
 
-    public static <I1, I2, I3, I4> String callWithAllCombinations(
-        final Iterable<I1> args1,
-        final Iterable<I2> args2,
-        final Iterable<I3> args3,
-        final Iterable<I4> args4,
-        final Function4<I1, I2, I3, I4, ?> f) {
-
-        return callWithAllCombinations(args1, args2, args3, args4, UNSPECIFIED, (e1, e2, e3, e4, e5) -> f.apply(e1, e2, e3, e4));
+    /**
+     * Applies the provided function to all combinations of all the provided arguments for the function, and returns the
+     * produced results as a String.
+     *
+     * The produced String will contain both the provided arguments and the computed value, and can later be used for
+     * writting the *approvals files*.
+     *
+     * @param args1    A collection of all the arguments 1 to apply the function to
+     * @param args2    A collection of all the arguments 2 to apply the function to
+     * @param args3    A collection of all the arguments 3 to apply the function to
+     * @param args4    A collection of all the arguments 4 to apply the function to
+     * @param function The function to apply on the combinations of provided arguments
+     * @param <IN1>    Type of the argument 1
+     * @param <IN2>    Type of the argument 2
+     * @param <IN3>    Type of the argument 3
+     * @param <IN4>    Type of the argument 4
+     * @return A String containing all the combinations of provided arguments, and the result produced by the function
+     * application
+     */
+    public static <IN1, IN2, IN3, IN4> String applyCombinations
+    (final Iterable<IN1> args1, final Iterable<IN2> args2, final Iterable<IN3> args3, final Iterable<IN4> args4,
+     final Function4<IN1, IN2, IN3, IN4, ?> function) {
+        return applyCombinations(args1, args2, args3, args4, UNSPECIFIED,
+            (arg1, arg2, arg3, arg4, arg5) -> function.apply(arg1, arg2, arg3, arg4));
     }
 
-    public static <I1, I2, I3, I4, I5> String callWithAllCombinations(
-        final Iterable<I1> args1,
-        final Iterable<I2> args2,
-        final Iterable<I3> args3,
-        final Iterable<I4> args4,
-        final Iterable<I5> args5,
-        final Function5<I1, I2, I3, I4, I5, ?> f) {
+    /**
+     * Applies the provided function to all combinations of all the provided arguments for the function, and returns the
+     * produced results as a String.
+     *
+     * The produced String will contain both the provided arguments and the computed value, and can later be used for
+     * writting the *approvals files*.
+     *
+     * @param args1    A collection of all the arguments 1 to apply the function to
+     * @param args2    A collection of all the arguments 2 to apply the function to
+     * @param args3    A collection of all the arguments 3 to apply the function to
+     * @param args4    A collection of all the arguments 4 to apply the function to
+     * @param args5    A collection of all the arguments 5 to apply the function to
+     * @param function The function to apply on the combinations of provided arguments
+     * @param <IN1>    Type of the argument 1
+     * @param <IN2>    Type of the argument 2
+     * @param <IN3>    Type of the argument 3
+     * @param <IN4>    Type of the argument 4
+     * @param <IN5>    Type of the argument 5
+     * @return A String containing all the combinations of provided arguments, and the result produced by the function
+     * application
+     */
+    public static <IN1, IN2, IN3, IN4, IN5> String applyCombinations
+    (final Iterable<IN1> args1, final Iterable<IN2> args2, final Iterable<IN3> args3, final Iterable<IN4> args4,
+     final Iterable<IN5> args5, final Function5<IN1, IN2, IN3, IN4, IN5, ?> function) {
         final StringBuilder results = new StringBuilder();
-        for (final I1 a1 : args1) {
-            for (final I2 a2 : args2) {
-                for (final I3 a3 : args3) {
-                    for (final I4 a4 : args4) {
-                        for (final I5 a5 : args5) {
+        for (final IN1 arg1 : args1) {
+            for (final IN2 arg2 : args2) {
+                for (final IN3 arg3 : args3) {
+                    for (final IN4 arg4 : args4) {
+                        for (final IN5 arg5 : args5) {
                             try {
-                                results.append(f.apply(a1, a2, a3, a4, a5));
+                                results.append(function.apply(arg1, arg2, arg3, arg4, arg5));
                             } catch (final Exception e) {
                                 results.append(e);
                             }
-                            results.append(mkString(
-                                " <== , ",
-                                ", ",
-                                "\n",
-                                a1, a2, a3, a4, a5));
+                            results.append(mkString(" <== , ", ", ", "\n",
+                                arg1, arg2, arg3, arg4, arg5));
                         }
                     }
                 }
@@ -103,12 +179,8 @@ public class FunctionUtils {
         return results.toString();
     }
 
-    private static String mkString(
-        final String prefix,
-        final String delimiter,
-        final String suffix,
-        final Object... objects) {
-
+    private static String mkString(final String prefix, final String delimiter, final String suffix,
+                                   final Object... objects) {
         return Arrays.stream(objects)
             .filter(o -> o != UNSPECIFIED_ENTRY)
             .map(Object::toString)

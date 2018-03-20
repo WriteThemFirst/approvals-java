@@ -18,13 +18,14 @@
 package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
+import com.github.writethemfirst.approvals.utils.FunctionUtils;
 import com.github.writethemfirst.approvals.utils.functions.*;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.write;
-import static com.github.writethemfirst.approvals.utils.FunctionUtils.callWithAllCombinations;
+import static com.github.writethemfirst.approvals.utils.FunctionUtils.applyCombinations;
 import static java.util.Arrays.stream;
 
 /**
@@ -115,7 +116,7 @@ public class CombinationApprovals extends Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public <I1> void verifyAllCombinations(final Iterable<I1> args1, final Function1<I1, ?> f) {
-        csv().verify(callWithAllCombinations(args1, f));
+        csv().verify(FunctionUtils.applyCombinations(args1, f));
     }
 
     /**
@@ -155,7 +156,7 @@ public class CombinationApprovals extends Approvals {
         final Iterable<I2> args2,
         final Function2<I1, I2, ?> f) {
 
-        csv().verify(callWithAllCombinations(args1, args2, f));
+        csv().verify(FunctionUtils.applyCombinations(args1, args2, f));
     }
 
     /**
@@ -206,7 +207,7 @@ public class CombinationApprovals extends Approvals {
         final Iterable<I3> args3,
         final Function3<I1, I2, I3, ?> f) {
 
-        csv().verify(callWithAllCombinations(args1, args2, args3, f));
+        csv().verify(FunctionUtils.applyCombinations(args1, args2, args3, f));
     }
 
     /**
@@ -262,7 +263,7 @@ public class CombinationApprovals extends Approvals {
         final Iterable<I4> args4,
         final Function4<I1, I2, I3, I4, ?> f) {
 
-        csv().verify(callWithAllCombinations(args1, args2, args3, args4, f));
+        csv().verify(FunctionUtils.applyCombinations(args1, args2, args3, args4, f));
     }
 
     /**
@@ -322,7 +323,7 @@ public class CombinationApprovals extends Approvals {
         final Iterable<I5> args5,
         final Function5<I1, I2, I3, I4, I5, ?> f) {
 
-        csv().verify(callWithAllCombinations(args1, args2, args3, args4, args5, f));
+        csv().verify(applyCombinations(args1, args2, args3, args4, args5, f));
     }
 
     /**

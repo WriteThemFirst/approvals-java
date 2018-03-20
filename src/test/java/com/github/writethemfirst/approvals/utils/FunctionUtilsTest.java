@@ -18,7 +18,6 @@
 package com.github.writethemfirst.approvals.utils;
 
 import com.github.writethemfirst.approvals.Approvals;
-import com.github.writethemfirst.approvals.utils.FunctionUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -33,7 +32,7 @@ class FunctionUtilsTest {
     void shouldBeCalledWithAllArguments() {
         final List<Integer> args1 = Arrays.asList(10, 20, 30);
         final List<Long> args2 = Arrays.asList(4L, 5L, 0L);
-        final String results = FunctionUtils.callWithAllCombinations(args1, args2, (a, b) -> a / b);
+        final String results = FunctionUtils.applyCombinations(args1, args2, (a, b) -> a / b);
         approvals.verify(results);
     }
 
