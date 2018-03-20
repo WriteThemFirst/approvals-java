@@ -60,7 +60,7 @@ public class FileUtils {
      * If it already exist, that method will do nothing. If there's any issue while creating the approval file, the
      * {@link IOException} will be wrapped in a {@link RuntimeException} and thrown.
      */
-    public static void createFile(final Path path) {
+    public static void createFileIfNeeded(final Path path) {
         final File file = path.toFile();
         if (!file.exists()) {
             try {
@@ -92,14 +92,14 @@ public class FileUtils {
     }
 
     /**
-     * Removes recursively all elements if `file` is a directory, then removes `file`.
+     * Removes recursively all elements if `path` is a directory, then removes `path`.
      *
-     * If the file doesn't exist, nothing will be done.
+     * If the path doesn't exist, nothing will be done.
      *
-     * @param file the Path to be removed
+     * @param path the Path to be removed
      */
-    public static void silentRecursiveRemove(final Path file) {
-        silentRecursiveRemove(file.toFile());
+    public static void silentRecursiveRemove(final Path path) {
+        silentRecursiveRemove(path.toFile());
     }
 
     /**
@@ -152,14 +152,14 @@ public class FileUtils {
     /**
      * Copies the content of a file found at a specified Path to another file located at another specified Path.
      *
-     * It'll swallow all errors while reading the source file and only produce exceptions in case of errors while
-     * writing the new file.
+     * It'll swallow all errors while reading the sourceFile (using an empty String as data) and only produce exceptions
+     * in case of errors while writing the new file.
      *
-     * @param source      The path from which the source file should be read (data to be copied)
-     * @param destination The path to which the destination file should be written (containing the read data)
+     * @param sourceFile        The file from which the data to be copied should be read
+     * @param destinationFolder The folder to which the data to be copied should be written
      */
-    public static void copy(final Path source, final Path destination) {
-        write(silentRead(source), destination);
+    public static void copy(final Path sourceFile, final Path destinationFolder) {
+        write(silentRead(sourceFile), destinationFolder);
     }
 
     /**
@@ -191,7 +191,7 @@ public class FileUtils {
                 ? Files.find(baseDirectory, MAX_DEPTH, ($, attributes) -> attributes.isRegularFile())
                 : Stream.empty();
         } catch (final IOException e) {
-            throw new RuntimeException(format("Can't browse the <%s> directory for files.", baseDirectory), e);
+            throw new RuntimeException(format("Can't browse directory at <%s> for files.", baseDirectory), e);
         }
     }
 

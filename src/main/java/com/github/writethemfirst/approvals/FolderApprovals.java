@@ -118,6 +118,6 @@ public class FolderApprovals extends Approvals {
         approvedAndReceivedPaths
             .allFilesToCheck()
             .map(paths -> paths.approved)
-            .forEach(FileUtils::createFile);
+            .forEach(FileUtils::createFileIfNeeded);
     }
 }

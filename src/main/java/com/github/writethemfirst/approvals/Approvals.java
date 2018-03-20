@@ -122,7 +122,7 @@ public class Approvals {
     public void verify(final Object output) {
         final ApprovedAndReceivedPaths files = approvedAndReceivedPaths();
         writeReceivedFile(output, files);
-        createFile(files.approved);
+        createFileIfNeeded(files.approved);
         if (files.filesHaveSameContent()) {
             silentRemove(files.received);
         } else {
