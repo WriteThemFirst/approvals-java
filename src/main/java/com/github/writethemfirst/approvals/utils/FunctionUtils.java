@@ -34,14 +34,14 @@ import java.util.stream.Collectors;
  */
 public class FunctionUtils {
 
-    private static final Object EMPTY_ENTRY = new Object();
-    private static final Iterable<Object> EMPTY = Collections.singletonList(EMPTY_ENTRY);
+    private static final Object UNSPECIFIED_ENTRY = new Object();
+    private static final Iterable<Object> UNSPECIFIED = Collections.singletonList(UNSPECIFIED_ENTRY);
 
     public static <I1> String callWithAllCombinations(
         final Iterable<I1> args1,
         final Function1<I1, ?> f) {
 
-        return callWithAllCombinations(args1, EMPTY, (e1, e2) -> f.apply(e1));
+        return callWithAllCombinations(args1, UNSPECIFIED, (e1, e2) -> f.apply(e1));
     }
 
     public static <I1, I2> String callWithAllCombinations(
@@ -49,7 +49,7 @@ public class FunctionUtils {
         final Iterable<I2> args2,
         final Function2<I1, I2, ?> f) {
 
-        return callWithAllCombinations(args1, args2, EMPTY, (e1, e2, e3) -> f.apply(e1, e2));
+        return callWithAllCombinations(args1, args2, UNSPECIFIED, (e1, e2, e3) -> f.apply(e1, e2));
     }
 
     public static <I1, I2, I3> String callWithAllCombinations(
@@ -58,7 +58,7 @@ public class FunctionUtils {
         final Iterable<I3> args3,
         final Function3<I1, I2, I3, ?> f) {
 
-        return callWithAllCombinations(args1, args2, args3, EMPTY, (e1, e2, e3, e4) -> f.apply(e1, e2, e3));
+        return callWithAllCombinations(args1, args2, args3, UNSPECIFIED, (e1, e2, e3, e4) -> f.apply(e1, e2, e3));
 
     }
 
@@ -69,7 +69,7 @@ public class FunctionUtils {
         final Iterable<I4> args4,
         final Function4<I1, I2, I3, I4, ?> f) {
 
-        return callWithAllCombinations(args1, args2, args3, args4, EMPTY, (e1, e2, e3, e4, e5) -> f.apply(e1, e2, e3, e4));
+        return callWithAllCombinations(args1, args2, args3, args4, UNSPECIFIED, (e1, e2, e3, e4, e5) -> f.apply(e1, e2, e3, e4));
     }
 
     public static <I1, I2, I3, I4, I5> String callWithAllCombinations(
@@ -110,7 +110,7 @@ public class FunctionUtils {
         final Object... objects) {
 
         return Arrays.stream(objects)
-            .filter(o -> o != EMPTY_ENTRY)
+            .filter(o -> o != UNSPECIFIED_ENTRY)
             .map(Object::toString)
             .collect(Collectors.joining(delimiter, prefix, suffix));
     }
