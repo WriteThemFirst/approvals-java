@@ -18,7 +18,7 @@
 package com.github.writethemfirst.approvals.utils;
 
 /**
- * # OS Utils
+ * # OSUtils
  *
  * Approvals-Java can be executed from all kind of environments, which also means all kind of OS (at least Windows,
  * Linux, Mac OSX).
