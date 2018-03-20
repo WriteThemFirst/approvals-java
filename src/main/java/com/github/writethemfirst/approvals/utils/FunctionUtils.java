@@ -169,7 +169,7 @@ public class FunctionUtils {
                             } catch (final Exception e) {
                                 results.append(e);
                             }
-                            results.append(mkString(" <== , ", ", ", "\n",
+                            results.append(buildArgumentsString(" <== , ", ", ", "\n",
                                 arg1, arg2, arg3, arg4, arg5));
                         }
                     }
@@ -179,9 +179,19 @@ public class FunctionUtils {
         return results.toString();
     }
 
-    private static String mkString(final String prefix, final String delimiter, final String suffix,
-                                   final Object... objects) {
-        return Arrays.stream(objects)
+    /**
+     * Builds a String representation out of the provided arguments using the provided prefix, delimiter, and suffix;
+     * after filtering the valid arguments (not the UNSPECIFIED_ENTRY ones).
+     *
+     * @param prefix    Prefix to be added before each produced String
+     * @param delimiter Delimiter to be used to separate each members of the built String
+     * @param suffix    Suffix to be added after each produced String
+     * @param arguments The list of arguments to be filtered and included in the constructed String
+     * @return A String representation of the provided arguments after filtering the valid ones
+     */
+    private static String buildArgumentsString(final String prefix, final String delimiter, final String suffix,
+                                               final Object... arguments) {
+        return Arrays.stream(arguments)
             .filter(o -> o != UNSPECIFIED_ENTRY)
             .map(Object::toString)
             .collect(Collectors.joining(delimiter, prefix, suffix));
