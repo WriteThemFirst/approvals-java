@@ -17,7 +17,7 @@
  */
 package com.github.writethemfirst.approvals;
 
-import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
+import com.github.writethemfirst.approvals.files.ApprovalFiles;
 import com.github.writethemfirst.approvals.utils.FileUtils;
 
 import java.io.IOException;
@@ -83,39 +83,39 @@ public class FolderApprovals extends Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public void verifyAllFiles(final Path actualFolder) {
-        final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceivedPaths();
-        prepareFolders(actualFolder, approvedAndReceivedPaths);
-        final Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches =
-            approvedAndReceivedPaths
+        final ApprovalFiles approvalFiles = approvedAndReceivedPaths();
+        prepareFolders(actualFolder, approvalFiles);
+        final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches =
+            approvalFiles
                 .allFilesToCheck()
-                .collect(partitioningBy(ApprovedAndReceivedPaths::filesHaveSameContent));
+                .collect(partitioningBy(ApprovalFiles::filesHaveSameContent));
 
-        cleanupReceivedFiles(approvedAndReceivedPaths, matchesAndMismatches);
+        cleanupReceivedFiles(approvalFiles, matchesAndMismatches);
         reportMismatches(matchesAndMismatches);
     }
 
-    private void reportMismatches(final Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches) {
+    private void reportMismatches(final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches) {
         matchesAndMismatches.get(false).forEach(mismatch -> reporter.mismatch(mismatch.approved, mismatch.received));
     }
 
-    private void cleanupReceivedFiles(final ApprovedAndReceivedPaths approvedAndReceivedPaths, final Map<Boolean, List<ApprovedAndReceivedPaths>> matchesAndMismatches) {
+    private void cleanupReceivedFiles(final ApprovalFiles approvalFiles, final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches) {
         matchesAndMismatches.get(true).forEach(ar -> silentRemove(ar.received));
         if (matchesAndMismatches.get(false).isEmpty()) {
-            silentRecursiveRemove(approvedAndReceivedPaths.received);
+            silentRecursiveRemove(approvalFiles.received);
         }
     }
 
     /**
      * Copies files from *actual* to *received* folder, and creates missing *approved* files.
      */
-    private void prepareFolders(final Path actualFolder, final ApprovedAndReceivedPaths approvedAndReceivedPaths) {
+    private void prepareFolders(final Path actualFolder, final ApprovalFiles approvalFiles) {
         try {
-            Files.createDirectories(approvedAndReceivedPaths.approved);
+            Files.createDirectories(approvalFiles.approved);
         } catch (final IOException e) {
-            throw new RuntimeException("could not create *approved* folder " + approvedAndReceivedPaths.approved, e);
+            throw new RuntimeException("could not create *approved* folder " + approvalFiles.approved, e);
         }
-        listFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvedAndReceivedPaths.received));
-        approvedAndReceivedPaths
+        listFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvalFiles.received));
+        approvalFiles
             .allFilesToCheck()
             .map(paths -> paths.approved)
             .forEach(FileUtils::createFileIfNeeded);

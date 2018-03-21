@@ -17,12 +17,12 @@
  */
 package com.github.writethemfirst.approvals;
 
-import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
+import com.github.writethemfirst.approvals.files.ApprovalFiles;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 
 import java.nio.file.Path;
 
-import static com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths.approvedAndReceived;
+import static com.github.writethemfirst.approvals.files.ApprovalFiles.build;
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
@@ -120,7 +120,7 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public void verify(final Object output) {
-        final ApprovedAndReceivedPaths files = approvedAndReceivedPaths();
+        final ApprovalFiles files = approvedAndReceivedPaths();
         writeReceivedFile(output, files);
         createFileIfNeeded(files.approved);
         if (files.filesHaveSameContent()) {
@@ -132,7 +132,7 @@ public class Approvals {
     }
 
     //Can be overridden to add a header to the file.
-    void writeReceivedFile(final Object output, final ApprovedAndReceivedPaths files) {
+    void writeReceivedFile(final Object output, final ApprovalFiles files) {
         write(output + "", files.received);
     }
 
@@ -170,8 +170,8 @@ public class Approvals {
         return callerMethod(testClass).orElse("unknown_method");
     }
 
-    ApprovedAndReceivedPaths approvedAndReceivedPaths() {
-        return approvedAndReceived(
+    ApprovalFiles approvedAndReceivedPaths() {
+        return build(
             folder,
             customFileName != null ? customFileName : callerMethodName(),
             customExtension);

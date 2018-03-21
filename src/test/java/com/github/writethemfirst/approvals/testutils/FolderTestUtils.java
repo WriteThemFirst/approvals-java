@@ -17,13 +17,13 @@
  */
 package com.github.writethemfirst.approvals.testutils;
 
-import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
+import com.github.writethemfirst.approvals.files.ApprovalFiles;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths.approvedAndReceived;
+import static com.github.writethemfirst.approvals.files.ApprovalFiles.build;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRecursiveRemove;
 import static com.github.writethemfirst.approvals.utils.FileUtils.write;
 import static java.nio.file.Paths.get;
@@ -37,9 +37,9 @@ public class FolderTestUtils {
         final String className = testClass.getSimpleName();
         final Path packageResourcesPath = get("src/test/resources/", testClass.getPackage().getName().split("\\."));
         final Path folderForClass = packageResourcesPath.resolve(className);
-        final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceived(folderForClass, methodName, "");
-        received = approvedAndReceivedPaths.received;
-        approved = approvedAndReceivedPaths.approved;
+        final ApprovalFiles approvalFiles = build(folderForClass, methodName, "");
+        received = approvalFiles.received;
+        approved = approvalFiles.approved;
         actual = Files.createTempDirectory(methodName);
     }
 

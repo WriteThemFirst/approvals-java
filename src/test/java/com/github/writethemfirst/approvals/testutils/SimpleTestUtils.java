@@ -17,11 +17,11 @@
  */
 package com.github.writethemfirst.approvals.testutils;
 
-import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
+import com.github.writethemfirst.approvals.files.ApprovalFiles;
 
 import java.nio.file.Path;
 
-import static com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths.approvedAndReceived;
+import static com.github.writethemfirst.approvals.files.ApprovalFiles.build;
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static java.nio.file.Paths.get;
 
@@ -33,9 +33,9 @@ public class SimpleTestUtils {
         final String className = testClass.getSimpleName();
         final Path packageResourcesPath = get("src/test/resources/", testClass.getPackage().getName().split("\\."));
         final Path folderForClass = packageResourcesPath.resolve(className);
-        final ApprovedAndReceivedPaths approvedAndReceivedPaths = approvedAndReceived(folderForClass, methodName, extensionWithDot);
-        received = approvedAndReceivedPaths.received;
-        approved = approvedAndReceivedPaths.approved;
+        final ApprovalFiles approvalFiles = build(folderForClass, methodName, extensionWithDot);
+        received = approvalFiles.received;
+        approved = approvalFiles.approved;
     }
 
     public void writeReceived(final String content) {

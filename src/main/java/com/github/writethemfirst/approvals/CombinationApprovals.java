@@ -17,7 +17,7 @@
  */
 package com.github.writethemfirst.approvals;
 
-import com.github.writethemfirst.approvals.files.ApprovedAndReceivedPaths;
+import com.github.writethemfirst.approvals.files.ApprovalFiles;
 import com.github.writethemfirst.approvals.utils.FunctionUtils;
 import com.github.writethemfirst.approvals.utils.functions.*;
 
@@ -97,7 +97,7 @@ public class CombinationApprovals extends Approvals {
 
 
     @Override
-    void writeReceivedFile(final Object output, final ApprovedAndReceivedPaths files) {
+    void writeReceivedFile(final Object output, final ApprovalFiles files) {
         write(header + output, files.received);
     }
 
