@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.listFiles;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
+import static java.lang.String.format;
 
 /**
  * # ApprovalFiles
@@ -102,7 +103,7 @@ public class ApprovalFiles {
      * @return The path to the approval file computed from all the specified information
      */
     private static Path buildApprovalFilePath(final Path folder, final String methodName, final String extension) {
-        return Paths.get(folder.resolve(methodName) + "." + extension);
+        return folder.resolve(format("%s.%s", methodName, extension));
     }
 
     public boolean filesHaveSameContent() {
