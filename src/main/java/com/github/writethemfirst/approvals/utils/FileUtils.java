@@ -155,25 +155,27 @@ public class FileUtils {
      * It'll swallow all errors while reading the sourceFile (using an empty String as data) and only produce exceptions
      * in case of errors while writing the new file.
      *
-     * @param sourceFile        The file from which the data to be copied should be read
-     * @param destinationFolder The folder to which the data to be copied should be written
+     * @param sourceFile      The file from which the data to be copied should be read
+     * @param destinationFile The file to which the data to be copied should be written
      */
-    public static void copy(final Path sourceFile, final Path destinationFolder) {
-        write(silentRead(sourceFile), destinationFolder);
+    public static void copy(final Path sourceFile, final Path destinationFile) {
+        write(silentRead(sourceFile), destinationFile);
     }
 
     /**
-     * Copies the content of a file found at a specified Path to another file located in the specified folder.
+     * Copies the content of a file found at a specified Path to another file located in the specified
+     * destinationFolder.
      *
-     * If the file doesn't exist in the specified folder, it'll be created. It'll swallow all errors while reading the
-     * source file and only produce exceptions in case of errors while writing the new file.
+     * If the file doesn't exist in the specified destinationFolder, it'll be created. It'll swallow all errors while
+     * reading the sourceFile file and only produce exceptions in case of errors while writing the new file.
      *
-     * @param source The path from which the source file should be read (data to be copied)
-     * @param folder The path in which the copy of the file should be made (parent folder of the copy then)
+     * @param sourceFile        The path from which the sourceFile file should be read (data to be copied)
+     * @param destinationFolder The path in which the copy of the file should be made (parent destinationFolder of the
+     *                          copy then)
      */
-    public static void copyToFolder(final Path source, final Path folder) {
-        final Path destination = folder.resolve(source.getFileName());
-        copy(source, destination);
+    public static void copyToFolder(final Path sourceFile, final Path destinationFolder) {
+        final Path destinationFile = destinationFolder.resolve(sourceFile.getFileName());
+        copy(sourceFile, destinationFile);
     }
 
     /**
