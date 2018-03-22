@@ -123,7 +123,7 @@ public class Approvals {
         final ApprovalFiles files = approvedAndReceivedPaths();
         writeReceivedFile(output, files);
         createFileIfNeeded(files.approved);
-        if (files.filesHaveSameContent()) {
+        if (files.haveSameContent()) {
             silentRemove(files.received);
         } else {
             reporter.mismatch(files.approved, files.received);

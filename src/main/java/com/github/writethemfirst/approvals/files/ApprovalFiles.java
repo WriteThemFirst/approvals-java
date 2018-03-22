@@ -111,7 +111,7 @@ public class ApprovalFiles {
      * @return true if both approved and received are directories
      */
     private boolean areRegularFiles() {
-        return !approved.toFile().isDirectory() || !received.toFile().isDirectory();
+        return approved.toFile().isFile() && received.toFile().isFile();
     }
 
     /**
@@ -156,7 +156,17 @@ public class ApprovalFiles {
         return new ApprovalFiles(approvedFile, receivedFile);
     }
 
-    public boolean filesHaveSameContent() {
+    /**
+     * If approved and received are regular files, this method will check if both files have the same content (by
+     * reading them and comparing the data afterwards).
+     *
+     * If approved and received actually are folders, this method will simply return false.
+     *
+     * @return True if approved and received are regular files and have the same content
+     */
+    public boolean haveSameContent() {
+        if (!areRegularFiles())
+            return false;
         final String receivedContent = silentRead(received);
         final String approvedContent = silentRead(approved);
         return receivedContent.equals(approvedContent);

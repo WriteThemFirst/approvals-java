@@ -88,7 +88,7 @@ public class FolderApprovals extends Approvals {
         final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches =
             approvalFiles
                 .allFilesToCheck()
-                .collect(partitioningBy(ApprovalFiles::filesHaveSameContent));
+                .collect(partitioningBy(ApprovalFiles::haveSameContent));
 
         cleanupReceivedFiles(approvalFiles, matchesAndMismatches);
         reportMismatches(matchesAndMismatches);
