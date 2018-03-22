@@ -18,7 +18,6 @@
 package com.github.writethemfirst.approvals.files;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.listFiles;
@@ -106,6 +105,57 @@ public class ApprovalFiles {
         return folder.resolve(format("%s.%s", methodName, extension));
     }
 
+    /**
+     * Checks if approved and received are directories and not regular *approved* and *received* files.
+     *
+     * @return true if both approved and received are directories
+     */
+    private boolean areRegularFiles() {
+        return !approved.toFile().isDirectory() || !received.toFile().isDirectory();
+    }
+
+    /**
+     * If approved and received are directories, this method allows to create a new {@link ApprovalFiles} object which
+     * associates to an already known *approved* file a resolved *received* file. That *received* file will be searched
+     * for in the received folder by resolving the relative path found from the *approved* file.
+     *
+     * It allows to go from a found *approved* file to a pair of both *approved* and *received* file.
+     *
+     * If approved or received are actualy not directories (which is checked with areRegularFiles), this current
+     * instance of {@link ApprovalFiles} will be returned.
+     *
+     * @param approvedFile The *approved* file we already know and for which we want to associate a *received* file
+     * @return An {@link ApprovalFiles} instance containing both the *approved* and matching *received* file
+     */
+    private ApprovalFiles associateMatchingReceivedFile(final Path approvedFile) {
+        if (areRegularFiles())
+            return this;
+        final Path approvedRelativePath = approved.relativize(approvedFile);
+        final Path receivedFile = received.resolve(approvedRelativePath);
+        return new ApprovalFiles(approvedFile, receivedFile);
+    }
+
+    /**
+     * If approved and received are directories, this method allows to create a new {@link ApprovalFiles} object which
+     * associates to an already known *received* file a resolved *approved* file. That *approved* file will be searched
+     * for in the approved folder by resolving the relative path found from the *received* file.
+     *
+     * It allows to go from a found *received* file to a pair of both *approved* and *received* file.
+     *
+     * If approved or received are actualy not directories (which is checked with areRegularFiles), this current
+     * instance of {@link ApprovalFiles} will be returned.
+     *
+     * @param receivedFile The *received* file we already know and for which we want to associate a *approved* file
+     * @return An {@link ApprovalFiles} instance containing both the *approved* and matching *received* file
+     */
+    private ApprovalFiles associateMatchingApprovedFile(final Path receivedFile) {
+        if (areRegularFiles())
+            return this;
+        final Path receivedRelativePath = received.relativize(receivedFile);
+        final Path approvedFile = approved.resolve(receivedRelativePath);
+        return new ApprovalFiles(approvedFile, receivedFile);
+    }
+
     public boolean filesHaveSameContent() {
         final String receivedContent = silentRead(received);
         final String approvedContent = silentRead(approved);
@@ -119,34 +169,18 @@ public class ApprovalFiles {
     public Stream<ApprovalFiles> allFilesToCheck() {
         return Stream
             .concat(
-                listFiles(approved).map(this::forApprovedFile),
-                listFiles(received).map(this::forReceivedFile)
+                listFiles(approved).map(this::associateMatchingReceivedFile),
+                listFiles(received).map(this::associateMatchingApprovedFile)
             )
             .distinct();
     }
 
     /**
-     * When `this` represents a pairs of folders, returns a pair of files in these folders.
+     * **Overriding equals to allow filtering of duplicates.**
      *
-     * @param approvedFile a file in the `approved` folder
+     * @param o The object we want to compare to the current instance
+     * @return true if both objects are considered equals
      */
-    private ApprovalFiles forApprovedFile(final Path approvedFile) {
-        final Path approvedRelative = approved.relativize(approvedFile);
-        final Path receivedFile = received.resolve(approvedRelative);
-        return new ApprovalFiles(approvedFile, receivedFile);
-    }
-
-    /**
-     * When `this` represents a pairs of folders, returns a pair of files in these folders.
-     *
-     * @param receivedFile a file in the `received` folder
-     */
-    private ApprovalFiles forReceivedFile(final Path receivedFile) {
-        final Path receivedRelative = received.relativize(receivedFile);
-        final Path approvedFile = approved.resolve(receivedRelative);
-        return new ApprovalFiles(approvedFile, receivedFile);
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -157,6 +191,11 @@ public class ApprovalFiles {
         return approved.equals(that.approved) && received.equals(that.received);
     }
 
+    /**
+     * **Overriding hashCode to allow filtering of duplicates.**
+     *
+     * @return A unique hashcode for the particular data holded in that object.
+     */
     @Override
     public int hashCode() {
         int result = approved.hashCode();
