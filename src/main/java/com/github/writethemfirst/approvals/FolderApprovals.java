@@ -87,7 +87,7 @@ public class FolderApprovals extends Approvals {
         prepareFolders(actualFolder, approvalFiles);
         final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches =
             approvalFiles
-                .allFilesToCheck()
+                .listChildrenApprovalFiles()
                 .collect(partitioningBy(ApprovalFiles::haveSameContent));
 
         cleanupReceivedFiles(approvalFiles, matchesAndMismatches);
@@ -116,7 +116,7 @@ public class FolderApprovals extends Approvals {
         }
         listFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvalFiles.received));
         approvalFiles
-            .allFilesToCheck()
+            .listChildrenApprovalFiles()
             .map(paths -> paths.approved)
             .forEach(FileUtils::createFileIfNeeded);
     }

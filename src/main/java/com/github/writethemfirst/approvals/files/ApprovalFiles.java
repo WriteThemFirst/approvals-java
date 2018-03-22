@@ -172,17 +172,25 @@ public class ApprovalFiles {
         return receivedContent.equals(approvedContent);
     }
 
-
     /**
-     * When `this` is a pair of folders, constructs all pairs of files.
+     * If approved and received actually are folders (which can be the case while using the folder approval features),
+     * this method allows to list all the children approval files from those folders.
+     *
+     * It'll basically read all the files from the approved folder, all the files from the received folder, associate
+     * the matching approved and received files for each of those, and of course filter the duplicates. This gives us a
+     * complete list of all approval files in the end.
+     *
+     * In case that function is called when approved or received are not folders, it'll simply return an empty stream.
+     *
+     * @return A Stream containing all the pairs of approval files for the approved and received folders.
      */
-    public Stream<ApprovalFiles> allFilesToCheck() {
-        return Stream
-            .concat(
-                listFiles(approved).map(this::associateMatchingReceivedFile),
-                listFiles(received).map(this::associateMatchingApprovedFile)
-            )
-            .distinct();
+    public Stream<ApprovalFiles> listChildrenApprovalFiles() {
+        if (areRegularFiles())
+            return Stream.empty();
+        return Stream.concat(
+            listFiles(approved).map(this::associateMatchingReceivedFile),
+            listFiles(received).map(this::associateMatchingApprovedFile)
+        ).distinct();
     }
 
     /**
