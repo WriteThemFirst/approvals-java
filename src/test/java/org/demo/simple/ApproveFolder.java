@@ -28,9 +28,8 @@ class ApproveFolder {
     private final FolderApprover approvals = new FolderApprover();
 
     @Test
-    @Disabled
     void verifyFolder() {
-        approvals.verifyAllFiles(Paths.get("src\\test\\resources\\org\\demo\\simple\\ApproveFolder\\verifyFolder.actual"));
+        approvals.verifyAllFiles(Paths.get("src/test/resources/org/demo/simple/ApproveFolder/verifyFolder.actual"));
     }
 
 }
