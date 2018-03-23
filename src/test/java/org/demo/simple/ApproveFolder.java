@@ -17,19 +17,17 @@
  */
 package org.demo.simple;
 
-import com.github.writethemfirst.approvals.FolderApprover;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
 
+import static com.github.writethemfirst.approvals.Approvals.verifyAllFiles;
+
 
 class ApproveFolder {
-    private final FolderApprover approvals = new FolderApprover();
-
     @Test
     void verifyFolder() {
-        approvals.verifyAllFiles(Paths.get("src/test/resources/org/demo/simple/ApproveFolder/verifyFolder.actual"));
+        verifyAllFiles(Paths.get("src/test/resources/org/demo/simple/ApproveFolder/verifyFolder.actual"));
     }
 
 }

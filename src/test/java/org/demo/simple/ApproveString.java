@@ -17,25 +17,24 @@
  */
 package org.demo.simple;
 
-import com.github.writethemfirst.approvals.Approvals;
-import com.github.writethemfirst.approvals.Approver;
 import org.junit.jupiter.api.Test;
 
+import static com.github.writethemfirst.approvals.Approvals.verify;
+
 class ApproveString {
-    private final Approver approvals = new Approver();
 
     @Test
     void verifySimpleString() {
-        approvals.verify("my string");
+        verify("my string");
     }
 
     @Test
     void verifyWithLineFeed() {
-        approvals.verify("line1\nline2");
+        verify("line1\nline2");
     }
 
     @Test
     void verifyWithCarriageReturnLineFeed() {
-        approvals.verify("line1\r\nline2");
+        verify("line1\r\nline2");
     }
 }

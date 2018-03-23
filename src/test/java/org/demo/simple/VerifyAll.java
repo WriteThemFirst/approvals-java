@@ -20,12 +20,22 @@ package org.demo.simple;
 import com.github.writethemfirst.approvals.CombinationApprover;
 import org.junit.jupiter.api.Test;
 
+import static com.github.writethemfirst.approvals.Approvals.verifyAllCombinations;
 import static java.util.Arrays.asList;
 
 class VerifyAll {
 
     @Test
     void verifyAllWith3Arguments() {
+        verifyAllCombinations(
+            asList(1, 10, 100),
+            asList(2, 20, 200),
+            asList(5, 50),
+            (a, b, c) -> a + b * c);
+    }
+
+@Test
+    void verifyAllWith3NamedArguments() {
         final CombinationApprover approvals = new CombinationApprover().namedArguments("a", "b", "c");
         approvals.verifyAllCombinations(
             asList(1, 10, 100),

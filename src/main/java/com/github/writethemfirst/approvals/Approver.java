@@ -57,7 +57,7 @@ import static java.nio.file.Paths.get;
  * @see Reporter
  */
 public class Approver {
-    private final Class<?> testClass = callerClass(getClass());
+    private final Class<?> testClass = callerClass(getClass(), Approvals.class);
     private final Path folder = folderForClass(testClass);
     final Reporter reporter;
     final String customFileName;
