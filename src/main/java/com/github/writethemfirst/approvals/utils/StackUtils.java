@@ -17,7 +17,8 @@
  */
 package com.github.writethemfirst.approvals.utils;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,10 +47,10 @@ public class StackUtils {
      * @return The caller class of the provided one (ie. the first one found which isn't the reference after finding the
      * reference)
      */
-    public static Class<?> callerClass(final Class<?> referenceClass) {
+    public static Class<?> callerClass(final Class<?>... referenceClass) {
         //can be rewritten with dropWhile in Java 9
         final List<String> classesInStack = distinctClassesInStack();
-        final int referenceIndex = classesInStack.indexOf(referenceClass.getName());
+        final int referenceIndex = positionFromLastReferenceInStack(classesInStack, referenceClass);
         final String callerClassName = classesInStack.get(referenceIndex + 1);
         try {
             return Class.forName(callerClassName);
@@ -58,13 +59,23 @@ public class StackUtils {
         }
     }
 
+    private static int positionFromLastReferenceInStack(final List<String> classesInStack, final Class<?>[] referenceClasses) {
+        final ArrayList<String> reversedStack = new ArrayList<>(classesInStack);
+        Collections.reverse(reversedStack);
+        final Optional<String> lastReferenceName = reversedStack.stream()
+            .filter(className -> stream(referenceClasses).anyMatch(
+                referenceClass -> className.equals(referenceClass.getName())))
+            .findFirst();
+        return classesInStack.indexOf(lastReferenceName.get());
+    }
+
     /**
      * Parses the current thread stacktrace and returns a list of all distinct class names found in it.
      *
      * @return A List containing all distinct classes' names from the current thread stacktrace
      */
     private static List<String> distinctClassesInStack() {
-        return Arrays.stream(currentThread().getStackTrace())
+        return stream(currentThread().getStackTrace())
             .map(StackTraceElement::getClassName)
             .distinct()
             .collect(Collectors.toList());

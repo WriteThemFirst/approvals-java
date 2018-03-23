@@ -17,6 +17,7 @@
  */
 package org.demo.simple;
 
+import com.github.writethemfirst.approvals.Approvals;
 import com.github.writethemfirst.approvals.Approver;
 import org.junit.jupiter.api.Test;
 

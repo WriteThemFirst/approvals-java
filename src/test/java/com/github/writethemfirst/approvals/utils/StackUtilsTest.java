@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
+import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,6 +41,17 @@ class StackUtilsTest {
     @Test
     void methodNameShouldBeTheMethodName() {
         assertThat(callerMethod(getClass())).contains("methodNameShouldBeTheMethodName");
+    }
+
+  @Test
+    void callerClassShouldExcludeSeveralArguments() {
+      assertThat(Utils.call()).isEqualTo(getClass());
+    }
+
+    static class Utils {
+        static Class<?> call(){
+            return callerClass(StackUtils.class, Utils.class);
+        }
     }
 
 
