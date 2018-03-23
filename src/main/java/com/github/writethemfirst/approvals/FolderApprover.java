@@ -32,12 +32,12 @@ import static java.util.stream.Collectors.partitioningBy;
 /**
  * Approves a folder. See {@link #verifyAllFiles(Path)}.
  */
-public class FolderApprovals extends Approvals {
+public class FolderApprover extends Approver {
 
     /**
      * Standard FolderApprovals.
      */
-    public FolderApprovals() {
+    public FolderApprover() {
     }
 
     /**
@@ -45,8 +45,8 @@ public class FolderApprovals extends Approvals {
      *
      * @return a copy of this FolderApprovals
      */
-    public FolderApprovals reportTo(final Reporter reporter) {
-        return new FolderApprovals(reporter, customFileName, customExtension);
+    public FolderApprover reportTo(final Reporter reporter) {
+        return new FolderApprover(reporter, customFileName, customExtension);
     }
 
     /**
@@ -54,11 +54,11 @@ public class FolderApprovals extends Approvals {
      *
      * @return a copy of this FolderApprovals
      */
-    public FolderApprovals writeTo(final String customFileName) {
-        return new FolderApprovals(reporter, customFileName, customExtension);
+    public FolderApprover writeTo(final String customFileName) {
+        return new FolderApprover(reporter, customFileName, customExtension);
     }
 
-    private FolderApprovals(
+    private FolderApprover(
         final Reporter reporter,
         final String customFileName,
         final String customExtension) {

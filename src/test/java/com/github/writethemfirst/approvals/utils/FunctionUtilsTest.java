@@ -17,7 +17,7 @@
  */
 package com.github.writethemfirst.approvals.utils;
 
-import com.github.writethemfirst.approvals.Approvals;
+import com.github.writethemfirst.approvals.Approver;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -26,7 +26,7 @@ import java.util.List;
 import static java.lang.String.format;
 
 class FunctionUtilsTest {
-    private final Approvals approvals = new Approvals();
+    private final Approver approvals = new Approver();
 
     @Test
     void shouldBeCalledWithAllArguments() {

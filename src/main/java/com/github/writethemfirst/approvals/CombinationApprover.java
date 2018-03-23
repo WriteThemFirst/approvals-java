@@ -32,10 +32,10 @@ import static java.util.Arrays.stream;
  * Approves a function by calling it with combinations of parameters. See {@link #verifyAllCombinations(Object[],
  * Object[], Object[], Function3)}.
  */
-public class CombinationApprovals extends Approvals {
+public class CombinationApprover extends Approver {
     private final String header;
 
-    public CombinationApprovals() {
+    public CombinationApprover() {
         super();
         header = "";
     }
@@ -46,8 +46,8 @@ public class CombinationApprovals extends Approvals {
      * @return a copy of this CombinationApprovals
      */
     @Override
-    public CombinationApprovals reportTo(final Reporter reporter) {
-        return new CombinationApprovals(reporter, customFileName, customExtension, header);
+    public CombinationApprover reportTo(final Reporter reporter) {
+        return new CombinationApprover(reporter, customFileName, customExtension, header);
     }
 
     /**
@@ -56,8 +56,8 @@ public class CombinationApprovals extends Approvals {
      * @return a copy of this CombinationApprovals
      */
     @Override
-    public CombinationApprovals writeTo(final String customFileName) {
-        return new CombinationApprovals(reporter, customFileName, customExtension, header);
+    public CombinationApprover writeTo(final String customFileName) {
+        return new CombinationApprover(reporter, customFileName, customExtension, header);
     }
 
     /**
@@ -65,9 +65,9 @@ public class CombinationApprovals extends Approvals {
      * *received* CSV files.
      *
      * @param names one name for each argument
-     * @return a copy of the {@link CombinationApprovals}
+     * @return a copy of the {@link CombinationApprover}
      */
-    public CombinationApprovals namedArguments(final String... names) {
+    public CombinationApprover namedArguments(final String... names) {
         return header(stream(names).collect(Collectors.joining(
             ", ",
             "result, ",
@@ -75,7 +75,7 @@ public class CombinationApprovals extends Approvals {
         )));
     }
 
-    private CombinationApprovals(
+    private CombinationApprover(
         final Reporter reporter,
         final String customFileName,
         final String customExtension,
@@ -86,13 +86,13 @@ public class CombinationApprovals extends Approvals {
     }
 
 
-    private CombinationApprovals csv() {
-        return new CombinationApprovals(reporter, customFileName, ".csv", header);
+    private CombinationApprover csv() {
+        return new CombinationApprover(reporter, customFileName, ".csv", header);
     }
 
 
-    private CombinationApprovals header(final String headerWithLineFeed) {
-        return new CombinationApprovals(reporter, customFileName, customExtension, headerWithLineFeed);
+    private CombinationApprover header(final String headerWithLineFeed) {
+        return new CombinationApprover(reporter, customFileName, customExtension, headerWithLineFeed);
     }
 
 

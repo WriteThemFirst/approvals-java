@@ -17,14 +17,14 @@
  */
 package com.github.writethemfirst.approvals.reporters;
 
-import com.github.writethemfirst.approvals.Approvals;
+import com.github.writethemfirst.approvals.Approver;
 import com.github.writethemfirst.approvals.testutils.SimpleTestUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JUnit5ReporterTest {
-    private final Approvals approvals = new Approvals().reportTo(new JUnit5Reporter());
+    private final Approver approvals = new Approver().reportTo(new JUnit5Reporter());
 
 
     @Test

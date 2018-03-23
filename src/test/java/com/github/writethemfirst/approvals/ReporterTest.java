@@ -26,7 +26,7 @@ import static org.mockito.Mockito.mock;
 
 class ReporterTest {
     private final Reporter reporter = mock(Reporter.class);
-    private final Approvals approvals = new Approvals().reportTo(reporter);
+    private final Approver approvals = new Approver().reportTo(reporter);
 
 
     @Test

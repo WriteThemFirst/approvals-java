@@ -17,7 +17,7 @@
  */
 package org.demo.simple;
 
-import com.github.writethemfirst.approvals.FolderApprovals;
+import com.github.writethemfirst.approvals.FolderApprover;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +25,7 @@ import java.nio.file.Paths;
 
 
 class ApproveFolder {
-    private final FolderApprovals approvals = new FolderApprovals();
+    private final FolderApprover approvals = new FolderApprover();
 
     @Test
     @Disabled

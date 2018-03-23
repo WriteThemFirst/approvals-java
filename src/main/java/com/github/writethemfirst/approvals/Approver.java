@@ -51,12 +51,12 @@ import static java.nio.file.Paths.get;
  * content. Some `Reporter`s are provided by the framework, but you can also provide your own.
  *
  * The basic and main entry point you should have a look at in this `Approvals` class is the {@link
- * Approvals#verify(Object)} method, allowing to compute a comparison between an output and some content stored in an
+ * Approver#verify(Object)} method, allowing to compute a comparison between an output and some content stored in an
  * *approved* file.
  *
  * @see Reporter
  */
-public class Approvals {
+public class Approver {
     private final Class<?> testClass = callerClass(getClass());
     private final Path folder = folderForClass(testClass);
     final Reporter reporter;
@@ -67,14 +67,14 @@ public class Approvals {
      * Standard approvals, with default {@link Reporter} and file name detected from the test class used to apply the
      * constructor and the test method used to apply a {@link #verify(Object)} method.
      */
-    public Approvals() {
+    public Approver() {
         this(Reporter.DEFAULT, null, "");
     }
 
     /**
      * Protected constructor used by the "copy" methods.
      */
-    Approvals(
+    Approver(
         final Reporter reporter,
         final String customFileName,
         final String customExtension) {
@@ -89,8 +89,8 @@ public class Approvals {
      *
      * @return a copy of this Approvals
      */
-    public Approvals reportTo(final Reporter reporter) {
-        return new Approvals(reporter, customFileName, customExtension);
+    public Approver reportTo(final Reporter reporter) {
+        return new Approver(reporter, customFileName, customExtension);
     }
 
     /**
@@ -98,8 +98,8 @@ public class Approvals {
      *
      * @return a copy of this Approvals
      */
-    public Approvals writeTo(final String customFileName) {
-        return new Approvals(reporter, customFileName, customExtension);
+    public Approver writeTo(final String customFileName) {
+        return new Approver(reporter, customFileName, customExtension);
     }
 
 

@@ -17,11 +17,11 @@
  */
 package org.demo.simple;
 
-import com.github.writethemfirst.approvals.Approvals;
+import com.github.writethemfirst.approvals.Approver;
 import org.junit.jupiter.api.Test;
 
 class ApproveString {
-    private Approvals approvals = new Approvals();
+    private Approver approvals = new Approver();
 
     @Test
     void verifySimpleString() {

@@ -29,7 +29,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
 class ApprovalsFolderTest {
-    private final FolderApprovals approvals = new FolderApprovals().reportTo(new ThrowsReporter());
+    private final FolderApprover approvals = new FolderApprover().reportTo(new ThrowsReporter());
     final Reporter mockReporter = mock(Reporter.class);
 
     @Test
@@ -71,7 +71,7 @@ class ApprovalsFolderTest {
 
     @Test
     void shouldFireReporterOnEachMismatch() throws IOException {
-        final FolderApprovals approvals = new FolderApprovals().reportTo(mockReporter);
+        final FolderApprover approvals = new FolderApprover().reportTo(mockReporter);
         final FolderTestUtils testUtils = new FolderTestUtils("shouldFireReporterOnEachMismatch", getClass());
 
         testUtils.writeApproved("approved1", "sample.xml");
@@ -97,7 +97,7 @@ class ApprovalsFolderTest {
     void shouldCreateAllReceivedFiles() throws IOException {
         final FolderTestUtils testUtils = new FolderTestUtils("shouldCreateAllReceivedFiles", getClass());
 
-        final FolderApprovals approvals = new FolderApprovals().reportTo(mockReporter);
+        final FolderApprover approvals = new FolderApprover().reportTo(mockReporter);
 
         testUtils.writeActual("actual", "sample.xml");
         testUtils.writeActual("actual2", "sample2.xml");
@@ -118,7 +118,7 @@ class ApprovalsFolderTest {
 
     @Test
     void shouldRemoveMatchedReceivedFiles() throws IOException {
-        final FolderApprovals approvals = new FolderApprovals().reportTo(mockReporter);
+        final FolderApprover approvals = new FolderApprover().reportTo(mockReporter);
 
         final FolderTestUtils testUtils = new FolderTestUtils("shouldRemoveMatchedReceivedFiles", getClass());
         testUtils.writeActual("actual", "sample.xml");

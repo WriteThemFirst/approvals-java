@@ -28,7 +28,7 @@ class ApprovalsVerifyAllTest {
     @Test
     void shouldReportMismatchWithSingleArgument() {
         final Reporter reporter = mock(Reporter.class);
-        final CombinationApprovals approvals = new CombinationApprovals().reportTo(reporter);
+        final CombinationApprover approvals = new CombinationApprover().reportTo(reporter);
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithSingleArgument", getClass(), ".csv");
 
         try {
@@ -48,7 +48,7 @@ class ApprovalsVerifyAllTest {
     @Test
     void shouldReportMismatchWithTwoArguments() {
         final Reporter reporter = mock(Reporter.class);
-        final CombinationApprovals approvals = new CombinationApprovals().reportTo(reporter);
+        final CombinationApprover approvals = new CombinationApprover().reportTo(reporter);
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithTwoArguments", getClass(), ".csv");
 
         try {
@@ -70,7 +70,7 @@ class ApprovalsVerifyAllTest {
     @Test
     void shouldReportMismatchWithFiveArguments() {
         final Reporter reporter = mock(Reporter.class);
-        final CombinationApprovals approvals = new CombinationApprovals().reportTo(reporter).namedArguments("x", "y", "a", "b", "c");
+        final CombinationApprover approvals = new CombinationApprover().reportTo(reporter).namedArguments("x", "y", "a", "b", "c");
         final SimpleTestUtils testUtils =
             new SimpleTestUtils("shouldReportMismatchWithFiveArguments", getClass(), ".csv");
 
