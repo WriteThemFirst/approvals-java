@@ -31,7 +31,7 @@ public interface Windows {
     Reporter IDEA = new CommandReporter(new Command(
         "%programFiles%\\JetBrains",
         "idea64.exe"),
-        "merge %approved% %received% %approved%");
+        "diff %received% %approved%");
 
     /**
      * Download KDiff3 from https://sourceforge.net/projects/kdiff3/files/
