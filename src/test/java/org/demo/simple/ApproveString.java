@@ -34,6 +34,11 @@ class ApproveString {
     }
 
     @Test
+    void verifyWithTrailingSpaces() {
+        verify("line1   \nline2   \n   ");
+    }
+
+    @Test
     void verifyWithCarriageReturnLineFeed() {
         verify("line1\r\nline2");
     }
