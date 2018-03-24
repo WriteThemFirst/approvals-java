@@ -18,7 +18,6 @@
 package com.github.writethemfirst.approvals.reporters.windows;
 
 import com.github.writethemfirst.approvals.Reporter;
-import com.github.writethemfirst.approvals.reporters.windows.Command;
 
 import java.io.IOException;
 import java.nio.file.Path;

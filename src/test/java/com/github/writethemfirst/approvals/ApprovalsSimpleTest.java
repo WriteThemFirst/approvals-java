@@ -143,9 +143,9 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldUseSpecificMethodName() {
-        final Approver approvals = new Approver().writeTo("myScalaMethod").reportTo(new ThrowsReporter());
+        final Approver approvals = new Approver().writeTo("my scala method").reportTo(new ThrowsReporter());
 
-        final SimpleTestUtils testUtils = new SimpleTestUtils("myScalaMethod", getClass(), "");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("my_scala_method", getClass(), "");
         testUtils.cleanupPaths();
 
         try {

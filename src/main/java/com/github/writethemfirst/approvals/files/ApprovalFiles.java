@@ -102,7 +102,7 @@ public class ApprovalFiles {
      * @return The path to the approval file computed from all the specified information
      */
     private static Path buildApprovalFilePath(final Path folder, final String methodName, final String extension) {
-        return folder.resolve(format("%s.%s", methodName, extension));
+        return folder.resolve(format("%s.%s", methodName.replaceAll(" ", "_"), extension));
     }
 
     /**
