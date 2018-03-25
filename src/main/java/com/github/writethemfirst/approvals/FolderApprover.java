@@ -58,6 +58,17 @@ public class FolderApprover extends Approver {
         return new FolderApprover(reporter, customFileName, customExtension, testClass);
     }
 
+    /**
+     * Specifies the testClass to use as a folder name to store *approved* and *received* files.
+     *
+     * @return a copy of this Approvals
+     */
+    public FolderApprover testing(final Class<?> testClass) {
+        return new FolderApprover(reporter, customFileName, customExtension, testClass);
+    }
+
+
+
     private FolderApprover(
         final Reporter reporter,
         final String customFileName,

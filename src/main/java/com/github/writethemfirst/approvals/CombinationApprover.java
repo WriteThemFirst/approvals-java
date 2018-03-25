@@ -61,6 +61,16 @@ public class CombinationApprover extends Approver {
     }
 
     /**
+     * Specifies the testClass to use as a folder name to store *approved* and *received* files.
+     *
+     * @return a copy of this Approvals
+     */
+    public CombinationApprover testing(final Class<?> testClass) {
+        return new CombinationApprover(reporter, customFileName, customExtension, header, testClass);
+    }
+
+
+    /**
      * Specifies a header naming the arguments of the function under test. This header prefixes the *approved* and
      * *received* CSV files.
      *

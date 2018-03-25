@@ -108,6 +108,15 @@ public class Approver {
         return new Approver(reporter, customFileName, customExtension, testClass);
     }
 
+    /**
+     * Specifies the testClass to use as a folder name to store *approved* and *received* files.
+     *
+     * @return a copy of this Approvals
+     */
+    public Approver testing(final Class<?> testClass) {
+        return new Approver(reporter, customFileName, customExtension, testClass);
+    }
+
 
     /**
      * Compares the actual output of your program (the function's argument) and the content of the *approved* file
