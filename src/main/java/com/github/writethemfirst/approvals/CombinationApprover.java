@@ -47,7 +47,7 @@ public class CombinationApprover extends Approver {
      */
     @Override
     public CombinationApprover reportTo(final Reporter reporter) {
-        return new CombinationApprover(reporter, customFileName, customExtension, header);
+        return new CombinationApprover(reporter, customFileName, customExtension, header, testClass);
     }
 
     /**
@@ -57,7 +57,7 @@ public class CombinationApprover extends Approver {
      */
     @Override
     public CombinationApprover writeTo(final String customFileName) {
-        return new CombinationApprover(reporter, customFileName, customExtension, header);
+        return new CombinationApprover(reporter, customFileName, customExtension, header, testClass);
     }
 
     /**
@@ -79,20 +79,21 @@ public class CombinationApprover extends Approver {
         final Reporter reporter,
         final String customFileName,
         final String customExtension,
-        final String headerWithLineFeed) {
+        final String headerWithLineFeed,
+        final Class<?> testClass) {
 
-        super(reporter, customFileName, customExtension);
+        super(reporter, customFileName, customExtension, testClass);
         this.header = headerWithLineFeed;
     }
 
 
     private CombinationApprover csv() {
-        return new CombinationApprover(reporter, customFileName, ".csv", header);
+        return new CombinationApprover(reporter, customFileName, ".csv", header, testClass);
     }
 
 
     private CombinationApprover header(final String headerWithLineFeed) {
-        return new CombinationApprover(reporter, customFileName, customExtension, headerWithLineFeed);
+        return new CombinationApprover(reporter, customFileName, customExtension, headerWithLineFeed, testClass);
     }
 
 

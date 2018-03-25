@@ -57,8 +57,8 @@ import static java.nio.file.Paths.get;
  * @see Reporter
  */
 public class Approver {
-    private final Class<?> testClass = callerClass(getClass(), Approvals.class);
-    private final Path folder = folderForClass(testClass);
+    final Class<?> testClass;
+    private final Path folder;
     final Reporter reporter;
     final String customFileName;
     final String customExtension;
@@ -68,7 +68,10 @@ public class Approver {
      * constructor and the test method used to apply a {@link #verify(Object)} method.
      */
     public Approver() {
-        this(Reporter.DEFAULT, null, "");
+        this(Reporter.DEFAULT,
+            null,
+            "",
+            callerClass(Approver.class, Approvals.class, FolderApprover.class, CombinationApprover.class));
     }
 
     /**
@@ -77,11 +80,14 @@ public class Approver {
     Approver(
         final Reporter reporter,
         final String customFileName,
-        final String customExtension) {
+        final String customExtension,
+        final Class<?> testClass) {
 
         this.reporter = reporter;
         this.customFileName = customFileName;
         this.customExtension = customExtension;
+        this.testClass = testClass;
+        this.folder = folderForClass(testClass);
     }
 
     /**
@@ -90,7 +96,7 @@ public class Approver {
      * @return a copy of this Approvals
      */
     public Approver reportTo(final Reporter reporter) {
-        return new Approver(reporter, customFileName, customExtension);
+        return new Approver(reporter, customFileName, customExtension, testClass);
     }
 
     /**
@@ -99,7 +105,7 @@ public class Approver {
      * @return a copy of this Approvals
      */
     public Approver writeTo(final String customFileName) {
-        return new Approver(reporter, customFileName, customExtension);
+        return new Approver(reporter, customFileName, customExtension, testClass);
     }
 
 

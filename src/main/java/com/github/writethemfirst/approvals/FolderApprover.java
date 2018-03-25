@@ -46,7 +46,7 @@ public class FolderApprover extends Approver {
      * @return a copy of this FolderApprovals
      */
     public FolderApprover reportTo(final Reporter reporter) {
-        return new FolderApprover(reporter, customFileName, customExtension);
+        return new FolderApprover(reporter, customFileName, customExtension, testClass);
     }
 
     /**
@@ -55,15 +55,16 @@ public class FolderApprover extends Approver {
      * @return a copy of this FolderApprovals
      */
     public FolderApprover writeTo(final String customFileName) {
-        return new FolderApprover(reporter, customFileName, customExtension);
+        return new FolderApprover(reporter, customFileName, customExtension, testClass);
     }
 
     private FolderApprover(
         final Reporter reporter,
         final String customFileName,
-        final String customExtension) {
+        final String customExtension,
+        final Class<?> testClass) {
 
-        super(reporter, customFileName, customExtension);
+        super(reporter, customFileName, customExtension, testClass);
     }
 
     /**
