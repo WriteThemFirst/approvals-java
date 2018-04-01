@@ -21,7 +21,16 @@
  * *Approvals-Java* aims at using available merge tools on the developer's workstation in order to review and approve
  * the differences between the *approval files*.
  *
- * That package will contain all the tools and helpers required in order to search and use the merge tools and software
+ * That package will contain all the tools and helpers required in order to search and use the merge tools and softwares
  * available on a Windows workstation.
  */
-package com.github.writethemfirst.approvals.reporters.windows;
+/**
+ * # Linux Reporters Package
+ *
+ * *Approvals-Java* aims at using available merge tools on the developer's workstation in order to review and approve
+ * the differences between the *approval files*.
+ *
+ * That package will contain all the tools and helpers required in order to search and use the merge tools and software
+ * available on a Linux workstation.
+ */
+package com.github.writethemfirst.approvals.reporters.linux;

@@ -33,11 +33,16 @@ public class OSUtils {
     /**
      * The Operating System full name retrieved from the system properties.
      */
-    public static final String OPERATING_SYSTEM = System.getProperty("os.name");
+    private static final String OPERATING_SYSTEM = System.getProperty("os.name");
 
     /**
      * Indicates if the current operating system is included in the Windows Family (all versions included).
      */
     public static boolean isWindows = OPERATING_SYSTEM.startsWith("Windows");
+
+    /**
+     * Indicates if the current operating system is included in the Linux Family (all distributions / versions included).
+     */
+    public static boolean isLinux = OPERATING_SYSTEM.startsWith("Linux");
 
 }

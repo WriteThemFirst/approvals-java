@@ -20,7 +20,7 @@
  *
  * *Approval Testing* relies on the principle of comparing the program's output with some content stored in files.
  *
- * In case of any differences found during those comparisons, actions should be taken: it can fial the tests, or trigger
+ * In case of any differences found during those comparisons, actions should be taken: it can fail the tests, or trigger
  * some other actions the developers choose. Like writing some logs, or reporting it some other way.
  *
  * Additionally, *Approvals-Java* aims at providing some integration with *diff & merge* tools to help developers

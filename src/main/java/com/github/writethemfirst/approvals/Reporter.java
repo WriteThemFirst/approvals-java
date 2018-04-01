@@ -20,6 +20,7 @@ package com.github.writethemfirst.approvals;
 import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
 import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
+import com.github.writethemfirst.approvals.reporters.linux.Linux;
 import com.github.writethemfirst.approvals.reporters.windows.Windows;
 import com.github.writethemfirst.approvals.utils.OSUtils;
 
@@ -50,6 +51,8 @@ public interface Reporter {
      */
     Reporter DEFAULT = OSUtils.isWindows
         ? Windows.DEFAULT
+        : OSUtils.isLinux
+        ? Linux.DEFAULT
         : new FirstWorkingReporter(new JUnit5Reporter(), new ThrowsReporter());
 
     /**
