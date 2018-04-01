@@ -30,8 +30,8 @@
     <a href='http://hits.dwyl.io/WriteThemFirst/approvals-java'>
         <img src='http://hits.dwyl.io/WriteThemFirst/approvals-java.svg' />
     </a>
-    <a href='https://github.com/WriteThemFirst/approvals-java/tree/v0.3'>
-        <img src='https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/v0.3.svg' />
+    <a href='https://github.com/WriteThemFirst/approvals-java/tree/v0.4'>
+        <img src='https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/v0.4.svg' />
     </a>
     <a href='https://github.com/WriteThemFirst/approvals-java/issues/'>
         <img src='https://img.shields.io/github/issues/WriteThemFirst/approvals-java.svg' />
@@ -107,7 +107,7 @@ In your project's `pom.xml`, simply add this dependency:
 <dependency>
     <groupId>com.github.writethemfirst</groupId>
     <artifactId>approvals-java</artifactId>
-    <version>0.3</version>
+    <version>0.4</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -117,7 +117,7 @@ In your project's `pom.xml`, simply add this dependency:
 In your `build.gradle`, simply add this dependency:
 
 ```groovy
-testCompile 'com.github.writethemfirst:approvals-java:0.3'
+testCompile 'com.github.writethemfirst:approvals-java:0.4'
 ```
 
 ## Nightly Builds
@@ -163,7 +163,7 @@ If you use it in other contexts, do not hesitate to let us know!
 
 ## Approval testing basics
 
-Traditional unit testing is based on hand-writing assertions on the output of your method. This might sound boring for some people, or even sometimes really hard in case of working on some legacy source code. 
+Traditional unit testing is based on hand-writing assertions on the output of your method. This might sound boring for some people, or even sometimes really hard in case of working on some legacy source code.
 
 *Approval Testing* is a way of approching assertions with the following principle:
 
@@ -244,7 +244,7 @@ public class GildedRoseApprovalTests {
     @Test
     void approvalCopySrcFolder() {
         final Approvals approvals = new Approvals();
-        
+
         final Path output = Files.createTempDirectory("src");
         FolderCopy.copyFrom(Paths.get("."), output);
         approvals.verifyAgainstMasterFolder(output);
@@ -267,7 +267,7 @@ import com.github.writethemfirst.approvals.Approvals;
 class GildedRoseApprovalTest {
 
     private Approvals approvals = new Approvals();
-   
+
     @Test
     void updateQuality_pass_shouldEvolve() {
         approvals.verifyAll(
@@ -335,20 +335,20 @@ This project is completely open to any contributions! *(and remember: feedbacks 
 
 Do not hesitate to:
 
-1. [Submit issues](https://github.com/WriteThemFirst/approvals-java/issues/new) 
+1. [Submit issues](https://github.com/WriteThemFirst/approvals-java/issues/new)
   about any feedbacks you may have about the library,
-2. [Send us a Pull Request](https://github.com/WriteThemFirst/approvals-java/pulls) 
+2. [Send us a Pull Request](https://github.com/WriteThemFirst/approvals-java/pulls)
   with any contribution you think about,
 3. [Have a look at open issues](https://github.com/WriteThemFirst/approvals-java/issues)
   if you want to find a topic to work on,
-4. Do not hesitate to have a look at 
-  [good first issues](https://github.com/WriteThemFirst/approvals-java/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3A%2B1%3A+good+first+issue%22) 
-  or [help wanted issues](https://github.com/WriteThemFirst/approvals-java/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3Asos%3A+help+wanted%22) 
+4. Do not hesitate to have a look at
+  [good first issues](https://github.com/WriteThemFirst/approvals-java/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3A%2B1%3A+good+first+issue%22)
+  or [help wanted issues](https://github.com/WriteThemFirst/approvals-java/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3Asos%3A+help+wanted%22)
   if you search for something to start with!
 5. Get in touch with us to discuss about what you'd like to contribute if you don't feel like starting alone ;)
 
-Before contributing though, please have a look 
-at our [Code of Conduct](CODE_OF_CONDUCT.md) *(because we value humans and their differences)* 
+Before contributing though, please have a look
+at our [Code of Conduct](CODE_OF_CONDUCT.md) *(because we value humans and their differences)*
 and to our [Contribution Guide](CONTRIBUTING.md) *(because we think that a few rules allow to work faster and safer)*.
 
 Do not hesitate to discuss anything from those documents if you feel they need any modification though.
@@ -357,7 +357,7 @@ Do not hesitate to discuss anything from those documents if you feel they need a
 
 Approvals-Java is inspired by [ApprovalTests](http://approvaltests.sourceforge.net/).
 
-We really liked the idea of approval testing but not so much the Java implementation 
+We really liked the idea of approval testing but not so much the Java implementation
 ([Github](https://github.com/approvals/ApprovalTests.Java)).
 
 Our main concerns were that:
@@ -369,7 +369,7 @@ Our main concerns were that:
 So we decided to implement quickly a subset of the initial features and deploy the dependency on Maven Central!
 
 Thanks a lot to [all the people behind Approvals](https://github.com/orgs/approvals/people),
-because we got the inspiration from their work! 
+because we got the inspiration from their work!
 
 Thanks also to all people who created those tools we love:
 
@@ -379,12 +379,12 @@ Thanks also to all people who created those tools we love:
 
 # The team?
 
-[Write Them First!](https://github.com/WriteThemFirst) is just a bunch of french developers 
-who strongly believe that automated tests are extremely important in software development. 
+[Write Them First!](https://github.com/WriteThemFirst) is just a bunch of french developers
+who strongly believe that automated tests are extremely important in software development.
 
-Since they also value [TDD](https://en.wikipedia.org/wiki/Test-driven_development) 
-or [BDD](https://en.wikipedia.org/wiki/Behavior-driven_development), 
-they decided to create a few *(at least one)* tools to make those activities easier! 
+Since they also value [TDD](https://en.wikipedia.org/wiki/Test-driven_development)
+or [BDD](https://en.wikipedia.org/wiki/Behavior-driven_development),
+they decided to create a few *(at least one)* tools to make those activities easier!
 
 # License
 
