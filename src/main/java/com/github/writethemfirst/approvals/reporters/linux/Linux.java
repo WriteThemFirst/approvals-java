@@ -32,12 +32,18 @@ public interface Linux {
 
     Reporter IDEA_ULTIMATE = new CommandReporter(new Command(
         "/usr/bin",
-        "/usr/bin/intellij-idea-ultimate-edition"),
+        "intellij-idea-ultimate-edition"),
         "diff %received% %approved%");
+
+    Reporter BEYOND_COMPARE = new CommandReporter(new Command(
+        "/usr/bin",
+        "bcompare"),
+        "%received% %approved%");
 
 
     Reporter DEFAULT = new FirstWorkingReporter(
         IDEA_ULTIMATE,
+        BEYOND_COMPARE,
         new JUnit5Reporter(),
         new ThrowsReporter());
 }
