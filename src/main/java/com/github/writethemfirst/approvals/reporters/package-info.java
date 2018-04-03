@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * # Reporters
+ * # Reporters Package
  *
  * *Approval Testing* relies on the principle of comparing the program's output with some content stored in files.
  *

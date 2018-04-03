@@ -17,7 +17,7 @@
  */
 package com.github.writethemfirst.approvals.reporters;
 
-import com.github.writethemfirst.approvals.Approver;
+import com.github.writethemfirst.approvals.approvers.Approver;
 import com.github.writethemfirst.approvals.testutils.SimpleTestUtils;
 import org.junit.jupiter.api.Test;
 

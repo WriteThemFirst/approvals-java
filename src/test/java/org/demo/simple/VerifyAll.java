@@ -17,7 +17,7 @@
  */
 package org.demo.simple;
 
-import com.github.writethemfirst.approvals.CombinationApprover;
+import com.github.writethemfirst.approvals.approvers.CombinationApprover;
 import org.junit.jupiter.api.Test;
 
 import static com.github.writethemfirst.approvals.Approvals.verifyAllCombinations;

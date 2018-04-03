@@ -17,6 +17,9 @@
  */
 package com.github.writethemfirst.approvals;
 
+import com.github.writethemfirst.approvals.approvers.Approver;
+import com.github.writethemfirst.approvals.approvers.CombinationApprover;
+import com.github.writethemfirst.approvals.approvers.FolderApprover;
 import com.github.writethemfirst.approvals.utils.functions.*;
 
 import java.nio.file.Path;

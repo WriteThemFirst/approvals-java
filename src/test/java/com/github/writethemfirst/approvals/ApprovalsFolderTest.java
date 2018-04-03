@@ -17,6 +17,7 @@
  */
 package com.github.writethemfirst.approvals;
 
+import com.github.writethemfirst.approvals.approvers.FolderApprover;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.testutils.FolderTestUtils;
 import org.junit.jupiter.api.Test;

@@ -15,26 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.demo.simple;
-
-import com.github.writethemfirst.approvals.approvers.Approver;
-import org.junit.jupiter.api.Test;
-
-class ApproveString {
-    private Approver approvals = new Approver();
-
-    @Test
-    void verifySimpleString() {
-        approvals.verify("my string");
-    }
-
-    @Test
-    void verifyWithLineFeed() {
-        approvals.verify("line1\nline2");
-    }
-
-    @Test
-    void verifyWithCarriageReturnLineFeed() {
-        approvals.verify("line1\r\nline2");
-    }
-}
+/**
+ * # Approvers Package
+ *
+ * *Approvals-Java* allows to approve your test data from different ways.
+ *
+ * It allows you to simply validate the output of a Program execution, but it can also let you approve a whole folder
+ * content, or even run multiple times your program by computing combinations over all its inputs, and then generate a
+ * complete output of the execution to be reviewed.
+ *
+ * That package contains all the *Approver* objects which are used in order to actually compute the approbations over
+ * your test data.
+ */
+package com.github.writethemfirst.approvals.approvers;

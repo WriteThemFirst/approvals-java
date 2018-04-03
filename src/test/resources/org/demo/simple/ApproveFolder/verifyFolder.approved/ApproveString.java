@@ -17,7 +17,7 @@
  */
 package org.demo.simple;
 
-import com.github.writethemfirst.approvals.Approver;
+import com.github.writethemfirst.approvals.approvers.Approver;
 import org.junit.jupiter.api.Test;
 
 class ApproveString {

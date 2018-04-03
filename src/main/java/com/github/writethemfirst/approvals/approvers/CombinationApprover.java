@@ -15,8 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals;
+package com.github.writethemfirst.approvals.approvers;
 
+import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.files.ApprovalFiles;
 import com.github.writethemfirst.approvals.utils.FunctionUtils;
 import com.github.writethemfirst.approvals.utils.functions.*;
