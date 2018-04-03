@@ -16,15 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * # Windows Reporters Package
- *
- * *Approvals-Java* aims at using available merge tools on the developer's workstation in order to review and approve
- * the differences between the *approval files*.
- *
- * That package will contain all the tools and helpers required in order to search and use the merge tools and softwares
- * available on a Windows workstation.
- */
-/**
  * # Linux Reporters Package
  *
  * *Approvals-Java* aims at using available merge tools on the developer's workstation in order to review and approve
