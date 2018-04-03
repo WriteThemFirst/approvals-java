@@ -15,4 +15,4 @@ previous_tag=$(git describe --tags --abbrev=0 ${latest_tag}^)
 
 # Display the changelog between the two tags
 
-git log ${previous_tag}...${latest_tag} --pretty=format:"* [%s](%H)" --reverse | grep "sparkles\|bug\|fire"
+git log ${previous_tag}...${latest_tag} --pretty=format:"* [%s](%H)" --reverse | grep "sparkles\|bug"
