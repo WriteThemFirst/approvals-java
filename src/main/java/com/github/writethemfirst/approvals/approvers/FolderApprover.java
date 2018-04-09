@@ -19,6 +19,7 @@ package com.github.writethemfirst.approvals.approvers;
 
 import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.files.ApprovalFiles;
+import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.FileUtils;
 
 import java.io.IOException;
@@ -105,10 +106,15 @@ public class FolderApprover extends Approver {
 
         cleanupReceivedFiles(approvalFiles, matchesAndMismatches);
         reportMismatches(matchesAndMismatches);
+        throwMismatches(matchesAndMismatches);
     }
 
     private void reportMismatches(final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches) {
         matchesAndMismatches.get(false).forEach(mismatch -> reporter.mismatch(mismatch.approved, mismatch.received));
+    }
+
+    private void throwMismatches(final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches) {
+        matchesAndMismatches.get(false).forEach(mismatch -> new ThrowsReporter().mismatch(mismatch.approved, mismatch.received));
     }
 
     private void cleanupReceivedFiles(final ApprovalFiles approvalFiles, final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches) {

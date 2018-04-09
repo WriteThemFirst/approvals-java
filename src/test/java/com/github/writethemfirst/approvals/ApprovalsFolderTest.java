@@ -30,8 +30,8 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
 class ApprovalsFolderTest {
-    private final FolderApprover approvals = new FolderApprover().reportTo(new ThrowsReporter());
     final Reporter mockReporter = mock(Reporter.class);
+    private final FolderApprover approvals = new FolderApprover().reportTo(mockReporter);
 
     @Test
     void shouldDoNothingWhenBothFoldersAreEmpty() throws IOException {
@@ -54,6 +54,18 @@ class ApprovalsFolderTest {
         assertThatThrownBy(() -> approvals.verifyAllFiles(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <some content> but was: <>");
+
+        testUtils.cleanupPaths();
+    }
+
+    @Test
+    void shouldThrowWhenAnExtraFileIsPresent() throws IOException {
+        final FolderTestUtils testUtils = new FolderTestUtils("shouldThrowWhenAnExtraFileIsPresent", getClass());
+        testUtils.writeReceived("some content", "someFile.txt");
+
+        assertThatThrownBy(() -> approvals.verifyAllFiles(testUtils.actual))
+            .isInstanceOf(AssertionError.class)
+            .hasMessageContaining("expected: <> but was: <some content>");
 
         testUtils.cleanupPaths();
     }
