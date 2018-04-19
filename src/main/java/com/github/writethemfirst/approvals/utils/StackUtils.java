@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
 import static java.lang.Thread.currentThread;
 import static java.util.Arrays.stream;
 
@@ -38,35 +39,57 @@ import static java.util.Arrays.stream;
 public class StackUtils {
 
     /**
-     * Returns the caller class of `reference` by searching the current thread stacktrace.
+     * Returns the caller class of the first potential reference class found by searching the current thread
+     * stacktrace.
      *
-     * We consider the caller class to be the first one found in the current thread stacktrace after finding the
-     * reference one.
+     * We consider the caller class to be the first one found in the current thread stacktrace after finding the first
+     * potential reference class.
      *
-     * @param referenceClass A non-null class for which we want to find the caller class
-     * @return The caller class of the provided one (ie. the first one found which isn't the reference after finding the
-     * reference)
+     * @param potentialReferenceClasses An array of all potential reference classes to use to search for a caller class.
+     *                                  The first class which is found in the current stack trace will be used as
+     *                                  reference
+     * @return The caller class of the first potential reference class found in the current stack trace
      */
-    public static Class<?> callerClass(final Class<?>... referenceClass) {
-        //can be rewritten with dropWhile in Java 9
+    public static Class<?> callerClass(final Class<?>... potentialReferenceClasses) {
+        // FIXME: Rewrite using dropWhile when switching to Java 9
         final List<String> classesInStack = distinctClassesInStack();
-        final int referenceIndex = positionFromLastReferenceInStack(classesInStack, referenceClass);
-        final String callerClassName = classesInStack.get(referenceIndex + 1);
+        final String callerClassName = firstMatchingCallerClass(classesInStack, potentialReferenceClasses);
         try {
             return Class.forName(callerClassName);
         } catch (final ClassNotFoundException e) {
-            throw new Error("Unexpected exception", e);
+            throw new Error(format("Can't retrieve the caller class named <%s> in current class loader...", callerClassName), e);
         }
     }
 
-    private static int positionFromLastReferenceInStack(final List<String> classesInStack, final Class<?>[] referenceClasses) {
+    /**
+     * Returns the caller class (from the classes in the current stack trace) of the first matching reference class
+     * (from the potential reference classes provided).
+     *
+     * @param classesInStack            A list of all distinct classes' names from the current thread stacktrace
+     * @param potentialReferenceClasses An array of all potential reference classes to use to search for a caller class.
+     *                                  The first class which is found in the current stack trace will be used as
+     *                                  reference
+     * @return The name of the caller class of the first matching reference class
+     */
+    private static String firstMatchingCallerClass(final List<String> classesInStack, final Class<?>[] potentialReferenceClasses) {
         final ArrayList<String> reversedStack = new ArrayList<>(classesInStack);
         Collections.reverse(reversedStack);
         final Optional<String> lastReferenceName = reversedStack.stream()
-            .filter(className -> stream(referenceClasses).anyMatch(
+            .filter(className -> stream(potentialReferenceClasses).anyMatch(
                 referenceClass -> className.equals(referenceClass.getName())))
             .findFirst();
-        return classesInStack.indexOf(lastReferenceName.get());
+        
+        if (lastReferenceName.isPresent()) {
+            final int referenceIndex = classesInStack.indexOf(lastReferenceName.get());
+            if (referenceIndex + 1 < classesInStack.size()) {
+                return classesInStack.get(referenceIndex + 1);
+            } else {
+                System.err.println("Reference class is found but appears to have no parent in the current stack trace...");
+            }
+        } else {
+            System.err.println("Can't locate any of the provided reference classes in the current stack trace...");
+        }
+        return "";
     }
 
     /**
