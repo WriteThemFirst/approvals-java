@@ -24,8 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static com.github.writethemfirst.approvals.files.ApprovalFiles.build;
-import static com.github.writethemfirst.approvals.utils.FileUtils.silentRecursiveRemove;
-import static com.github.writethemfirst.approvals.utils.FileUtils.write;
+import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static java.nio.file.Paths.get;
 
 public class FolderTestUtils {
@@ -53,6 +52,10 @@ public class FolderTestUtils {
 
     public void writeReceived(final String content, final String fileName) {
         write(content, received.resolve(fileName));
+    }
+
+    public String readReceived(final String fileName) {
+        return silentRead(received.resolve(fileName));
     }
 
     public void cleanupPaths() {

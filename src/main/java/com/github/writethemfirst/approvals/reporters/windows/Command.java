@@ -75,7 +75,7 @@ public class Command {
     /**
      * Runs the executable outside the JVM by calling Runtime.exec().
      */
-    public void execute(final String... arguments) throws IOException {
+    void execute(final String... arguments) throws IOException {
         final String[] cmdArray = concat(
             of(pathToLatestExe().get()),
             stream(arguments))

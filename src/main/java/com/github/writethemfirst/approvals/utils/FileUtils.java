@@ -64,6 +64,7 @@ public class FileUtils {
         final File file = path.toFile();
         if (!file.exists()) {
             try {
+                createParentDirectories(path);
                 //noinspection ResultOfMethodCallIgnored
                 file.createNewFile();
             } catch (final IOException e) {
@@ -134,18 +135,22 @@ public class FileUtils {
      * @param file    The file in which the content should be written
      */
     public static void write(final String content, final Path file) {
-        try {
-            createDirectories(file.getParent());
-        } catch (final IOException e) {
-            System.err.println(format("Can't create directories for the files located at <%s>.", file));
-            throw new RuntimeException(e);
-        }
+        createParentDirectories(file);
         try (BufferedWriter writer = newBufferedWriter(file)) {
             writer.write(content);
         } catch (final IOException e) {
             final String message = format("Can't write the file located at <%s> because of <%s>.",
                 file.toAbsolutePath(), e.getMessage());
             throw new RuntimeException(message, e);
+        }
+    }
+
+    private static void createParentDirectories(final Path file) {
+        try {
+            createDirectories(file.getParent());
+        } catch (final IOException e) {
+            System.err.println(format("Can't create directories for the files located at <%s>.", file));
+            throw new RuntimeException(e);
         }
     }
 

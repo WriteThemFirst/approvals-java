@@ -76,6 +76,19 @@ public class ApprovalFiles {
     }
 
     /**
+     * Appends to the approved and received paths the name of a file.
+     *
+     * @param file the Path for which only the name is taken into account
+     * @return an ApprovalsFile, on step deeper
+     */
+    public ApprovalFiles resolve(Path file) {
+        final Path fileName = file.getFileName();
+        return new ApprovalFiles(
+            approved.resolve(fileName),
+            received.resolve(fileName));
+    }
+
+    /**
      * Builds a pair of approval entries from the provided folder, method name, and extension. The path for both
      * *approved* and *received* files will be computed and used as approval files.
      *

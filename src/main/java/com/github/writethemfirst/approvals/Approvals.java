@@ -50,6 +50,26 @@ public class Approvals {
     }
 
     /**
+     * Compares the actual output of your program (the function's argument) and the content of the *approved* file
+     * matching with the test method.
+     *
+     * It'll use a temporary *received* folder to store a copy of the output of your program. This file will be erased
+     * in case the results are matching. Otherwise, it will be kept for you to review it.
+     *
+     * In case of differences found in the output, the {@link Reporter} linked to this `Approvals` instance will be
+     * called ({@link Reporter#mismatch(Path, Path)}).
+     *
+     * @param output a {@link Path} containing the output of your program. It will be compared to the associated
+     *               *approved* file.
+     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
+     *                          framework like JUnit
+     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
+     */
+    public static void verify(final Path output) {
+        new Approver().verify(output);
+    }
+
+    /**
      * Compares the actual output of your program (files in the folder `actualFolder`) and the content of the *approved*
      * "Master" folder matching with the test method.
      *

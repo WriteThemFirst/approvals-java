@@ -139,6 +139,33 @@ public class Approver {
     public void verify(final Object output) {
         final ApprovalFiles files = approvedAndReceivedPaths();
         writeReceivedFile(output, files);
+        verifyImpl(files);
+    }
+
+
+    /**
+     * Compares the actual output of your program (the function's argument) and the content of the *approved* file
+     * matching with the test method.
+     *
+     * It'll use a temporary *received* folder to store a copy of the output of your program. This file will be erased
+     * in case the results are matching. Otherwise, it will be kept for you to review it.
+     *
+     * In case of differences found in the output, the {@link Reporter} linked to this `Approvals` instance will be
+     * called ({@link Reporter#mismatch(Path, Path)}).
+     *
+     * @param output a {@link Path} containing the output of your program. It will be compared to the associated
+     *               *approved* file.
+     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
+     *                          framework like JUnit
+     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
+     */
+    public void verify(final Path output) {
+        final ApprovalFiles files = approvedAndReceivedPaths().resolve(output);
+        copy(output, files.received);
+        verifyImpl(files);
+    }
+
+    private void verifyImpl(final ApprovalFiles files) {
         createFileIfNeeded(files.approved);
         if (files.haveSameContent()) {
             silentRemove(files.received);
@@ -148,7 +175,7 @@ public class Approver {
         }
     }
 
-    //Can be overridden to add a header to the file.
+    //Can be overridden to add a header to the file
     void writeReceivedFile(final Object output, final ApprovalFiles files) {
         write(output + "", files.received);
     }
