@@ -235,7 +235,11 @@ public class Approver {
 
         matchesAndMismatches.cleanupReceivedFiles(approvalFiles);
         try {
-            matchesAndMismatches.reportMismatches(reporter);
+            if (matchesAndMismatches.hasSeveralMismatches()) {
+                reporter.mismatch(approvalFiles.approved, approvalFiles.received);
+            } else {
+                matchesAndMismatches.reportMismatches(reporter);
+            }
             matchesAndMismatches.throwMismatches();
         } finally {
             approvalFiles

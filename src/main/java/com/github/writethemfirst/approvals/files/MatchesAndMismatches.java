@@ -42,6 +42,10 @@ public class MatchesAndMismatches {
         mismatches.forEach(mismatch -> reporter.mismatch(mismatch.approved, mismatch.received));
     }
 
+    public boolean hasSeveralMismatches() {
+        return mismatches.size() > 1;
+    }
+
     public void throwMismatches() {
         mismatches.forEach(mismatch -> new ThrowsReporter().mismatch(mismatch.approved, mismatch.received));
     }

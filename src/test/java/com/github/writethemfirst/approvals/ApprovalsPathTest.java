@@ -82,9 +82,9 @@ class ApprovalsPathTest {
     }
 
     @Test
-    void shouldFireReporterOnEachMismatch() throws IOException {
+    void shouldFireReporterOnceForAllMismatches() throws IOException {
         final Approver approvals = new Approver().reportTo(mockReporter);
-        final FolderTestUtils testUtils = new FolderTestUtils("shouldFireReporterOnEachMismatch", getClass());
+        final FolderTestUtils testUtils = new FolderTestUtils("shouldFireReporterOnceForAllMismatches", getClass());
 
         testUtils.writeApproved("approved1", "sample.xml");
         testUtils.writeApproved("approved2", "sample2.xml");
@@ -95,12 +95,7 @@ class ApprovalsPathTest {
             // expected
         }
 
-        then(mockReporter).should().mismatch(
-            testUtils.approved.resolve("sample.xml"),
-            testUtils.received.resolve("sample.xml"));
-        then(mockReporter).should().mismatch(
-            testUtils.approved.resolve("sample2.xml"),
-            testUtils.received.resolve("sample2.xml"));
+        then(mockReporter).should().mismatch(testUtils.approved, testUtils.received);
 
         testUtils.cleanupPaths();
     }
