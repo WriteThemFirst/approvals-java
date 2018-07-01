@@ -41,7 +41,7 @@ class ReporterTest {
             // expected
         }
 
-        then(reporter).should().mismatch(testUtils.approved, testUtils.received);
+        then(reporter).should().mismatch(testUtils.approvalFiles);
 
         testUtils.cleanupPaths();
     }
@@ -58,7 +58,7 @@ class ReporterTest {
             // expected
         }
 
-        then(reporter).should().mismatch(testUtils.approved, testUtils.received);
+        then(reporter).should().mismatch(testUtils.approvalFiles);
 
         testUtils.cleanupPaths();
     }

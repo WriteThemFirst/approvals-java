@@ -236,7 +236,7 @@ public class Approver {
         matchesAndMismatches.cleanupReceivedFiles(approvalFiles);
         try {
             if (matchesAndMismatches.hasSeveralMismatches()) {
-                reporter.mismatch(approvalFiles.approved, approvalFiles.received);
+                reporter.mismatch(approvalFiles);
             } else {
                 matchesAndMismatches.reportMismatches(reporter);
             }
@@ -266,8 +266,8 @@ public class Approver {
             silentRemove(files.received);
         } else {
             try {
-                reporter.mismatch(files.approved, files.received);
-                new ThrowsReporter().mismatch(files.approved, files.received);
+                reporter.mismatch(files);
+                new ThrowsReporter().mismatch(files);
             } finally {
                 files.createApprovedFileIfNeeded();
             }

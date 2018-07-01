@@ -31,12 +31,13 @@ public class FolderTestUtils {
     public final Path received;
     public final Path approved;
     public final Path actual;
+    public final ApprovalFiles approvalFiles;
 
     public FolderTestUtils(final String methodName, final Class<?> testClass) throws IOException {
         final String className = testClass.getSimpleName();
         final Path packageResourcesPath = get("src/test/resources/", testClass.getPackage().getName().split("\\."));
         final Path folderForClass = packageResourcesPath.resolve(className);
-        final ApprovalFiles approvalFiles = build(folderForClass, methodName, "");
+        approvalFiles = build(folderForClass, methodName, "");
         received = approvalFiles.received;
         approved = approvalFiles.approved;
         actual = Files.createTempDirectory(methodName);

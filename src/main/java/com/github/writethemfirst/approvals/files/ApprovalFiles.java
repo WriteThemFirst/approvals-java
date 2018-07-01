@@ -75,7 +75,7 @@ public class ApprovalFiles {
      * @param approved An *approved* entry (can be either a file or a folder)
      * @param received A *received* entry (can be either a file or a folder)
      */
-    private ApprovalFiles(final Path approved, final Path received) {
+    public ApprovalFiles(final Path approved, final Path received) {
         this.approved = approved;
         this.received = received;
     }

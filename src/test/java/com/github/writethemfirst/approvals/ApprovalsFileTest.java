@@ -22,6 +22,8 @@ import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.testutils.FolderTestUtils;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Paths;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.then;
@@ -43,8 +45,7 @@ class ApprovalsFileTest {
         }
 
         then(mockReporter).should().mismatch(
-            testUtils.approved.resolve("file.txt"),
-            testUtils.received.resolve("file.txt"));
+            testUtils.approvalFiles.resolve(Paths.get("file.txt")));
 
         testUtils.cleanupPaths();
     }

@@ -18,6 +18,7 @@
 package com.github.writethemfirst.approvals.reporters.windows;
 
 import com.github.writethemfirst.approvals.Reporter;
+import com.github.writethemfirst.approvals.files.ApprovalFiles;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -30,7 +31,7 @@ import static java.util.Arrays.stream;
 public class CommandReporter implements Reporter {
     private final Command command;
     private final String[] arguments;
-    public final static String DEFAULT_ARGUMENTS = "%received% %approved%";
+    private final static String DEFAULT_ARGUMENTS = "%received% %approved%";
 
 
     public CommandReporter(final Command command) {
@@ -50,14 +51,15 @@ public class CommandReporter implements Reporter {
     }
 
     @Override
-    public void mismatch(final Path approved, final Path received) {
+    public void mismatch(final ApprovalFiles files) {
         if (command.isAvailable()) {
             try {
-                command.execute(actualArguments(approved, received));
+                command.execute(actualArguments(files.approved, files.received));
             } catch (final IOException e) {
                 throw new RuntimeException(e);
             }
         }
+
     }
 
     @Override
@@ -65,11 +67,10 @@ public class CommandReporter implements Reporter {
         return command.isAvailable();
     }
 
-
     /**
      * Prepares the arguments by substituting %approved% and %received% tags with actual files.
      */
-    String[] actualArguments(final Path approved, final Path received) {
+    private String[] actualArguments(final Path approved, final Path received) {
         return stream(arguments)
             .map(elt -> prepareCommandElement(approved, received, elt))
             .toArray(String[]::new);

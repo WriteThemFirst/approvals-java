@@ -95,7 +95,7 @@ class ApprovalsPathTest {
             // expected
         }
 
-        then(mockReporter).should().mismatch(testUtils.approved, testUtils.received);
+        then(mockReporter).should().mismatch(testUtils.approvalFiles);
 
         testUtils.cleanupPaths();
     }

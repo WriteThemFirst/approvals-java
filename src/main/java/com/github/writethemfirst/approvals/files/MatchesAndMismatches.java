@@ -39,7 +39,7 @@ public class MatchesAndMismatches {
     }
 
     public void reportMismatches(final Reporter reporter) {
-        mismatches.forEach(mismatch -> reporter.mismatch(mismatch.approved, mismatch.received));
+        mismatches.forEach(reporter::mismatch);
     }
 
     public boolean hasSeveralMismatches() {
@@ -47,7 +47,7 @@ public class MatchesAndMismatches {
     }
 
     public void throwMismatches() {
-        mismatches.forEach(mismatch -> new ThrowsReporter().mismatch(mismatch.approved, mismatch.received));
+        mismatches.forEach(mismatch -> new ThrowsReporter().mismatch(mismatch));
     }
 
     public void cleanupReceivedFiles(final ApprovalFiles approvalFiles) {

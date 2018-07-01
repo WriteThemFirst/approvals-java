@@ -28,12 +28,13 @@ import static java.nio.file.Paths.get;
 public class SimpleTestUtils {
     public final Path received;
     public final Path approved;
+    public final ApprovalFiles approvalFiles;
 
     public SimpleTestUtils(final String methodName, final Class<?> testClass, final String extensionWithDot) {
         final String className = testClass.getSimpleName();
         final Path packageResourcesPath = get("src/test/resources/", testClass.getPackage().getName().split("\\."));
         final Path folderForClass = packageResourcesPath.resolve(className);
-        final ApprovalFiles approvalFiles = build(folderForClass, methodName, extensionWithDot);
+        approvalFiles = build(folderForClass, methodName, extensionWithDot);
         received = approvalFiles.received;
         approved = approvalFiles.approved;
     }

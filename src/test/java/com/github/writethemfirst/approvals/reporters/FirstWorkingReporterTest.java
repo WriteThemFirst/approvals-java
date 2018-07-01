@@ -18,6 +18,7 @@
 package com.github.writethemfirst.approvals.reporters;
 
 import com.github.writethemfirst.approvals.Reporter;
+import com.github.writethemfirst.approvals.files.ApprovalFiles;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
@@ -38,12 +39,14 @@ class FirstWorkingReporterTest {
         when(reporter1.isAvailable()).thenReturn(false);
         when(reporter2.isAvailable()).thenReturn(true);
         when(reporter3.isAvailable()).thenReturn(true);
+        final ApprovalFiles approvalFiles = new ApprovalFiles(a, b);
 
         final FirstWorkingReporter firstWorkingReporter = new FirstWorkingReporter(reporter1, reporter2, reporter3);
 
-        firstWorkingReporter.mismatch(a, b);
 
-        then(reporter2).should().mismatch(a, b);
+        firstWorkingReporter.mismatch(approvalFiles);
+
+        then(reporter2).should().mismatch(approvalFiles);
 
     }
 
@@ -53,10 +56,11 @@ class FirstWorkingReporterTest {
         final Path a = Paths.get("a");
         final Path b = Paths.get("b");
         when(reporter1.isAvailable()).thenReturn(false);
+        final ApprovalFiles approvalFiles = new ApprovalFiles(a, b);
 
         final FirstWorkingReporter firstWorkingReporter = new FirstWorkingReporter(reporter1);
 
-        firstWorkingReporter.mismatch(a, b); // should not throw
+        firstWorkingReporter.mismatch(approvalFiles); // should not throw
     }
 
 }
