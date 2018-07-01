@@ -29,8 +29,8 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
 class ApprovalsPathTest {
-    final Reporter mockReporter = mock(Reporter.class);
-    private final Approver approvals = new Approver().reportTo(mockReporter);
+    private final Reporter mockReporter = mock(Reporter.class);
+    private final Approver approver = new Approver().reportTo(mockReporter);
 
     @Test
     void shouldDoNothingWhenBothFoldersAreEmpty() throws IOException {
@@ -38,7 +38,7 @@ class ApprovalsPathTest {
         final FolderTestUtils testUtils = new FolderTestUtils("shouldDoNothingWhenBothFoldersAreEmpty", getClass());
 
         //WHEN
-        approvals.verify(testUtils.actual);
+        approver.verify(testUtils.actual);
 
         //THEN no exception should be thrown
 
@@ -50,7 +50,7 @@ class ApprovalsPathTest {
         final FolderTestUtils testUtils = new FolderTestUtils("shouldThrowWhenAFileIsMissing", getClass());
         testUtils.writeApproved("some content", "someFile.txt");
 
-        assertThatThrownBy(() -> approvals.verify(testUtils.actual))
+        assertThatThrownBy(() -> approver.verify(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <some content> but was: <>");
 
@@ -62,7 +62,7 @@ class ApprovalsPathTest {
         final FolderTestUtils testUtils = new FolderTestUtils("shouldThrowWhenAnExtraFileIsPresent", getClass());
         testUtils.writeReceived("some content", "someFile.txt");
 
-        assertThatThrownBy(() -> approvals.verify(testUtils.actual))
+        assertThatThrownBy(() -> approver.verify(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <> but was: <some content>");
 
@@ -74,7 +74,7 @@ class ApprovalsPathTest {
         final FolderTestUtils testUtils = new FolderTestUtils("shouldThrowWhenAFileIsDifferent", getClass());
         testUtils.writeApproved("expected content", "sample.xml");
 
-        assertThatThrownBy(() -> approvals.verify(testUtils.actual))
+        assertThatThrownBy(() -> approver.verify(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <expected content> but was: <>");
 
@@ -151,7 +151,7 @@ class ApprovalsPathTest {
         testUtils.cleanupPaths();
         testUtils.writeActual("actual", "sample.xml");
 
-        assertThatThrownBy(() -> approvals.verify(testUtils.actual))
+        assertThatThrownBy(() -> approver.verify(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <> but was: <actual>");
 
@@ -164,7 +164,7 @@ class ApprovalsPathTest {
         testUtils.writeActual("actual", "sample.xml");
 
         try {
-            approvals.verify(testUtils.actual);
+            approver.verify(testUtils.actual);
         } catch (final AssertionError e) {
             // expected
         }

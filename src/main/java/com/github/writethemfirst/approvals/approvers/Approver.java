@@ -23,16 +23,19 @@ import com.github.writethemfirst.approvals.files.ApprovalFiles;
 import com.github.writethemfirst.approvals.files.MatchesAndMismatches;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.FileUtils;
+import com.github.writethemfirst.approvals.utils.functions.Function2;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Collectors;
 
 import static com.github.writethemfirst.approvals.files.ApprovalFiles.build;
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
 import static java.nio.file.Paths.get;
+import static java.util.Arrays.stream;
 
 /**
  * # Approvals
@@ -63,11 +66,12 @@ import static java.nio.file.Paths.get;
  * @see Reporter
  */
 public class Approver {
-    final Class<?> testClass;
+    private final Class<?> testClass;
     private final Path folder;
-    final Reporter reporter;
-    final String customFileName;
-    final String customExtension;
+    private final Reporter reporter;
+    private final String customFileName;
+    private final String customExtension;
+    private final String header;
 
     /**
      * Standard approvals, with default {@link Reporter} and file name detected from the test class used to apply the
@@ -77,50 +81,85 @@ public class Approver {
         this(Reporter.DEFAULT,
             null,
             "",
-            callerClass(Approver.class, Approvals.class, CombinationApprover.class));
+            callerClass(Approver.class, Approvals.class),
+            "");
     }
 
     /**
      * Protected constructor used by the "copy" methods.
      */
-    Approver(
+    private Approver(
         final Reporter reporter,
         final String customFileName,
         final String customExtension,
-        final Class<?> testClass) {
+        final Class<?> testClass,
+        final String header) {
 
         this.reporter = reporter;
         this.customFileName = customFileName;
         this.customExtension = customExtension;
         this.testClass = testClass;
         this.folder = folderForClass(testClass);
+        this.header = header;
     }
 
     /**
      * Specifies the reporter used to report mismatches.
      *
-     * @return a copy of this Approvals
+     * @return a copy of this Approver
      */
     public Approver reportTo(final Reporter reporter) {
-        return new Approver(reporter, customFileName, customExtension, testClass);
+        return new Approver(reporter, customFileName, customExtension, testClass, header);
     }
 
     /**
      * Specifies the name to use for *approved* and *received* files.
      *
-     * @return a copy of this Approvals
+     * @return a copy of this Approver
      */
     public Approver writeTo(final String customFileName) {
-        return new Approver(reporter, customFileName, customExtension, testClass);
+        return new Approver(reporter, customFileName, customExtension, testClass, header);
     }
 
     /**
      * Specifies the testClass to use as a folder name to store *approved* and *received* files.
      *
-     * @return a copy of this Approvals
+     * @return a copy of this Approver
      */
     public Approver testing(final Class<?> testClass) {
-        return new Approver(reporter, customFileName, customExtension, testClass);
+        return new Approver(reporter, customFileName, customExtension, testClass, header);
+    }
+
+    /**
+     * Force the extension to be "csv", useful in conjonction with {@link com.github.writethemfirst.approvals.utils.FunctionUtils}.
+     *
+     * @return a copy of this Approver
+     */
+    public Approver csv() {
+        return new Approver(reporter, customFileName, ".csv", testClass, header);
+    }
+
+    /**
+     * Specifies a header naming the arguments of the function under test. This header prefixes the *approved* and
+     * *received* CSV files.
+     *
+     * @param names one name for each argument
+     * @return a copy of this Approver
+     */
+    public Approver namedArguments(final String... names) {
+        return header(stream(names).collect(Collectors.joining(
+            ", ",
+            "result, ",
+            "\n"
+        )));
+    }
+
+    private Approver header(final String headerWithLineFeed) {
+        return new Approver(reporter, customFileName, customExtension, testClass, headerWithLineFeed);
+    }
+
+    private void writeReceivedFile(final Object output, final ApprovalFiles files) {
+        write(header + output, files.received);
     }
 
 
@@ -227,11 +266,6 @@ public class Approver {
         }
     }
 
-    //Can be overridden to add a header to the file
-    void writeReceivedFile(final Object output, final ApprovalFiles files) {
-        write(output + "", files.received);
-    }
-
 
     /**
      * Computes and returns the Path to the folder to be used for storing the *approved* and *received* files linked to
@@ -266,7 +300,7 @@ public class Approver {
         return callerMethod(testClass).orElse("unknown_method");
     }
 
-    ApprovalFiles approvedAndReceivedPaths() {
+    private ApprovalFiles approvedAndReceivedPaths() {
         return build(
             folder,
             customFileName != null ? customFileName : callerMethodName(),

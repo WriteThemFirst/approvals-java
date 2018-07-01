@@ -27,7 +27,7 @@ import static org.mockito.Mockito.mock;
 
 class ReporterTest {
     private final Reporter reporter = mock(Reporter.class);
-    private final Approver approvals = new Approver().reportTo(reporter);
+    private final Approver approver = new Approver().reportTo(reporter);
 
 
     @Test
@@ -36,7 +36,7 @@ class ReporterTest {
         testUtils.writeApproved("some text");
 
         try {
-            approvals.verify("different text");
+            approver.verify("different text");
         } catch (final AssertionError e) {
             // expected
         }
@@ -53,7 +53,7 @@ class ReporterTest {
         testUtils.cleanupPaths();
 
         try {
-            approvals.verify("text");
+            approver.verify("text");
         } catch (final AssertionError e) {
             // expected
         }

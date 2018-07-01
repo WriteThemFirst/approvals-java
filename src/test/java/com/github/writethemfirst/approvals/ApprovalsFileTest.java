@@ -28,16 +28,16 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
 class ApprovalsFileTest {
-    final Reporter mockReporter = mock(Reporter.class);
+    private final Reporter mockReporter = mock(Reporter.class);
 
 
     @Test
     void shouldMismatchOnReceivedFile() throws Exception {
-        final Approver approvals = new Approver().reportTo(mockReporter);
+        final Approver approver = new Approver().reportTo(mockReporter);
         final FolderTestUtils testUtils = new FolderTestUtils("shouldMismatchOnReceivedFile", getClass());
         testUtils.writeActual("actual", "file.txt");
         try {
-            approvals.verify(testUtils.actual.resolve("file.txt"));
+            approver.verify(testUtils.actual.resolve("file.txt"));
         } catch (final AssertionError e) {
             // expected
         }
@@ -51,11 +51,11 @@ class ApprovalsFileTest {
 
     @Test
     void shouldMismatchOnReceivedFileContent() throws Exception {
-        final Approver approvals = new Approver().reportTo(new ThrowsReporter());
+        final Approver approver = new Approver().reportTo(new ThrowsReporter());
         final FolderTestUtils testUtils = new FolderTestUtils("shouldMismatchOnReceivedFileContent", getClass());
         testUtils.writeActual("actual", "file.txt");
 
-        assertThatThrownBy(() -> approvals.verify(testUtils.actual.resolve("file.txt")))
+        assertThatThrownBy(() -> approver.verify(testUtils.actual.resolve("file.txt")))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <> but was: <actual>");
 

@@ -18,10 +18,12 @@
 package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.approvers.Approver;
-import com.github.writethemfirst.approvals.approvers.CombinationApprover;
 import com.github.writethemfirst.approvals.utils.functions.*;
 
 import java.nio.file.Path;
+
+import static com.github.writethemfirst.approvals.utils.FunctionUtils.applyCombinations;
+import static java.util.Arrays.asList;
 
 public class Approvals {
     private Approvals() {
@@ -103,7 +105,8 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public static <I1> void verifyAllCombinations(final Iterable<I1> args1, final Function1<I1, ?> f) {
-        new CombinationApprover().verifyAllCombinations(args1, f);
+        final Approver approver = new Approver();
+        approver.csv().verify(applyCombinations(args1, f));
     }
 
     /**
@@ -120,7 +123,7 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public static <I1> void verifyAllCombinations(final I1[] args1, final Function1<I1, ?> f) {
-        new CombinationApprover().verifyAllCombinations(args1, f);
+        verifyAllCombinations(asList(args1), f);
     }
 
     /**
@@ -143,7 +146,8 @@ public class Approvals {
         final Iterable<I2> args2,
         final Function2<I1, I2, ?> f) {
 
-        new CombinationApprover().verifyAllCombinations(args1, args2, f);
+        final Approver approver = new Approver();
+        approver.csv().verify(applyCombinations(args1, args2, f));
     }
 
     /**
@@ -166,7 +170,7 @@ public class Approvals {
         final I2[] args2,
         final Function2<I1, I2, ?> f) {
 
-        new CombinationApprover().verifyAllCombinations(args1, args2, f);
+        verifyAllCombinations(asList(args1), asList(args2), f);
     }
 
     /**
@@ -191,7 +195,8 @@ public class Approvals {
         final Iterable<I3> args3,
         final Function3<I1, I2, I3, ?> f) {
 
-        new CombinationApprover().verifyAllCombinations(args1, args2, args3, f);
+        final Approver approver = new Approver();
+        approver.csv().verify(applyCombinations(args1, args2, args3, f));
     }
 
     /**
@@ -216,7 +221,11 @@ public class Approvals {
         final I3[] args3,
         final Function3<I1, I2, I3, ?> f) {
 
-        new CombinationApprover().verifyAllCombinations(args1, args2, args3, f);
+        verifyAllCombinations(
+            asList(args1),
+            asList(args2),
+            asList(args3),
+            f);
     }
 
     /**
@@ -243,7 +252,8 @@ public class Approvals {
         final Iterable<I4> args4,
         final Function4<I1, I2, I3, I4, ?> f) {
 
-        new CombinationApprover().verifyAllCombinations(args1, args2, args3, args4, f);
+        final Approver approver = new Approver();
+        approver.csv().verify(applyCombinations(args1, args2, args3, args4, f));
     }
 
     /**
@@ -270,7 +280,12 @@ public class Approvals {
         final I4[] args4,
         final Function4<I1, I2, I3, I4, ?> f) {
 
-        new CombinationApprover().verifyAllCombinations(args1, args2, args3, args4, f);
+        verifyAllCombinations(
+            asList(args1),
+            asList(args2),
+            asList(args3),
+            asList(args4),
+            f);
     }
 
     /**
@@ -299,7 +314,8 @@ public class Approvals {
         final Iterable<I5> args5,
         final Function5<I1, I2, I3, I4, I5, ?> f) {
 
-        new CombinationApprover().verifyAllCombinations(args1, args2, args3, args4, args5, f);
+        final Approver approver = new Approver();
+        approver.csv().verify(applyCombinations(args1, args2, args3, args4, args5, f));
     }
 
     /**
@@ -328,7 +344,13 @@ public class Approvals {
         final I5[] args5,
         final Function5<I1, I2, I3, I4, I5, ?> f) {
 
-        new CombinationApprover().verifyAllCombinations(args1, args2, args3, args4, args5, f);
+        verifyAllCombinations(
+            asList(args1),
+            asList(args2),
+            asList(args3),
+            asList(args4),
+            asList(args5),
+            f);
     }
 
 }

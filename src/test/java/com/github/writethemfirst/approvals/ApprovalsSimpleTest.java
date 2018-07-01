@@ -28,18 +28,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
 class ApprovalsSimpleTest {
-    private final Approver approvals = new Approver().reportTo(new ThrowsReporter());
+    private final Approver approver = new Approver().reportTo(new ThrowsReporter());
 
 
     @Test
     void shouldThrowWhenMismatchAndUsingCommandReporter() {
         final CommandReporter reporter = mock(CommandReporter.class);
-        final Approver approvals = new Approver().reportTo(reporter);
+        final Approver approver = new Approver().reportTo(reporter);
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldThrowWhenMismatchAndUsingCommandReporter", getClass(), "");
 
         testUtils.writeApproved("approved text");
 
-        assertThatThrownBy(() -> approvals.verify("actual text"))
+        assertThatThrownBy(() -> approver.verify("actual text"))
             .isInstanceOf(AssertionError.class)
             .hasMessage("expected: <approved text> but was: <actual text>");
 
@@ -51,7 +51,7 @@ class ApprovalsSimpleTest {
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldDoNothingWhenApprovedFileExistsAndIsCorrect", getClass(), "");
         testUtils.writeApproved("some text");
 
-        approvals.verify("some text");
+        approver.verify("some text");
 
         testUtils.cleanupPaths();
     }
@@ -62,7 +62,7 @@ class ApprovalsSimpleTest {
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldFailWhenApprovedFileExistsAndIsDifferent", getClass(), "");
         testUtils.writeApproved("expected text");
 
-        assertThatThrownBy(() -> approvals.verify("actual text"))
+        assertThatThrownBy(() -> approver.verify("actual text"))
             .isInstanceOf(AssertionError.class)
             .hasMessage("expected: <expected text> but was: <actual text>");
 
@@ -75,7 +75,7 @@ class ApprovalsSimpleTest {
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldFailWhenApprovedFileDoesNotExist", getClass(), "");
         testUtils.cleanupPaths();
 
-        assertThatThrownBy(() -> approvals.verify("text"))
+        assertThatThrownBy(() -> approver.verify("text"))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <> but was: <text>");
 
@@ -89,7 +89,7 @@ class ApprovalsSimpleTest {
         testUtils.cleanupPaths();
 
         try {
-            approvals.verify("text");
+            approver.verify("text");
         } catch (final AssertionError e) {
             assertThat(testUtils.readReceived()).isEqualTo("text");
         }
@@ -104,7 +104,7 @@ class ApprovalsSimpleTest {
         testUtils.writeApproved("approved");
 
         try {
-            approvals.verify("text");
+            approver.verify("text");
         } catch (final AssertionError e) {
             assertThat(testUtils.readReceived()).isEqualTo("text");
         }
@@ -119,7 +119,7 @@ class ApprovalsSimpleTest {
         testUtils.writeReceived("last content");
         testUtils.writeApproved("same");
 
-        approvals.verify("same");
+        approver.verify("same");
 
         assertThat(testUtils.readReceived()).isEqualTo("");
 
@@ -132,7 +132,7 @@ class ApprovalsSimpleTest {
         testUtils.cleanupPaths();
 
         try {
-            approvals.verify("new content");
+            approver.verify("new content");
         } catch (final AssertionError e) {
             //expected
         }
@@ -144,13 +144,13 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldUseSpecificMethodName() {
-        final Approver approvals = new Approver().writeTo("my scala method").reportTo(new ThrowsReporter());
+        final Approver approver = new Approver().writeTo("my scala method").reportTo(new ThrowsReporter());
 
         final SimpleTestUtils testUtils = new SimpleTestUtils("my_scala_method", getClass(), "");
         testUtils.cleanupPaths();
 
         try {
-            approvals.verify("new content");
+            approver.verify("new content");
         } catch (final AssertionError e) {
             //expected
         }

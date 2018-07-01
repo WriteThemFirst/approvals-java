@@ -17,23 +17,26 @@
  */
 package com.github.writethemfirst.approvals;
 
-import com.github.writethemfirst.approvals.approvers.CombinationApprover;
+import com.github.writethemfirst.approvals.approvers.Approver;
 import com.github.writethemfirst.approvals.testutils.SimpleTestUtils;
 import org.junit.jupiter.api.Test;
 
+import static com.github.writethemfirst.approvals.utils.FunctionUtils.applyCombinations;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 class ApprovalsVerifyAllTest {
+    private final Reporter reporter = mock(Reporter.class);
+    private final Approver approver = new Approver().reportTo(reporter).csv();
+
     @Test
     void shouldReportMismatchWithSingleArgument() {
-        final Reporter reporter = mock(Reporter.class);
-        final CombinationApprover approvals = new CombinationApprover().reportTo(reporter);
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithSingleArgument", getClass(), ".csv");
 
         try {
-            approvals.verifyAllCombinations(new Integer[]{1, 2, 3}, x -> x + 1);
+            final String combinations = applyCombinations(asList(1, 2, 3), x -> x + 1);
+            approver.verify(combinations);
         } catch (final AssertionError e) {
             // expected
         }
@@ -48,15 +51,13 @@ class ApprovalsVerifyAllTest {
 
     @Test
     void shouldReportMismatchWithTwoArguments() {
-        final Reporter reporter = mock(Reporter.class);
-        final CombinationApprover approvals = new CombinationApprover().reportTo(reporter);
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithTwoArguments", getClass(), ".csv");
-
         try {
-            approvals.verifyAllCombinations(
+            final String combinations = applyCombinations(
                 asList(1, 2),
                 asList(4, 6),
                 (x, y) -> x + y);
+            approver.verify(combinations);
         } catch (final AssertionError e) {
             // expected
         }
@@ -70,19 +71,19 @@ class ApprovalsVerifyAllTest {
 
     @Test
     void shouldReportMismatchWithFiveArguments() {
-        final Reporter reporter = mock(Reporter.class);
-        final CombinationApprover approvals = new CombinationApprover().reportTo(reporter).namedArguments("x", "y", "a", "b", "c");
+
         final SimpleTestUtils testUtils =
             new SimpleTestUtils("shouldReportMismatchWithFiveArguments", getClass(), ".csv");
 
         try {
-            approvals.verifyAllCombinations(
+            final String combinations = applyCombinations(
                 asList(1, 2),
                 asList(3, 4),
                 asList(5, 6),
                 asList(7, 8),
                 asList(9, 10),
                 (x, y, a, b, c) -> x + y + a + b + c);
+            approver.namedArguments("x", "y", "a", "b", "c").verify(combinations);
         } catch (final AssertionError e) {
             // expected
         }
