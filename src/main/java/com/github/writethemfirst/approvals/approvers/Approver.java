@@ -20,21 +20,19 @@ package com.github.writethemfirst.approvals.approvers;
 import com.github.writethemfirst.approvals.Approvals;
 import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.files.ApprovalFiles;
+import com.github.writethemfirst.approvals.files.MatchesAndMismatches;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.FileUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
 
 import static com.github.writethemfirst.approvals.files.ApprovalFiles.build;
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
 import static java.nio.file.Paths.get;
-import static java.util.stream.Collectors.partitioningBy;
 
 /**
  * # Approvals
@@ -194,30 +192,14 @@ public class Approver {
     private void verifyFolderContent(final Path actualFolder) {
         final ApprovalFiles approvalFiles = approvedAndReceivedPaths();
         prepareFolders(actualFolder, approvalFiles);
-        final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches =
-            approvalFiles
-                .listChildrenApprovalFiles()
-                .collect(partitioningBy(ApprovalFiles::haveSameContent));
 
-        cleanupReceivedFiles(approvalFiles, matchesAndMismatches);
-        reportMismatches(matchesAndMismatches);
-        throwMismatches(matchesAndMismatches);
+        final MatchesAndMismatches matchesAndMismatches = approvalFiles.matchesAndMismatches();
+
+        matchesAndMismatches.cleanupReceivedFiles(approvalFiles);
+        matchesAndMismatches.reportMismatches(reporter);
+        matchesAndMismatches.throwMismatches();
     }
 
-    private void reportMismatches(final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches) {
-        matchesAndMismatches.get(false).forEach(mismatch -> reporter.mismatch(mismatch.approved, mismatch.received));
-    }
-
-    private void throwMismatches(final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches) {
-        matchesAndMismatches.get(false).forEach(mismatch -> new ThrowsReporter().mismatch(mismatch.approved, mismatch.received));
-    }
-
-    private void cleanupReceivedFiles(final ApprovalFiles approvalFiles, final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches) {
-        matchesAndMismatches.get(true).forEach(ar -> silentRemove(ar.received));
-        if (matchesAndMismatches.get(false).isEmpty()) {
-            silentRecursiveRemove(approvalFiles.received);
-        }
-    }
 
     /**
      * Copies files from *actual* to *received* folder, and creates missing *approved* files.

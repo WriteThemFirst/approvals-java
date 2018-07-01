@@ -18,11 +18,14 @@
 package com.github.writethemfirst.approvals.files;
 
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.listFiles;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 import static java.lang.String.format;
+import static java.util.stream.Collectors.partitioningBy;
 
 /**
  * # ApprovalFiles
@@ -103,6 +106,17 @@ public class ApprovalFiles {
         return new ApprovalFiles(
             buildApprovalFilePath(folder, methodName, "approved" + extension),
             buildApprovalFilePath(folder, methodName, "received" + extension));
+    }
+
+    /**
+     * Compares the content of files in *approved* and *received* folders.
+     *
+     * @return the 2 lists of matches (files with same content) and mismatches (different files)
+     */
+    public MatchesAndMismatches matchesAndMismatches() {
+        final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches = listChildrenApprovalFiles()
+            .collect(partitioningBy(ApprovalFiles::haveSameContent));
+        return new MatchesAndMismatches(matchesAndMismatches.get(true), matchesAndMismatches.get(false));
     }
 
     /**
