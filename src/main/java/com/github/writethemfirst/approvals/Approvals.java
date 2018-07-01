@@ -19,7 +19,6 @@ package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.approvers.Approver;
 import com.github.writethemfirst.approvals.approvers.CombinationApprover;
-import com.github.writethemfirst.approvals.approvers.FolderApprover;
 import com.github.writethemfirst.approvals.utils.functions.*;
 
 import java.nio.file.Path;
@@ -86,7 +85,7 @@ public class Approvals {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public static void verifyAllFiles(final Path actualFolder) {
-        new FolderApprover().verifyAllFiles(actualFolder);
+        new Approver().verify(actualFolder);
     }
 
     /**

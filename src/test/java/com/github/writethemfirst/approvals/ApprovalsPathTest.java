@@ -17,8 +17,7 @@
  */
 package com.github.writethemfirst.approvals;
 
-import com.github.writethemfirst.approvals.approvers.FolderApprover;
-import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
+import com.github.writethemfirst.approvals.approvers.Approver;
 import com.github.writethemfirst.approvals.testutils.FolderTestUtils;
 import org.junit.jupiter.api.Test;
 
@@ -29,9 +28,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
-class ApprovalsFolderTest {
+class ApprovalsPathTest {
     final Reporter mockReporter = mock(Reporter.class);
-    private final FolderApprover approvals = new FolderApprover().reportTo(mockReporter);
+    private final Approver approvals = new Approver().reportTo(mockReporter);
 
     @Test
     void shouldDoNothingWhenBothFoldersAreEmpty() throws IOException {
@@ -39,7 +38,7 @@ class ApprovalsFolderTest {
         final FolderTestUtils testUtils = new FolderTestUtils("shouldDoNothingWhenBothFoldersAreEmpty", getClass());
 
         //WHEN
-        approvals.verifyAllFiles(testUtils.actual);
+        approvals.verify(testUtils.actual);
 
         //THEN no exception should be thrown
 
@@ -51,7 +50,7 @@ class ApprovalsFolderTest {
         final FolderTestUtils testUtils = new FolderTestUtils("shouldThrowWhenAFileIsMissing", getClass());
         testUtils.writeApproved("some content", "someFile.txt");
 
-        assertThatThrownBy(() -> approvals.verifyAllFiles(testUtils.actual))
+        assertThatThrownBy(() -> approvals.verify(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <some content> but was: <>");
 
@@ -63,7 +62,7 @@ class ApprovalsFolderTest {
         final FolderTestUtils testUtils = new FolderTestUtils("shouldThrowWhenAnExtraFileIsPresent", getClass());
         testUtils.writeReceived("some content", "someFile.txt");
 
-        assertThatThrownBy(() -> approvals.verifyAllFiles(testUtils.actual))
+        assertThatThrownBy(() -> approvals.verify(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <> but was: <some content>");
 
@@ -75,7 +74,7 @@ class ApprovalsFolderTest {
         final FolderTestUtils testUtils = new FolderTestUtils("shouldThrowWhenAFileIsDifferent", getClass());
         testUtils.writeApproved("expected content", "sample.xml");
 
-        assertThatThrownBy(() -> approvals.verifyAllFiles(testUtils.actual))
+        assertThatThrownBy(() -> approvals.verify(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <expected content> but was: <>");
 
@@ -84,14 +83,14 @@ class ApprovalsFolderTest {
 
     @Test
     void shouldFireReporterOnEachMismatch() throws IOException {
-        final FolderApprover approvals = new FolderApprover().reportTo(mockReporter);
+        final Approver approvals = new Approver().reportTo(mockReporter);
         final FolderTestUtils testUtils = new FolderTestUtils("shouldFireReporterOnEachMismatch", getClass());
 
         testUtils.writeApproved("approved1", "sample.xml");
         testUtils.writeApproved("approved2", "sample2.xml");
 
         try {
-            approvals.verifyAllFiles(testUtils.actual);
+            approvals.verify(testUtils.actual);
         } catch (final AssertionError e) {
             // expected
         }
@@ -110,13 +109,13 @@ class ApprovalsFolderTest {
     void shouldCreateAllReceivedFiles() throws IOException {
         final FolderTestUtils testUtils = new FolderTestUtils("shouldCreateAllReceivedFiles", getClass());
 
-        final FolderApprover approvals = new FolderApprover().reportTo(mockReporter);
+        final Approver approvals = new Approver().reportTo(mockReporter);
 
         testUtils.writeActual("actual", "sample.xml");
         testUtils.writeActual("actual2", "sample2.xml");
 
         try {
-            approvals.verifyAllFiles(testUtils.actual);
+            approvals.verify(testUtils.actual);
         } catch (final AssertionError e) {
             // expected
         }
@@ -131,14 +130,14 @@ class ApprovalsFolderTest {
 
     @Test
     void shouldRemoveMatchedReceivedFiles() throws IOException {
-        final FolderApprover approvals = new FolderApprover().reportTo(mockReporter);
+        final Approver approvals = new Approver().reportTo(mockReporter);
 
         final FolderTestUtils testUtils = new FolderTestUtils("shouldRemoveMatchedReceivedFiles", getClass());
         testUtils.writeActual("actual", "sample.xml");
         testUtils.writeApproved("actual", "sample.xml");
         testUtils.writeReceived("actual", "sample.xml");
 
-        approvals.verifyAllFiles(testUtils.actual);
+        approvals.verify(testUtils.actual);
 
         assertThat(testUtils.received.resolve("sample.xml")).doesNotExist();
 
@@ -152,7 +151,7 @@ class ApprovalsFolderTest {
         testUtils.cleanupPaths();
         testUtils.writeActual("actual", "sample.xml");
 
-        assertThatThrownBy(() -> approvals.verifyAllFiles(testUtils.actual))
+        assertThatThrownBy(() -> approvals.verify(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <> but was: <actual>");
 
@@ -165,7 +164,7 @@ class ApprovalsFolderTest {
         testUtils.writeActual("actual", "sample.xml");
 
         try {
-            approvals.verifyAllFiles(testUtils.actual);
+            approvals.verify(testUtils.actual);
         } catch (final AssertionError e) {
             // expected
         }

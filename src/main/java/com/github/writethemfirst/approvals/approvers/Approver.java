@@ -21,14 +21,20 @@ import com.github.writethemfirst.approvals.Approvals;
 import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.files.ApprovalFiles;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
+import com.github.writethemfirst.approvals.utils.FileUtils;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 
 import static com.github.writethemfirst.approvals.files.ApprovalFiles.build;
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
 import static java.nio.file.Paths.get;
+import static java.util.stream.Collectors.partitioningBy;
 
 /**
  * # Approvals
@@ -73,7 +79,7 @@ public class Approver {
         this(Reporter.DEFAULT,
             null,
             "",
-            callerClass(Approver.class, Approvals.class, FolderApprover.class, CombinationApprover.class));
+            callerClass(Approver.class, Approvals.class, CombinationApprover.class));
     }
 
     /**
@@ -160,9 +166,73 @@ public class Approver {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public void verify(final Path output) {
-        final ApprovalFiles files = approvedAndReceivedPaths().resolve(output);
-        copy(output, files.received);
-        verifyImpl(files);
+        if (output.toFile().isDirectory()) {
+            verifyFolderContent(output);
+        } else {
+            final ApprovalFiles files = approvedAndReceivedPaths().resolve(output);
+            copy(output, files.received);
+            verifyImpl(files);
+        }
+    }
+
+    /**
+     * Compares the actual output of your program (files in the folder `actualFolder`) and the content of the *approved*
+     * "Master" folder matching with the test method.
+     *
+     * It'll use a temporary *received* folder to copy the actual files from your program. This folder and its files
+     * will be erased in case the results are matching. Otherwise, they will be kept for you to review it.
+     *
+     * In case of differences found in the output, the {@link Reporter} linked to this `Approvals` instance will be
+     * called ({@link Reporter#mismatch(Path, Path)}) for each mismatched file.
+     *
+     * @param actualFolder the folder containing the output of your program. It will be compared to the associated
+     *                     *approved* folder
+     * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
+     *                          framework like JUnit
+     * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
+     */
+    private void verifyFolderContent(final Path actualFolder) {
+        final ApprovalFiles approvalFiles = approvedAndReceivedPaths();
+        prepareFolders(actualFolder, approvalFiles);
+        final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches =
+            approvalFiles
+                .listChildrenApprovalFiles()
+                .collect(partitioningBy(ApprovalFiles::haveSameContent));
+
+        cleanupReceivedFiles(approvalFiles, matchesAndMismatches);
+        reportMismatches(matchesAndMismatches);
+        throwMismatches(matchesAndMismatches);
+    }
+
+    private void reportMismatches(final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches) {
+        matchesAndMismatches.get(false).forEach(mismatch -> reporter.mismatch(mismatch.approved, mismatch.received));
+    }
+
+    private void throwMismatches(final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches) {
+        matchesAndMismatches.get(false).forEach(mismatch -> new ThrowsReporter().mismatch(mismatch.approved, mismatch.received));
+    }
+
+    private void cleanupReceivedFiles(final ApprovalFiles approvalFiles, final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches) {
+        matchesAndMismatches.get(true).forEach(ar -> silentRemove(ar.received));
+        if (matchesAndMismatches.get(false).isEmpty()) {
+            silentRecursiveRemove(approvalFiles.received);
+        }
+    }
+
+    /**
+     * Copies files from *actual* to *received* folder, and creates missing *approved* files.
+     */
+    private void prepareFolders(final Path actualFolder, final ApprovalFiles approvalFiles) {
+        try {
+            Files.createDirectories(approvalFiles.approved);
+        } catch (final IOException e) {
+            throw new RuntimeException("could not create *approved* folder " + approvalFiles.approved, e);
+        }
+        listFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvalFiles.received));
+        approvalFiles
+            .listChildrenApprovalFiles()
+            .map(paths -> paths.approved)
+            .forEach(FileUtils::createFileIfNeeded);
     }
 
     private void verifyImpl(final ApprovalFiles files) {
