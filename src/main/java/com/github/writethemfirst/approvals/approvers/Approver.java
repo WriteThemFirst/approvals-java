@@ -27,6 +27,7 @@ import com.github.writethemfirst.approvals.utils.FileUtils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.github.writethemfirst.approvals.files.ApprovalFiles.build;
@@ -170,7 +171,7 @@ public class Approver {
      * results are matching. Otherwise, it will be kept for you to review it.
      *
      * In case of differences found in the output, the {@link Reporter} linked to this `Approvals` instance will be
-     * called ({@link Reporter#mismatch(Path, Path)}).
+     * called ({@link Reporter#mismatch(ApprovalFiles)} ).
      *
      * @param output Any object with a {@link Object#toString()} representation containing the output of your program.
      *               It will be compared to the associated *approved* file.
@@ -193,7 +194,7 @@ public class Approver {
      * in case the results are matching. Otherwise, it will be kept for you to review it.
      *
      * In case of differences found in the output, the {@link Reporter} linked to this `Approvals` instance will be
-     * called ({@link Reporter#mismatch(Path, Path)}).
+     * called ({@link Reporter#mismatch(ApprovalFiles)} ).
      *
      * @param output a {@link Path} containing the output of your program. It will be compared to the associated
      *               *approved* file.
@@ -219,7 +220,7 @@ public class Approver {
      * will be erased in case the results are matching. Otherwise, they will be kept for you to review it.
      *
      * In case of differences found in the output, the {@link Reporter} linked to this `Approvals` instance will be
-     * called ({@link Reporter#mismatch(Path, Path)}) for each mismatched file.
+     * called ({@link Reporter#mismatch(ApprovalFiles)}) for each mismatched file.
      *
      * @param actualFolder the folder containing the output of your program. It will be compared to the associated
      *                     *approved* folder
@@ -230,21 +231,21 @@ public class Approver {
     private void verifyFolderContent(final Path actualFolder) {
         final ApprovalFiles approvalFiles = approvedAndReceivedPaths();
         prepareFolders(actualFolder, approvalFiles);
+        final List<ApprovalFiles> childrenApprovalFiles = approvalFiles.listChildrenApprovalFiles().collect(Collectors.toList());
+        childrenApprovalFiles.forEach(ApprovalFiles::createEmptyApprovedFileIfNeeded);
 
         final MatchesAndMismatches matchesAndMismatches = approvalFiles.matchesAndMismatches();
 
         matchesAndMismatches.cleanupReceivedFiles(approvalFiles);
         try {
+            matchesAndMismatches.throwMismatches();
+        } finally {
+            childrenApprovalFiles.forEach(ApprovalFiles::createApprovedFileIfNeeded);
             if (matchesAndMismatches.hasSeveralMismatches()) {
                 reporter.mismatch(approvalFiles);
             } else {
                 matchesAndMismatches.reportMismatches(reporter);
             }
-            matchesAndMismatches.throwMismatches();
-        } finally {
-            approvalFiles
-                .listChildrenApprovalFiles()
-                .forEach(ApprovalFiles::createApprovedFileIfNeeded);
         }
     }
 
@@ -266,6 +267,7 @@ public class Approver {
             silentRemove(files.received);
         } else {
             try {
+                files.createEmptyApprovedFileIfNeeded();
                 reporter.mismatch(files);
                 new ThrowsReporter().mismatch(files);
             } finally {

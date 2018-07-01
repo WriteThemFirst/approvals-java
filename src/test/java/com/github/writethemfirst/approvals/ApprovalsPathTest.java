@@ -164,7 +164,9 @@ class ApprovalsPathTest {
             // expected
         }
 
-        assertThat(testUtils.approved.resolve("sample.xml")).exists().hasContent("actual");
+        assertThat(testUtils.approved.resolve("sample.xml"))
+            .exists()
+            .hasContent("actual");
 
         testUtils.cleanupPaths();
     }

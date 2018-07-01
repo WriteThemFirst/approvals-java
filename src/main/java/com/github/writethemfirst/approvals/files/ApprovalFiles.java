@@ -20,6 +20,7 @@ package com.github.writethemfirst.approvals.files;
 import com.github.writethemfirst.approvals.utils.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,8 @@ public class ApprovalFiles {
      * comparison
      */
     public final Path received;
+
+    private boolean approvedWasCreatedEmpty = false;
 
     /**
      * Constructs an ApprovalFiles instance for a pair of *approved* and *received* entries.
@@ -127,10 +130,25 @@ public class ApprovalFiles {
      * does nothing.
      */
     public void createApprovedFileIfNeeded() {
+        if (approvedWasCreatedEmpty) {
+            FileUtils.copy(received, approved);
+        }
+    }
+
+    /**
+     * Creates an empty approval file if it doesn't exist yet. If it already exists, that method does nothing.
+     */
+    public void createEmptyApprovedFileIfNeeded() {
         final File file = approved.toFile();
         if (!file.exists()) {
-            createParentDirectories(approved);
-            FileUtils.copy(received, approved);
+            try {
+                createParentDirectories(approved);
+                //noinspection ResultOfMethodCallIgnored
+                file.createNewFile();
+                approvedWasCreatedEmpty = true;
+            } catch (final IOException e) {
+                throw new RuntimeException(format("Can't create an empty file at <%s>.", file), e);
+            }
         }
     }
 
