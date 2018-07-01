@@ -127,8 +127,8 @@ class ApprovalsSimpleTest {
     }
 
     @Test
-    void shouldCreateEmptyApprovedFile() {
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldCreateEmptyApprovedFile", getClass(), "");
+    void shouldCreateApprovedFile() {
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldCreateApprovedFile", getClass(), "");
         testUtils.cleanupPaths();
 
         try {
@@ -137,7 +137,7 @@ class ApprovalsSimpleTest {
             //expected
         }
 
-        assertThat(testUtils.approved).exists().hasContent("");
+        assertThat(testUtils.approved).exists().hasContent("new content");
 
         testUtils.cleanupPaths();
     }

@@ -232,12 +232,16 @@ public class Approver {
         prepareFolders(actualFolder, approvalFiles);
 
         final MatchesAndMismatches matchesAndMismatches = approvalFiles.matchesAndMismatches();
-        approvalFiles
-            .listChildrenApprovalFiles()
-            .forEach(ApprovalFiles::createApprovedFileIfNeeded);
+
         matchesAndMismatches.cleanupReceivedFiles(approvalFiles);
-        matchesAndMismatches.reportMismatches(reporter);
-        matchesAndMismatches.throwMismatches();
+        try {
+            matchesAndMismatches.reportMismatches(reporter);
+            matchesAndMismatches.throwMismatches();
+        } finally {
+            approvalFiles
+                .listChildrenApprovalFiles()
+                .forEach(ApprovalFiles::createApprovedFileIfNeeded);
+        }
     }
 
 
@@ -257,9 +261,12 @@ public class Approver {
         if (files.haveSameContent()) {
             silentRemove(files.received);
         } else {
-            files.createApprovedFileIfNeeded();
-            reporter.mismatch(files.approved, files.received);
-            new ThrowsReporter().mismatch(files.approved, files.received);
+            try {
+                reporter.mismatch(files.approved, files.received);
+                new ThrowsReporter().mismatch(files.approved, files.received);
+            } finally {
+                files.createApprovedFileIfNeeded();
+            }
         }
     }
 

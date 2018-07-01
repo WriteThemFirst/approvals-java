@@ -17,16 +17,15 @@
  */
 package com.github.writethemfirst.approvals.files;
 
+import com.github.writethemfirst.approvals.utils.FileUtils;
+
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static com.github.writethemfirst.approvals.utils.FileUtils.createParentDirectories;
-import static com.github.writethemfirst.approvals.utils.FileUtils.listFiles;
-import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
+import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.partitioningBy;
 
@@ -130,13 +129,8 @@ public class ApprovalFiles {
     public void createApprovedFileIfNeeded() {
         final File file = approved.toFile();
         if (!file.exists()) {
-            try {
-                createParentDirectories(approved);
-                //noinspection ResultOfMethodCallIgnored
-                file.createNewFile();
-            } catch (final IOException e) {
-                throw new RuntimeException(format("Can't create an empty file at <%s>.", file), e);
-            }
+            createParentDirectories(approved);
+            FileUtils.copy(received, approved);
         }
     }
 

@@ -60,7 +60,7 @@ class ApprovalsPathTest {
     @Test
     void shouldThrowWhenAnExtraFileIsPresent() throws IOException {
         final FolderTestUtils testUtils = new FolderTestUtils("shouldThrowWhenAnExtraFileIsPresent", getClass());
-        testUtils.writeReceived("some content", "someFile.txt");
+        testUtils.writeActual("some content", "someFile.txt");
 
         assertThatThrownBy(() -> approver.verify(testUtils.actual))
             .isInstanceOf(AssertionError.class)
@@ -159,8 +159,8 @@ class ApprovalsPathTest {
     }
 
     @Test
-    void shouldCreateEmptyApprovedFiles() throws IOException {
-        final FolderTestUtils testUtils = new FolderTestUtils("shouldCreateEmptyApprovedFiles", getClass());
+    void shouldCreateApprovedFiles() throws IOException {
+        final FolderTestUtils testUtils = new FolderTestUtils("shouldCreateApprovedFiles", getClass());
         testUtils.writeActual("actual", "sample.xml");
 
         try {
@@ -169,7 +169,7 @@ class ApprovalsPathTest {
             // expected
         }
 
-        assertThat(testUtils.approved.resolve("sample.xml")).exists().hasContent("");
+        assertThat(testUtils.approved.resolve("sample.xml")).exists().hasContent("actual");
 
         testUtils.cleanupPaths();
     }
