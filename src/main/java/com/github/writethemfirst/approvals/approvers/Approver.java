@@ -23,7 +23,6 @@ import com.github.writethemfirst.approvals.files.ApprovalFiles;
 import com.github.writethemfirst.approvals.files.MatchesAndMismatches;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.FileUtils;
-import com.github.writethemfirst.approvals.utils.functions.Function2;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -233,7 +232,9 @@ public class Approver {
         prepareFolders(actualFolder, approvalFiles);
 
         final MatchesAndMismatches matchesAndMismatches = approvalFiles.matchesAndMismatches();
-
+        approvalFiles
+            .listChildrenApprovalFiles()
+            .forEach(ApprovalFiles::createApprovedFileIfNeeded);
         matchesAndMismatches.cleanupReceivedFiles(approvalFiles);
         matchesAndMismatches.reportMismatches(reporter);
         matchesAndMismatches.throwMismatches();
@@ -250,17 +251,13 @@ public class Approver {
             throw new RuntimeException("could not create *approved* folder " + approvalFiles.approved, e);
         }
         listFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvalFiles.received));
-        approvalFiles
-            .listChildrenApprovalFiles()
-            .map(paths -> paths.approved)
-            .forEach(FileUtils::createFileIfNeeded);
     }
 
     private void verifyImpl(final ApprovalFiles files) {
-        createFileIfNeeded(files.approved);
         if (files.haveSameContent()) {
             silentRemove(files.received);
         } else {
+            files.createApprovedFileIfNeeded();
             reporter.mismatch(files.approved, files.received);
             new ThrowsReporter().mismatch(files.approved, files.received);
         }

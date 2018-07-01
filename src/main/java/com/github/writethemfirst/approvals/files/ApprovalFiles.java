@@ -17,11 +17,14 @@
  */
 package com.github.writethemfirst.approvals.files;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static com.github.writethemfirst.approvals.utils.FileUtils.createParentDirectories;
 import static com.github.writethemfirst.approvals.utils.FileUtils.listFiles;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 import static java.lang.String.format;
@@ -117,6 +120,24 @@ public class ApprovalFiles {
         final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches = listChildrenApprovalFiles()
             .collect(partitioningBy(ApprovalFiles::haveSameContent));
         return new MatchesAndMismatches(matchesAndMismatches.get(true), matchesAndMismatches.get(false));
+    }
+
+
+    /**
+     * Creates a default approval file if it doesn't exist yet, with received content. If it already exists, that method
+     * does nothing.
+     */
+    public void createApprovedFileIfNeeded() {
+        final File file = approved.toFile();
+        if (!file.exists()) {
+            try {
+                createParentDirectories(approved);
+                //noinspection ResultOfMethodCallIgnored
+                file.createNewFile();
+            } catch (final IOException e) {
+                throw new RuntimeException(format("Can't create an empty file at <%s>.", file), e);
+            }
+        }
     }
 
     /**

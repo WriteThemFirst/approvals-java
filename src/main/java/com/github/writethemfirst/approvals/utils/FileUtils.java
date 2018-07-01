@@ -17,6 +17,8 @@
  */
 package com.github.writethemfirst.approvals.utils;
 
+import com.github.writethemfirst.approvals.files.ApprovalFiles;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -54,24 +56,6 @@ public class FileUtils {
         }
     }
 
-    /**
-     * Creates an empty approval file if it doesn't exist yet.
-     *
-     * If it already exist, that method will do nothing. If there's any issue while creating the approval file, the
-     * {@link IOException} will be wrapped in a {@link RuntimeException} and thrown.
-     */
-    public static void createFileIfNeeded(final Path path) {
-        final File file = path.toFile();
-        if (!file.exists()) {
-            try {
-                createParentDirectories(path);
-                //noinspection ResultOfMethodCallIgnored
-                file.createNewFile();
-            } catch (final IOException e) {
-                throw new RuntimeException(format("Can't create an empty file at <%s>.", file), e);
-            }
-        }
-    }
 
     /**
      * Removes the file located at the specified Path if it exists.
@@ -145,7 +129,7 @@ public class FileUtils {
         }
     }
 
-    private static void createParentDirectories(final Path file) {
+    public static void createParentDirectories(final Path file) {
         try {
             createDirectories(file.getParent());
         } catch (final IOException e) {
