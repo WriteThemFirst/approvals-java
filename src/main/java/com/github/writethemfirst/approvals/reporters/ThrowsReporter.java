@@ -20,9 +20,6 @@ package com.github.writethemfirst.approvals.reporters;
 import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.files.ApprovalFiles;
 
-import java.nio.file.Path;
-
-import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 import static java.lang.String.format;
 
 /**
@@ -36,9 +33,10 @@ public class ThrowsReporter implements Reporter {
 
     @Override
     public void mismatch(final ApprovalFiles files) {
-        final String approvedContent = silentRead(files.approved);
-        final String receivedContent = silentRead(files.received);
-        throw new AssertionError(format("expected: <%s> but was: <%s>", approvedContent, receivedContent));
+        throw new AssertionError(format(
+            "expected: <%s> but was: <%s>",
+            files.approvedContent(),
+            files.receivedContent()));
     }
 
     /**

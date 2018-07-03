@@ -232,7 +232,10 @@ public class Approver {
         final ApprovalFiles approvalFiles = approvedAndReceivedPaths();
         prepareFolders(actualFolder, approvalFiles);
         final List<ApprovalFiles> childrenApprovalFiles = approvalFiles.listChildrenApprovalFiles().collect(Collectors.toList());
-        childrenApprovalFiles.forEach(ApprovalFiles::createEmptyApprovedFileIfNeeded);
+        final List<ApprovalFiles> childrenWithApproved = childrenApprovalFiles
+            .stream()
+            .map(ApprovalFiles::createEmptyApprovedFileIfNeeded)
+            .collect(Collectors.toList());
 
         final MatchesAndMismatches matchesAndMismatches = approvalFiles.matchesAndMismatches();
 
@@ -240,7 +243,7 @@ public class Approver {
         try {
             matchesAndMismatches.throwMismatches();
         } finally {
-            childrenApprovalFiles.forEach(ApprovalFiles::createApprovedFileIfNeeded);
+            childrenWithApproved.forEach(ApprovalFiles::createApprovedFileIfNeeded);
             if (matchesAndMismatches.hasSeveralMismatches()) {
                 reporter.mismatch(approvalFiles);
             } else {
@@ -266,12 +269,12 @@ public class Approver {
         if (files.haveSameContent()) {
             silentRemove(files.received);
         } else {
+            final ApprovalFiles withApproved = files.createEmptyApprovedFileIfNeeded();
             try {
-                files.createEmptyApprovedFileIfNeeded();
                 reporter.mismatch(files);
                 new ThrowsReporter().mismatch(files);
             } finally {
-                files.createApprovedFileIfNeeded();
+                withApproved.createApprovedFileIfNeeded();
             }
         }
     }

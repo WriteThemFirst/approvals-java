@@ -37,7 +37,7 @@ import static java.util.stream.Collectors.partitioningBy;
  * running comparisons over the output of the program.
  *
  * *Approvals-Java* provides various features, including being able to approve single files, but also to validate the
- * output of a program using an approved folder (which can then contain various subfolders and files).
+ * output of a program using an approved folder (which can then contain various sub-folders and files).
  *
  * This class allows to store references of the 2 particular entries to consider: the *approved* and *received* entries,
  * which are used to store the reference data, and the temporary output of the program for comparison. The class manages
@@ -70,7 +70,20 @@ public class ApprovalFiles {
      */
     public final Path received;
 
-    private boolean approvedWasCreatedEmpty = false;
+    private final boolean approvedWasEmpty;
+
+    /**
+     * Constructs an ApprovalFiles instance for a pair of *approved* and *received* entries.
+     *
+     * @param approved         An *approved* entry (can be either a file or a folder)
+     * @param received         A *received* entry (can be either a file or a folder)
+     * @param approvedWasEmpty remembers if the approved file existed before approbation
+     */
+    private ApprovalFiles(final Path approved, final Path received, final boolean approvedWasEmpty) {
+        this.approved = approved;
+        this.received = received;
+        this.approvedWasEmpty = approvedWasEmpty;
+    }
 
     /**
      * Constructs an ApprovalFiles instance for a pair of *approved* and *received* entries.
@@ -79,8 +92,7 @@ public class ApprovalFiles {
      * @param received A *received* entry (can be either a file or a folder)
      */
     public ApprovalFiles(final Path approved, final Path received) {
-        this.approved = approved;
-        this.received = received;
+        this(approved, received, false);
     }
 
     /**
@@ -89,7 +101,7 @@ public class ApprovalFiles {
      * @param file the Path for which only the name is taken into account
      * @return an ApprovalsFile, on step deeper
      */
-    public ApprovalFiles resolve(Path file) {
+    public ApprovalFiles resolve(final Path file) {
         final Path fileName = file.getFileName();
         return new ApprovalFiles(
             approved.resolve(fileName),
@@ -114,7 +126,8 @@ public class ApprovalFiles {
     }
 
     /**
-     * Compares the content of files in *approved* and *received* folders.
+     * Compares the content of files in *approved* and *received* folders (only makes sense if *approved* and *received*
+     * are folders).
      *
      * @return the 2 lists of matches (files with same content) and mismatches (different files)
      */
@@ -130,7 +143,7 @@ public class ApprovalFiles {
      * does nothing.
      */
     public void createApprovedFileIfNeeded() {
-        if (approvedWasCreatedEmpty) {
+        if (approvedWasEmpty) {
             FileUtils.copy(received, approved);
         }
     }
@@ -138,18 +151,28 @@ public class ApprovalFiles {
     /**
      * Creates an empty approval file if it doesn't exist yet. If it already exists, that method does nothing.
      */
-    public void createEmptyApprovedFileIfNeeded() {
+    public ApprovalFiles createEmptyApprovedFileIfNeeded() {
         final File file = approved.toFile();
         if (!file.exists()) {
             try {
                 createParentDirectories(approved);
                 //noinspection ResultOfMethodCallIgnored
                 file.createNewFile();
-                approvedWasCreatedEmpty = true;
+                return new ApprovalFiles(approved, received, true);
             } catch (final IOException e) {
                 throw new RuntimeException(format("Can't create an empty file at <%s>.", file), e);
             }
+        } else {
+            return this;
         }
+    }
+
+    public String approvedContent() {
+        return approvedWasEmpty ? "" : silentRead(approved);
+    }
+
+    public String receivedContent() {
+        return silentRead(received);
     }
 
     /**
@@ -181,8 +204,8 @@ public class ApprovalFiles {
      *
      * It allows to go from a found *approved* file to a pair of both *approved* and *received* file.
      *
-     * If approved or received are actualy not directories (which is checked with areRegularFiles), this current
-     * instance of {@link ApprovalFiles} will be returned.
+     * If approved or received are not directories (which is checked with areRegularFiles), this current instance of
+     * {@link ApprovalFiles} will be returned.
      *
      * @param approvedFile The *approved* file we already know and for which we want to associate a *received* file
      * @return An {@link ApprovalFiles} instance containing both the *approved* and matching *received* file
@@ -202,8 +225,8 @@ public class ApprovalFiles {
      *
      * It allows to go from a found *received* file to a pair of both *approved* and *received* file.
      *
-     * If approved or received are actualy not directories (which is checked with areRegularFiles), this current
-     * instance of {@link ApprovalFiles} will be returned.
+     * If approved or received are not directories (which is checked with areRegularFiles), this current instance of
+     * {@link ApprovalFiles} will be returned.
      *
      * @param receivedFile The *received* file we already know and for which we want to associate a *approved* file
      * @return An {@link ApprovalFiles} instance containing both the *approved* and matching *received* file
@@ -225,11 +248,7 @@ public class ApprovalFiles {
      * @return True if approved and received are regular files and have the same content
      */
     public boolean haveSameContent() {
-        if (!areRegularFiles())
-            return false;
-        final String receivedContent = silentRead(received);
-        final String approvedContent = silentRead(approved);
-        return receivedContent.equals(approvedContent);
+        return areRegularFiles() && receivedContent().equals(approvedContent());
     }
 
     /**
@@ -272,7 +291,7 @@ public class ApprovalFiles {
     /**
      * **Overriding hashCode to allow filtering of duplicates.**
      *
-     * @return A unique hashcode for the particular data holded in that object.
+     * @return A unique hashcode for the particular data held in that object.
      */
     @Override
     public int hashCode() {

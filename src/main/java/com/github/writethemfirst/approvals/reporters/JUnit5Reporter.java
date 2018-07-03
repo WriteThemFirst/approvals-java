@@ -52,7 +52,7 @@ public class JUnit5Reporter implements Reporter {
             final Class<?> assertionsClass = Class.forName(JUNIT5_ASSERTIONS);
             final Method assertEquals = assertionsClass.getMethod("assertEquals",
                 Object.class, Object.class, String.class);
-            assertEquals.invoke(null, silentRead(files.approved), silentRead(files.received),
+            assertEquals.invoke(null, files.approvedContent(), files.receivedContent(),
                 format("%s differs from %s", files.received, files.approved));
         } catch (final InvocationTargetException e) {
             //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
