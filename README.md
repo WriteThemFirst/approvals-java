@@ -101,24 +101,33 @@ Also, it is written in pure Java and has no additional dependencies.
 
 ## Maven
 
-In your project's `pom.xml`, simply add this dependency:
+In your `pom.xml`, add this dependency:
 
 ```xml
 <dependency>
     <groupId>com.github.writethemfirst</groupId>
     <artifactId>approvals-java</artifactId>
-    <version>0.4</version>
+    <version>0.4.1</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ## Gradle
 
-In your `build.gradle`, simply add this dependency:
+In your `build.gradle`, add this dependency:
 
 ```groovy
-testCompile 'com.github.writethemfirst:approvals-java:0.4'
+testCompile 'com.github.writethemfirst:approvals-java:0.4.1'
 ```
+
+## Sbt (Scala users)
+
+In your `build.sbt`, add this dependency:
+
+```scala
+libraryDependencies += "com.github.writethemfirst" % "approvals-java" % "0.4.1"
+```
+
 
 ## Nightly Builds
 
