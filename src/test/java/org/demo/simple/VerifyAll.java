@@ -37,7 +37,7 @@ class VerifyAll {
 
     @Test
     void verifyAllWith3NamedArguments() {
-        final Approver approvals = new Approver().namedArguments("a", "b", "c").csv();
+        final Approver approvals = new Approver().namedArguments("a", "b", "c");
         approvals.verify(applyCombinations(
             asList(1, 10, 100),
             asList(2, 20, 200),

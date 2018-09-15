@@ -106,7 +106,7 @@ public class Approvals {
      */
     public static <I1> void verifyAllCombinations(final Iterable<I1> args1, final Function1<I1, ?> f) {
         final Approver approver = new Approver();
-        approver.csv().verify(applyCombinations(args1, f));
+        approver.verify(applyCombinations(args1, f));
     }
 
     /**
@@ -147,7 +147,7 @@ public class Approvals {
         final Function2<I1, I2, ?> f) {
 
         final Approver approver = new Approver();
-        approver.csv().verify(applyCombinations(args1, args2, f));
+        approver.verify(applyCombinations(args1, args2, f));
     }
 
     /**
@@ -196,7 +196,7 @@ public class Approvals {
         final Function3<I1, I2, I3, ?> f) {
 
         final Approver approver = new Approver();
-        approver.csv().verify(applyCombinations(args1, args2, args3, f));
+        approver.verify(applyCombinations(args1, args2, args3, f));
     }
 
     /**
@@ -253,7 +253,7 @@ public class Approvals {
         final Function4<I1, I2, I3, I4, ?> f) {
 
         final Approver approver = new Approver();
-        approver.csv().verify(applyCombinations(args1, args2, args3, args4, f));
+        approver.verify(applyCombinations(args1, args2, args3, args4, f));
     }
 
     /**
@@ -315,7 +315,7 @@ public class Approvals {
         final Function5<I1, I2, I3, I4, I5, ?> f) {
 
         final Approver approver = new Approver();
-        approver.csv().verify(applyCombinations(args1, args2, args3, args4, args5, f));
+        approver.verify(applyCombinations(args1, args2, args3, args4, args5, f));
     }
 
     /**

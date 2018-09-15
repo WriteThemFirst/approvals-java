@@ -131,17 +131,8 @@ public class Approver {
     }
 
     /**
-     * Force the extension to be "csv", useful in conjonction with {@link com.github.writethemfirst.approvals.utils.FunctionUtils}.
-     *
-     * @return a copy of this Approver
-     */
-    public Approver csv() {
-        return new Approver(reporter, customFileName, ".csv", testClass, header);
-    }
-
-    /**
      * Specifies a header naming the arguments of the function under test. This header prefixes the *approved* and
-     * *received* CSV files.
+     * *received* files.
      *
      * @param names one name for each argument
      * @return a copy of this Approver
@@ -316,8 +307,8 @@ public class Approver {
     private ApprovalFiles approvedAndReceivedPaths() {
         return build(
             folder,
-            customFileName != null ? customFileName : callerMethodName(),
-            customExtension);
+            customFileName != null ? customFileName : callerMethodName()
+        );
     }
 
 }

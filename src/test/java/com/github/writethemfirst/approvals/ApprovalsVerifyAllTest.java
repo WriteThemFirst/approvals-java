@@ -28,11 +28,11 @@ import static org.mockito.Mockito.mock;
 
 class ApprovalsVerifyAllTest {
     private final Reporter reporter = mock(Reporter.class);
-    private final Approver approver = new Approver().reportTo(reporter).csv();
+    private final Approver approver = new Approver().reportTo(reporter);
 
     @Test
     void shouldReportMismatchWithSingleArgument() {
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithSingleArgument", getClass(), ".csv");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithSingleArgument", getClass());
 
         try {
             final String combinations = applyCombinations(asList(1, 2, 3), x -> x + 1);
@@ -51,7 +51,7 @@ class ApprovalsVerifyAllTest {
 
     @Test
     void shouldReportMismatchWithTwoArguments() {
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithTwoArguments", getClass(), ".csv");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldReportMismatchWithTwoArguments", getClass());
         try {
             final String combinations = applyCombinations(
                 asList(1, 2),
@@ -73,7 +73,7 @@ class ApprovalsVerifyAllTest {
     void shouldReportMismatchWithFiveArguments() {
 
         final SimpleTestUtils testUtils =
-            new SimpleTestUtils("shouldReportMismatchWithFiveArguments", getClass(), ".csv");
+            new SimpleTestUtils("shouldReportMismatchWithFiveArguments", getClass());
 
         try {
             final String combinations = applyCombinations(

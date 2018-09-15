@@ -30,11 +30,11 @@ public class SimpleTestUtils {
     public final Path approved;
     public final ApprovalFiles approvalFiles;
 
-    public SimpleTestUtils(final String methodName, final Class<?> testClass, final String extensionWithDot) {
+    public SimpleTestUtils(final String methodName, final Class<?> testClass) {
         final String className = testClass.getSimpleName();
         final Path packageResourcesPath = get("src/test/resources/", testClass.getPackage().getName().split("\\."));
         final Path folderForClass = packageResourcesPath.resolve(className);
-        approvalFiles = build(folderForClass, methodName, extensionWithDot);
+        approvalFiles = build(folderForClass, methodName);
         received = approvalFiles.received;
         approved = approvalFiles.approved;
     }

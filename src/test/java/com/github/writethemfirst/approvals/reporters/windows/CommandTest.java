@@ -17,7 +17,6 @@
  */
 package com.github.writethemfirst.approvals.reporters.windows;
 
-import com.github.writethemfirst.approvals.reporters.windows.Command;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -39,9 +38,9 @@ import static org.mockito.Mockito.when;
 
 class CommandTest {
     private final String OS_SEPARATOR = FileSystems.getDefault().getSeparator();
-    private String IDEA_8 = "IntelliJ IDEA 2018";
-    private String IDEA_712 = "IntelliJ IDEA 2017.1.2";
-    private String IDEA_73 = "IntelliJ IDEA 2017.3";
+    private final String IDEA_8 = "IntelliJ IDEA 2018";
+    private final String IDEA_712 = "IntelliJ IDEA 2017.1.2";
+    private final String IDEA_73 = "IntelliJ IDEA 2017.3";
 
     @Test
     void shouldExecuteIntelliJ() throws Exception {

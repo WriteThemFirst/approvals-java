@@ -114,15 +114,12 @@ public class ApprovalFiles {
      *
      * @param folder     The folder in which the approval files should be located
      * @param methodName The name of the method calling the test. It is used to actually name the approval files
-     * @param extension  The extension to use for the approval file (by default could be either *approved* or
-     *                   *received*)
      * @return An {@link ApprovalFiles} object, containing the pair of generated *approved* and *received* entries
      */
-    //FIXME: That extension field should be removed or refactored. The String concatenation for the extension is super ugly.
-    public static ApprovalFiles build(final Path folder, final String methodName, final String extension) {
+    public static ApprovalFiles build(final Path folder, final String methodName) {
         return new ApprovalFiles(
-            buildApprovalFilePath(folder, methodName, "approved" + extension),
-            buildApprovalFilePath(folder, methodName, "received" + extension));
+            buildApprovalFilePath(folder, methodName, "approved"),
+            buildApprovalFilePath(folder, methodName, "received"));
     }
 
     /**

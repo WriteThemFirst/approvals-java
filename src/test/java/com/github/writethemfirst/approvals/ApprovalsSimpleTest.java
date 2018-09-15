@@ -35,7 +35,7 @@ class ApprovalsSimpleTest {
     void shouldThrowWhenMismatchAndUsingCommandReporter() {
         final CommandReporter reporter = mock(CommandReporter.class);
         final Approver approver = new Approver().reportTo(reporter);
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldThrowWhenMismatchAndUsingCommandReporter", getClass(), "");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldThrowWhenMismatchAndUsingCommandReporter", getClass());
 
         testUtils.writeApproved("approved text");
 
@@ -48,7 +48,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldDoNothingWhenApprovedFileExistsAndIsCorrect() {
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldDoNothingWhenApprovedFileExistsAndIsCorrect", getClass(), "");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldDoNothingWhenApprovedFileExistsAndIsCorrect", getClass());
         testUtils.writeApproved("some text");
 
         approver.verify("some text");
@@ -59,7 +59,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldFailWhenApprovedFileExistsAndIsDifferent() {
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldFailWhenApprovedFileExistsAndIsDifferent", getClass(), "");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldFailWhenApprovedFileExistsAndIsDifferent", getClass());
         testUtils.writeApproved("expected text");
 
         assertThatThrownBy(() -> approver.verify("actual text"))
@@ -72,7 +72,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldFailWhenApprovedFileDoesNotExist() {
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldFailWhenApprovedFileDoesNotExist", getClass(), "");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldFailWhenApprovedFileDoesNotExist", getClass());
         testUtils.cleanupPaths();
 
         assertThatThrownBy(() -> approver.verify("text"))
@@ -85,7 +85,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldKeepReceivedFileWhenApprovedFileDoesNotExist() {
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldKeepReceivedFileWhenApprovedFileDoesNotExist", getClass(), "");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldKeepReceivedFileWhenApprovedFileDoesNotExist", getClass());
         testUtils.cleanupPaths();
 
         try {
@@ -100,7 +100,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldKeepReceivedFileWhenApprovedFileMismatch() {
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldKeepReceivedFileWhenApprovedFileMismatch", getClass(), "");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldKeepReceivedFileWhenApprovedFileMismatch", getClass());
         testUtils.writeApproved("approved");
 
         try {
@@ -115,7 +115,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldRemoveReceivedFileWhenApprovedFileMatch() {
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldRemoveReceivedFileWhenApprovedFileMatch", getClass(), "");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldRemoveReceivedFileWhenApprovedFileMatch", getClass());
         testUtils.writeReceived("last content");
         testUtils.writeApproved("same");
 
@@ -128,7 +128,7 @@ class ApprovalsSimpleTest {
 
     @Test
     void shouldCreateApprovedFile() {
-        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldCreateApprovedFile", getClass(), "");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldCreateApprovedFile", getClass());
         testUtils.cleanupPaths();
 
         try {
@@ -146,7 +146,7 @@ class ApprovalsSimpleTest {
     void shouldUseSpecificMethodName() {
         final Approver approver = new Approver().writeTo("my scala method").reportTo(new ThrowsReporter());
 
-        final SimpleTestUtils testUtils = new SimpleTestUtils("my_scala_method", getClass(), "");
+        final SimpleTestUtils testUtils = new SimpleTestUtils("my_scala_method", getClass());
         testUtils.cleanupPaths();
 
         try {
