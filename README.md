@@ -263,6 +263,7 @@ public class GildedRoseApprovalTests {
 
 Each file in `output` is checked against the master directory.
 
+
 ## Verify a method with combinations of arguments
 
 This can save you a lot of time instead of manual assertions, and still cover for limit cases
@@ -273,6 +274,9 @@ package com.examples;
 
 import com.github.writethemfirst.approvals.Approvals;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+
 class GildedRoseApprovalTest {
 
     private Approvals approvals = new Approvals();
@@ -280,23 +284,22 @@ class GildedRoseApprovalTest {
     @Test
     void updateQuality_pass_shouldEvolve() {
         approvals.verifyAll(
-            //FIXME: no singleton
-            asList("Backstage passes"),
+            singletonList("Backstage passes"),
             asList(-1, 0, 1, 5, 6, 10, 11),
             asList(-1, 0, 1, 10),
             this::doTest);
     }
 
-    private Item doTest(String name, int sellIn, int quality) {
-        Item[] items = new Item[]{new Item(name, sellIn, quality)};
-        GildedRose app = new GildedRose(items);
+    private Item doTest(final String name, final int sellIn, final int quality) {
+        final Item[] items = new Item[]{new Item(name, sellIn, quality)};
+        final GildedRose app = new GildedRose(items);
         app.updateQuality();
         return app.items[0];
     }
 }
 ```
 
-Each of the 28 combinations of `name`, `sellIn`, `quality` is used to call `doTest(name, sellIn, quality)`.
+Each of the 28 (1x7x4) combinations of `name`, `sellIn`, `quality` is used to call `doTest(name, sellIn, quality)`.
 
 The 28 results are stored in the *received* text file and compared with the *approved* text file, which should look like:
 
@@ -332,7 +335,10 @@ The 28 results are stored in the *received* text file and compared with the *app
 
 # Advanced documentation
 
-If you can't find the information you're searching for in [our documentation](README.md) or in our [code sample](https://github.com/WriteThemFirst/GildedRoseApprovalDemo), then don't hesitate to have a look at our complete [Javadoc](https://www.javadoc.io/doc/com.github.writethemfirst/approvals-java/).
+If you can't find the information you're searching for in [our documentation](README.md) 
+or in our [code sample](https://github.com/WriteThemFirst/GildedRoseApprovalDemo),
+then don't hesitate to have a look at our complete 
+[Javadoc](https://www.javadoc.io/doc/com.github.writethemfirst/approvals-java/).
 
 # Frequently Asked Questions
 
@@ -340,7 +346,8 @@ Don't hesitate to have a quick look at our [Frequently Asked Questions](FAQ.md) 
 
 # Help/Contribute
 
-This project is completely open to any contributions! *(and remember: feedbacks are valuable contributions!)*
+This project is completely open to any contributions! 
+*(and remember: feedback is a valuable contribution!)*
 
 Do not hesitate to:
 
