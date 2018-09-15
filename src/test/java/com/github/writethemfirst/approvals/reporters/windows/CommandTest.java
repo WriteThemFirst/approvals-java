@@ -17,7 +17,10 @@
  */
 package com.github.writethemfirst.approvals.reporters.windows;
 
+import io.github.glytching.junit.extension.folder.TemporaryFolder;
+import io.github.glytching.junit.extension.folder.TemporaryFolderExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.File;
 import java.nio.file.FileSystems;
@@ -31,7 +34,6 @@ import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.createFile;
 import static java.nio.file.Paths.get;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.util.Files.newTemporaryFolder;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -43,8 +45,9 @@ class CommandTest {
     private final String IDEA_73 = "IntelliJ IDEA 2017.3";
 
     @Test
-    void shouldExecuteIntelliJ() throws Exception {
-        final File temp = newTemporaryFolder();
+    @ExtendWith(TemporaryFolderExtension.class)
+    void shouldExecuteIntelliJ(final TemporaryFolder temporaryFolder) throws Exception {
+        final File temp = temporaryFolder.getRoot();
         touchIdeaExe(IDEA_8, temp);
         final Runtime runtime = mock(Runtime.class);
 
@@ -62,8 +65,9 @@ class CommandTest {
     }
 
     @Test
-    void shouldLocateLatestIntelliJ() throws Exception {
-        final File temp = newTemporaryFolder();
+    @ExtendWith(TemporaryFolderExtension.class)
+    void shouldLocateLatestIntelliJ(final TemporaryFolder temporaryFolder) throws Exception {
+        final File temp = temporaryFolder.getRoot();
         touchIdeaExe(IDEA_712, temp);
         touchIdeaExe(IDEA_8, temp);
         touchIdeaExe(IDEA_73, temp);
@@ -81,10 +85,9 @@ class CommandTest {
     }
 
     @Test
-    void shouldLocateIntelliJInProgramFiles() throws Exception {
-        //Temp folder and environment variables
-        //Can be mocked more neatly with https://github.com/glytching/junit-extensions
-        final File temp = newTemporaryFolder();
+    @ExtendWith(TemporaryFolderExtension.class)
+    void shouldLocateIntelliJInProgramFiles(final TemporaryFolder temporaryFolder) throws Exception {
+        final File temp = temporaryFolder.getRoot();
         touchIdeaExe(IDEA_8, temp);
         final Map<String, String> mockedEnv = mock(Map.class);
         when(mockedEnv.get(WINDOWS_ENV_PROGRAM_FILES)).thenReturn(temp.getAbsolutePath());
@@ -97,10 +100,9 @@ class CommandTest {
     }
 
     @Test
-    void shouldLocateExeInProgramFilesX86() throws Exception {
-        //Temp folder and environment variables
-        //Can be mocked more neatly with https://github.com/glytching/junit-extensions
-        final File temp = newTemporaryFolder();
+    @ExtendWith(TemporaryFolderExtension.class)
+    void shouldLocateExeInProgramFilesX86(final TemporaryFolder temporaryFolder) throws Exception {
+        final File temp = temporaryFolder.getRoot();
         touchIdeaExe(IDEA_8, temp);
         final Map<String, String> mockedEnv = mock(Map.class);
         when(mockedEnv.get(WINDOWS_ENV_PROGRAM_FILES_X86)).thenReturn(temp.getAbsolutePath());
@@ -119,8 +121,9 @@ class CommandTest {
     }
 
     @Test
-    void shouldNotLocateIntelliJ() {
-        final File temp = newTemporaryFolder();
+    @ExtendWith(TemporaryFolderExtension.class)
+    void shouldNotLocateIntelliJ(final TemporaryFolder temporaryFolder) {
+        final File temp = temporaryFolder.getRoot();
         final Command command = new Command(temp.toString(), "idea64.exe");
 
         final Optional<String> latestExe = command.pathToLatestExe();
