@@ -109,8 +109,8 @@ public class ApprovalFiles {
     }
 
     /**
-     * Builds a pair of approval entries from the provided folder, method name, and extension. The path for both
-     * *approved* and *received* files will be computed and used as approval files.
+     * Builds a pair of approval entries from the provided folder and method name. The path for both *approved* and
+     * *received* files will be computed and used as approval files.
      *
      * @param folder     The folder in which the approval files should be located
      * @param methodName The name of the method calling the test. It is used to actually name the approval files
