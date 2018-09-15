@@ -87,25 +87,20 @@ class CommandTest {
     @Test
     @ExtendWith(TemporaryFolderExtension.class)
     void shouldLocateIntelliJInProgramFiles(final TemporaryFolder temporaryFolder) throws Exception {
-        final File temp = temporaryFolder.getRoot();
-        touchIdeaExe(IDEA_8, temp);
-        final Map<String, String> mockedEnv = mock(Map.class);
-        when(mockedEnv.get(WINDOWS_ENV_PROGRAM_FILES)).thenReturn(temp.getAbsolutePath());
-
-        final Command command = new Command(PROGRAM_FILES_KEY, "idea64.exe", mock(Runtime.class), mockedEnv);
-
-        final boolean available = command.isAvailable();
-
-        assertThat(available).isTrue();
+        checkLocateExeInProgramFiles(temporaryFolder, WINDOWS_ENV_PROGRAM_FILES);
     }
 
     @Test
     @ExtendWith(TemporaryFolderExtension.class)
     void shouldLocateExeInProgramFilesX86(final TemporaryFolder temporaryFolder) throws Exception {
+        checkLocateExeInProgramFiles(temporaryFolder, WINDOWS_ENV_PROGRAM_FILES_X86);
+    }
+
+    private void checkLocateExeInProgramFiles(final TemporaryFolder temporaryFolder, final String environmentKey) throws Exception {
         final File temp = temporaryFolder.getRoot();
         touchIdeaExe(IDEA_8, temp);
         final Map<String, String> mockedEnv = mock(Map.class);
-        when(mockedEnv.get(WINDOWS_ENV_PROGRAM_FILES_X86)).thenReturn(temp.getAbsolutePath());
+        when(mockedEnv.get(environmentKey)).thenReturn(temp.getAbsolutePath());
 
         final Command command = new Command(PROGRAM_FILES_KEY, "idea64.exe", mock(Runtime.class), mockedEnv);
 

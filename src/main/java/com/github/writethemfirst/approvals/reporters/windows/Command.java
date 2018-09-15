@@ -40,10 +40,9 @@ public class Command {
     private static final int MAX_FOLDERS_DEPTH = 5;
     static String WINDOWS_ENV_PROGRAM_FILES = "ProgramFiles";
     static String WINDOWS_ENV_PROGRAM_FILES_X86 = "ProgramFiles(x86)";
-    public static final String PROGRAM_FILES_KEY = "%programFiles%";
+    static final String PROGRAM_FILES_KEY = "%programFiles%";
 
     private final Runtime runtime;
-    private final Map<String, String> env;
 
     private final String path;
     private final String executable;
@@ -66,7 +65,6 @@ public class Command {
         this.path = path;
         this.executable = executable;
         this.runtime = runtime;
-        this.env = env;
         programFilesFolder = env.get(WINDOWS_ENV_PROGRAM_FILES);
         programFilesX86Folder = env.get(WINDOWS_ENV_PROGRAM_FILES_X86);
 
