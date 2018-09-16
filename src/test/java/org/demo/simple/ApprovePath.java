@@ -26,9 +26,8 @@ import static com.github.writethemfirst.approvals.Approvals.verify;
 class ApprovePath {
 
     @Test
-    void verifySingleFile() {
+    void verifySingleFileWithLineFeed() {
         verify(Paths.get("changelog.sh"));
     }
-
 
 }

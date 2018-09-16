@@ -18,8 +18,11 @@
 
 package com.github.writethemfirst.approvals.files;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 
+import static com.github.writethemfirst.approvals.utils.FileUtils.createParentDirectories;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 import static java.lang.String.format;
 
@@ -77,6 +80,23 @@ public class ApprovedAndReceived {
     public boolean haveSameContent() {
         return receivedContent().equals(approvedContent());
     }
+
+    /**
+     * Creates an empty approval file if it doesn't exist yet. If it already exists, that method does nothing.
+     */
+    public void createEmptyApprovedFileIfNeeded() {
+        final File file = approved.toFile();
+        if (!file.exists()) {
+            try {
+                createParentDirectories(approved);
+                //noinspection ResultOfMethodCallIgnored
+                file.createNewFile();
+            } catch (final IOException e) {
+                throw new RuntimeException(format("Can't create an empty file at <%s>.", file), e);
+            }
+        }
+    }
+
 
     /**
      * Builds the path to an approval file from the folder, method name, and extension to use.

@@ -17,15 +17,7 @@
  */
 package com.github.writethemfirst.approvals.files;
 
-import com.github.writethemfirst.approvals.utils.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
-
-import static com.github.writethemfirst.approvals.utils.FileUtils.createParentDirectories;
-import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
-import static java.lang.String.format;
 
 /**
  * # ApprovalFiles
@@ -45,28 +37,14 @@ import static java.lang.String.format;
  */
 public class ApprovalFiles extends ApprovedAndReceived {
 
-    private final boolean approvedWasEmpty;
-
     /**
      * Constructs an ApprovalFiles instance for a pair of *approved* and *received* entries.
      *
      * @param approved         An *approved* entry (can be either a file or a folder)
      * @param received         A *received* entry (can be either a file or a folder)
-     * @param approvedWasEmpty remembers if the approved file existed before approbation
-     */
-    private ApprovalFiles(final Path approved, final Path received, final boolean approvedWasEmpty) {
-        super(approved, received);
-        this.approvedWasEmpty = approvedWasEmpty;
-    }
-
-    /**
-     * Constructs an ApprovalFiles instance for a pair of *approved* and *received* entries.
-     *
-     * @param approved An *approved* entry (can be either a file or a folder)
-     * @param received A *received* entry (can be either a file or a folder)
      */
     public ApprovalFiles(final Path approved, final Path received) {
-        this(approved, received, false);
+        super(approved, received);
     }
 
     /**
@@ -78,43 +56,6 @@ public class ApprovalFiles extends ApprovedAndReceived {
      */
     public ApprovalFiles(final Path folder, final String methodName) {
         super(folder, methodName);
-        approvedWasEmpty = false;
     }
-
-
-    /**
-     * Creates a default approval file if it doesn't exist yet, with received content. If it already exists, that method
-     * does nothing.
-     */
-    public void createApprovedFileIfNeeded() {
-        if (approvedWasEmpty) {
-            FileUtils.copy(received, approved);
-        }
-    }
-
-    /**
-     * Creates an empty approval file if it doesn't exist yet. If it already exists, that method does nothing.
-     */
-    public ApprovalFiles createEmptyApprovedFileIfNeeded() {
-        final File file = approved.toFile();
-        if (!file.exists()) {
-            try {
-                createParentDirectories(approved);
-                //noinspection ResultOfMethodCallIgnored
-                file.createNewFile();
-                return new ApprovalFiles(approved, received, true);
-            } catch (final IOException e) {
-                throw new RuntimeException(format("Can't create an empty file at <%s>.", file), e);
-            }
-        } else {
-            return this;
-        }
-    }
-
-    @Override
-    public String approvedContent() {
-        return approvedWasEmpty ? "" : silentRead(approved);
-    }
-
 
 }

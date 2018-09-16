@@ -23,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.copyToFolder;
@@ -43,11 +42,6 @@ public class ApprovalFolders extends ApprovedAndReceived {
         super(folder, methodName);
     }
 
-    public List<ApprovalFiles> createEmptyApprovedFilesIfNeeded() {
-        return listFiles(approved).map(this::matchApprovedFile)
-            .map(ApprovalFiles::createEmptyApprovedFileIfNeeded)
-            .collect(Collectors.toList());
-    }
 
     /**
      * Appends to the approved and received paths the name of a file.

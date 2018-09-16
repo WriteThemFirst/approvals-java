@@ -137,7 +137,7 @@ class ApprovalsSimpleTest {
             //expected
         }
 
-        assertThat(testUtils.approved).exists().hasContent("new content");
+        assertThat(testUtils.approved).exists().hasContent("");
 
         testUtils.cleanupPaths();
     }

@@ -25,7 +25,6 @@ import com.github.writethemfirst.approvals.files.MatchesAndMismatches;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 
 import java.nio.file.Path;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
@@ -220,14 +219,12 @@ public class Approver {
     private void verifyFolderContent(final Path actualFolder) {
         final ApprovalFolders approvalFolders = approvedAndReceivedPathsForFolder();
         approvalFolders.prepareFolders(actualFolder);
-        final List<ApprovalFiles> childrenWithApproved = approvalFolders.createEmptyApprovedFilesIfNeeded();
         final MatchesAndMismatches matchesAndMismatches = approvalFolders.matchesAndMismatches();
 
         matchesAndMismatches.cleanupReceivedFiles(approvalFolders);
         try {
             matchesAndMismatches.throwMismatches();
         } finally {
-            childrenWithApproved.forEach(ApprovalFiles::createApprovedFileIfNeeded);
             if (matchesAndMismatches.hasSeveralMismatches()) {
                 reporter.mismatch(approvalFolders);
             } else {
@@ -241,13 +238,9 @@ public class Approver {
         if (files.haveSameContent()) {
             silentRemove(files.received);
         } else {
-            final ApprovalFiles withApproved = files.createEmptyApprovedFileIfNeeded();
-            try {
-                reporter.mismatch(files);
-                new ThrowsReporter().mismatch(files);
-            } finally {
-                withApproved.createApprovedFileIfNeeded();
-            }
+            files.createEmptyApprovedFileIfNeeded();
+            reporter.mismatch(files);
+            new ThrowsReporter().mismatch(files);
         }
     }
 
