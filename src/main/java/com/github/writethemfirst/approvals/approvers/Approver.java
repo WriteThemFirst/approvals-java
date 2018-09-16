@@ -25,13 +25,13 @@ import com.github.writethemfirst.approvals.files.MatchesAndMismatches;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 
 import java.nio.file.Path;
-import java.util.stream.Collectors;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
 import static java.nio.file.Paths.get;
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 
 /**
  * # Approvals
@@ -134,7 +134,7 @@ public class Approver {
      * @return a copy of this Approver
      */
     public Approver namedArguments(final String... names) {
-        return header(stream(names).collect(Collectors.joining(
+        return header(stream(names).collect(joining(
             ", ",
             "result, ",
             "\n"
@@ -167,9 +167,9 @@ public class Approver {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     public void verify(final Object output) {
-        final ApprovalFiles files = approvedAndReceivedPaths();
-        writeReceivedFile(output, files);
-        verifyImpl(files);
+        final ApprovalFiles approvalFiles = approvedAndReceivedPaths();
+        writeReceivedFile(output, approvalFiles);
+        verifySimpleFile(approvalFiles);
     }
 
 
@@ -191,11 +191,13 @@ public class Approver {
      */
     public void verify(final Path output) {
         if (output.toFile().isDirectory()) {
-            verifyFolderContent(output);
+            final ApprovalFolders approvalFolders = approvedAndReceivedPathsForFolder();
+            approvalFolders.prepareFolders(output);
+            verifyFolderContent(approvalFolders);
         } else {
             final ApprovalFiles files = approvedAndReceivedPathsForFolder(output);
             copy(output, files.received);
-            verifyImpl(files);
+            verifySimpleFile(files);
         }
     }
 
@@ -210,24 +212,19 @@ public class Approver {
      * In case of differences found in the output, the {@link Reporter} linked to this `Approvals` instance will be
      * called ({@link Reporter#mismatch(ApprovalFiles)}) for each mismatched file.
      *
-     * @param actualFolder the folder containing the output of your program. It will be compared to the associated
-     *                     *approved* folder
      * @throws AssertionError   if the {@link Reporter} implementation relies on standard assertions provided by a
      *                          framework like JUnit
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
-    private void verifyFolderContent(final Path actualFolder) {
-        final ApprovalFolders approvalFolders = approvedAndReceivedPathsForFolder();
-        approvalFolders.prepareFolders(actualFolder);
+    private void verifyFolderContent(final ApprovalFolders approvalFolders) {
         final MatchesAndMismatches matchesAndMismatches = approvalFolders.matchesAndMismatches();
-
         matchesAndMismatches.cleanupReceivedFiles();
         matchesAndMismatches.reportMismatches(reporter);
         matchesAndMismatches.throwMismatches();
     }
 
 
-    private void verifyImpl(final ApprovalFiles files) {
+    private void verifySimpleFile(final ApprovalFiles files) {
         if (files.haveSameContent()) {
             silentRemove(files.received);
         } else {
