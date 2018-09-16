@@ -22,13 +22,10 @@ import com.github.writethemfirst.approvals.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 
-import static com.github.writethemfirst.approvals.utils.FileUtils.*;
+import static com.github.writethemfirst.approvals.utils.FileUtils.createParentDirectories;
+import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 import static java.lang.String.format;
-import static java.util.stream.Collectors.partitioningBy;
 
 /**
  * # ApprovalFiles
@@ -95,18 +92,6 @@ public class ApprovalFiles {
         this(approved, received, false);
     }
 
-    /**
-     * Appends to the approved and received paths the name of a file.
-     *
-     * @param file the Path for which only the name is taken into account
-     * @return an ApprovalsFile, on step deeper
-     */
-    public ApprovalFiles resolve(final Path file) {
-        final Path fileName = file.getFileName();
-        return new ApprovalFiles(
-            approved.resolve(fileName),
-            received.resolve(fileName));
-    }
 
     /**
      * Builds a pair of approval entries from the provided folder and method name. The path for both *approved* and
@@ -120,18 +105,6 @@ public class ApprovalFiles {
         return new ApprovalFiles(
             buildApprovalFilePath(folder, methodName, "approved"),
             buildApprovalFilePath(folder, methodName, "received"));
-    }
-
-    /**
-     * Compares the content of files in *approved* and *received* folders (only makes sense if *approved* and *received*
-     * are folders).
-     *
-     * @return the 2 lists of matches (files with same content) and mismatches (different files)
-     */
-    public MatchesAndMismatches matchesAndMismatches() {
-        final Map<Boolean, List<ApprovalFiles>> matchesAndMismatches = listChildrenApprovalFiles()
-            .collect(partitioningBy(ApprovalFiles::haveSameContent));
-        return new MatchesAndMismatches(matchesAndMismatches.get(true), matchesAndMismatches.get(false));
     }
 
 
@@ -181,94 +154,18 @@ public class ApprovalFiles {
      *                   *received*)
      * @return The path to the approval file computed from all the specified information
      */
-    private static Path buildApprovalFilePath(final Path folder, final String methodName, final String extension) {
+    static Path buildApprovalFilePath(final Path folder, final String methodName, final String extension) {
         return folder.resolve(format("%s.%s", methodName.replaceAll(" ", "_"), extension));
     }
 
-    /**
-     * Checks if approved and received are directories or regular *approved* and *received* files.
-     *
-     * @return true if both approved and received are simple files
-     */
-    private boolean areRegularFiles() {
-        return approved.toFile().isFile() && received.toFile().isFile();
-    }
 
     /**
-     * If approved and received are directories, this method allows to create a new {@link ApprovalFiles} object which
-     * associates to an already known *approved* file a resolved *received* file. That *received* file will be searched
-     * for in the received folder by resolving the relative path found from the *approved* file.
-     *
-     * It allows to go from a found *approved* file to a pair of both *approved* and *received* file.
-     *
-     * If approved or received are not directories (which is checked with areRegularFiles), this current instance of
-     * {@link ApprovalFiles} will be returned.
-     *
-     * @param approvedFile The *approved* file we already know and for which we want to associate a *received* file
-     * @return An {@link ApprovalFiles} instance containing both the *approved* and matching *received* file
-     */
-    private ApprovalFiles associateMatchingReceivedFile(final Path approvedFile) {
-        return areRegularFiles()
-            ? this
-            : new ApprovalFiles(approvedFile, changeRoot(approvedFile, approved, received));
-    }
-
-
-    /**
-     * If approved and received are directories, this method allows to create a new {@link ApprovalFiles} object which
-     * associates to an already known *received* file a resolved *approved* file. That *approved* file will be searched
-     * for in the approved folder by resolving the relative path found from the *received* file.
-     *
-     * It allows to go from a found *received* file to a pair of both *approved* and *received* file.
-     *
-     * If approved or received are not directories (which is checked with areRegularFiles), this current instance of
-     * {@link ApprovalFiles} will be returned.
-     *
-     * @param receivedFile The *received* file we already know and for which we want to associate a *approved* file
-     * @return An {@link ApprovalFiles} instance containing both the *approved* and matching *received* file
-     */
-    private ApprovalFiles associateMatchingApprovedFile(final Path receivedFile) {
-        return areRegularFiles()
-            ? this
-            : new ApprovalFiles(changeRoot(receivedFile, received, approved), receivedFile);
-    }
-
-    private Path changeRoot(final Path file, final Path initialRoot, final Path newRoot) {
-        return newRoot.resolve(initialRoot.relativize(file));
-    }
-
-    /**
-     * If approved and received are regular files, this method will check if both files have the same content (by
-     * reading them and comparing the data afterwards).
-     *
-     * If approved and received actually are folders, this method will simply return false.
-     *
-     * @return True if approved and received are regular files and have the same content
+     * Checks if both files have the same content (by reading them and comparing the data afterwards).
      */
     public boolean haveSameContent() {
-        return areRegularFiles() && receivedContent().equals(approvedContent());
+        return receivedContent().equals(approvedContent());
     }
 
-    /**
-     * If approved and received actually are folders (which can be the case while using the folder approval features),
-     * this method allows to list all the children approval files from those folders.
-     *
-     * It'll basically read all the files from the approved folder, all the files from the received folder, associate
-     * the matching approved and received files for each of those, and of course filter the duplicates. This gives us a
-     * complete list of all approval files in the end.
-     *
-     * In case that function is called when approved or received are not folders, it'll simply return an empty stream.
-     *
-     * @return A Stream containing all the pairs of approval files for the approved and received folders.
-     */
-    public Stream<ApprovalFiles> listChildrenApprovalFiles() {
-        if (areRegularFiles())
-            return Stream.empty();
-        return Stream.concat(
-            listFiles(approved).map(this::associateMatchingReceivedFile),
-            listFiles(received).map(this::associateMatchingApprovedFile)
-        ).distinct();
-    }
 
     /**
      * **Overriding equals to allow filtering of duplicates.**
@@ -279,7 +176,7 @@ public class ApprovalFiles {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ApprovalFiles)) return false;
 
         final ApprovalFiles that = (ApprovalFiles) o;
 

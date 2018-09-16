@@ -17,13 +17,12 @@
  */
 package com.github.writethemfirst.approvals.testutils;
 
-import com.github.writethemfirst.approvals.files.ApprovalFiles;
+import com.github.writethemfirst.approvals.files.ApprovalFolders;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static com.github.writethemfirst.approvals.files.ApprovalFiles.build;
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static java.nio.file.Paths.get;
 
@@ -31,13 +30,13 @@ public class FolderTestUtils {
     public final Path received;
     public final Path approved;
     public final Path actual;
-    public final ApprovalFiles approvalFiles;
+    public final ApprovalFolders approvalFiles;
 
     public FolderTestUtils(final String methodName, final Class<?> testClass) throws IOException {
         final String className = testClass.getSimpleName();
         final Path packageResourcesPath = get("src/test/resources/", testClass.getPackage().getName().split("\\."));
         final Path folderForClass = packageResourcesPath.resolve(className);
-        approvalFiles = build(folderForClass, methodName);
+        approvalFiles = ApprovalFolders.build(folderForClass, methodName);
         received = approvalFiles.received;
         approved = approvalFiles.approved;
         actual = Files.createTempDirectory(methodName);

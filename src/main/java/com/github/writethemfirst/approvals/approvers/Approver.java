@@ -20,17 +20,14 @@ package com.github.writethemfirst.approvals.approvers;
 import com.github.writethemfirst.approvals.Approvals;
 import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.files.ApprovalFiles;
+import com.github.writethemfirst.approvals.files.ApprovalFolders;
 import com.github.writethemfirst.approvals.files.MatchesAndMismatches;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
-import com.github.writethemfirst.approvals.utils.FileUtils;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.github.writethemfirst.approvals.files.ApprovalFiles.build;
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
@@ -197,11 +194,12 @@ public class Approver {
         if (output.toFile().isDirectory()) {
             verifyFolderContent(output);
         } else {
-            final ApprovalFiles files = approvedAndReceivedPaths().resolve(output);
+            final ApprovalFolders files = approvedAndReceivedPathsForFolder(output);
             copy(output, files.received);
             verifyImpl(files);
         }
     }
+
 
     /**
      * Compares the actual output of your program (files in the folder `actualFolder`) and the content of the *approved*
@@ -220,41 +218,24 @@ public class Approver {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     private void verifyFolderContent(final Path actualFolder) {
-        final ApprovalFiles approvalFiles = approvedAndReceivedPaths();
-        prepareFolders(actualFolder, approvalFiles);
-        final List<ApprovalFiles> childrenApprovalFiles = approvalFiles.listChildrenApprovalFiles().collect(Collectors.toList());
-        final List<ApprovalFiles> childrenWithApproved = childrenApprovalFiles
-            .stream()
-            .map(ApprovalFiles::createEmptyApprovedFileIfNeeded)
-            .collect(Collectors.toList());
+        final ApprovalFolders approvalFolders = approvedAndReceivedPathsForFolder();
+        approvalFolders.prepareFolders(actualFolder);
+        final List<ApprovalFiles> childrenWithApproved = approvalFolders.createEmptyApprovedFilesIfNeeded();
+        final MatchesAndMismatches matchesAndMismatches = approvalFolders.matchesAndMismatches();
 
-        final MatchesAndMismatches matchesAndMismatches = approvalFiles.matchesAndMismatches();
-
-        matchesAndMismatches.cleanupReceivedFiles(approvalFiles);
+        matchesAndMismatches.cleanupReceivedFiles(approvalFolders);
         try {
             matchesAndMismatches.throwMismatches();
         } finally {
             childrenWithApproved.forEach(ApprovalFiles::createApprovedFileIfNeeded);
             if (matchesAndMismatches.hasSeveralMismatches()) {
-                reporter.mismatch(approvalFiles);
+                reporter.mismatch(approvalFolders);
             } else {
                 matchesAndMismatches.reportMismatches(reporter);
             }
         }
     }
 
-
-    /**
-     * Copies files from *actual* to *received* folder, and creates missing *approved* files.
-     */
-    private void prepareFolders(final Path actualFolder, final ApprovalFiles approvalFiles) {
-        try {
-            Files.createDirectories(approvalFiles.approved);
-        } catch (final IOException e) {
-            throw new RuntimeException("could not create *approved* folder " + approvalFiles.approved, e);
-        }
-        listFiles(actualFolder).forEach(p -> FileUtils.copyToFolder(p, approvalFiles.received));
-    }
 
     private void verifyImpl(final ApprovalFiles files) {
         if (files.haveSameContent()) {
@@ -304,11 +285,23 @@ public class Approver {
         return callerMethod(testClass).orElse("unknown_method");
     }
 
-    private ApprovalFiles approvedAndReceivedPaths() {
-        return build(
+    private ApprovalFolders approvedAndReceivedPathsForFolder(final Path output) {
+        return approvedAndReceivedPathsForFolder().resolve(output);
+    }
+
+    private ApprovalFolders approvedAndReceivedPathsForFolder() {
+        return ApprovalFolders.build(
             folder,
             customFileName != null ? customFileName : callerMethodName()
         );
     }
+
+    private ApprovalFiles approvedAndReceivedPaths() {
+        return ApprovalFiles.build(
+            folder,
+            customFileName != null ? customFileName : callerMethodName()
+        );
+    }
+
 
 }
