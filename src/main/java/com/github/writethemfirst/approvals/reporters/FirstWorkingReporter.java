@@ -18,9 +18,8 @@
 package com.github.writethemfirst.approvals.reporters;
 
 import com.github.writethemfirst.approvals.Reporter;
-import com.github.writethemfirst.approvals.files.ApprovalFiles;
+import com.github.writethemfirst.approvals.files.ApprovedAndReceived;
 
-import java.nio.file.Path;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -69,9 +68,10 @@ public class FirstWorkingReporter implements Reporter {
      *
      * Since the {@link FirstWorkingReporter} is usually used as a fallback reporter, in case no first working reporter
      * can be found and a mismatch is raised, a log entry will be written in System.err.
+     * @param files
      */
      @Override
-    public void mismatch(final ApprovalFiles files) {
+     public void mismatch(final ApprovedAndReceived files) {
         if (firstWorking().isPresent()) {
             firstWorking().get().mismatch(files);
         } else {

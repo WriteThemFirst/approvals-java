@@ -18,12 +18,11 @@
 package com.github.writethemfirst.approvals.reporters;
 
 import com.github.writethemfirst.approvals.Reporter;
-import com.github.writethemfirst.approvals.files.ApprovalFiles;
+import com.github.writethemfirst.approvals.files.ApprovedAndReceived;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 import static java.lang.String.format;
 
 /**
@@ -47,7 +46,7 @@ public class JUnit5Reporter implements Reporter {
     private final String JUNIT5_ASSERTIONS = "org.junit.jupiter.api.Assertions";
 
     @Override
-    public void mismatch(final ApprovalFiles files) {
+    public void mismatch(final ApprovedAndReceived files) {
         try {
             final Class<?> assertionsClass = Class.forName(JUNIT5_ASSERTIONS);
             final Method assertEquals = assertionsClass.getMethod("assertEquals",

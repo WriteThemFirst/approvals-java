@@ -26,11 +26,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.github.writethemfirst.approvals.files.ApprovalFiles.buildApprovalFilePath;
 import static com.github.writethemfirst.approvals.utils.FileUtils.copyToFolder;
 import static com.github.writethemfirst.approvals.utils.FileUtils.listFiles;
 import static java.util.stream.Collectors.partitioningBy;
 
-public class ApprovalFolders extends ApprovalFiles {
+public class ApprovalFolders extends ApprovedAndReceived {
     /**
      * Constructs an ApprovalFolders instance for a pair of *approved* and *received* folders..
      *
@@ -65,11 +66,11 @@ public class ApprovalFolders extends ApprovalFiles {
      * Appends to the approved and received paths the name of a file.
      *
      * @param file the Path for which only the name is taken into account
-     * @return an ApprovalsFile, on step deeper
+     * @return an ApprovalsFile, one step deeper
      */
-    public ApprovalFolders resolve(final Path file) {
+    public ApprovalFiles resolve(final Path file) {
         final Path fileName = file.getFileName();
-        return new ApprovalFolders(
+        return new ApprovalFiles(
             approved.resolve(fileName),
             received.resolve(fileName));
     }

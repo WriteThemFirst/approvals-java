@@ -18,7 +18,7 @@
 package com.github.writethemfirst.approvals.reporters.windows;
 
 import com.github.writethemfirst.approvals.Reporter;
-import com.github.writethemfirst.approvals.files.ApprovalFiles;
+import com.github.writethemfirst.approvals.files.ApprovedAndReceived;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -51,7 +51,7 @@ public class CommandReporter implements Reporter {
     }
 
     @Override
-    public void mismatch(final ApprovalFiles files) {
+    public void mismatch(final ApprovedAndReceived files) {
         if (command.isAvailable()) {
             try {
                 command.execute(actualArguments(files.approved, files.received));

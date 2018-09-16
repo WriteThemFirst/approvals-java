@@ -159,7 +159,7 @@ public class Approver {
      * results are matching. Otherwise, it will be kept for you to review it.
      *
      * In case of differences found in the output, the {@link Reporter} linked to this `Approvals` instance will be
-     * called ({@link Reporter#mismatch(ApprovalFiles)} ).
+     * called ({@link Reporter#mismatch(com.github.writethemfirst.approvals.files.ApprovedAndReceived)} ).
      *
      * @param output Any object with a {@link Object#toString()} representation containing the output of your program.
      *               It will be compared to the associated *approved* file.
@@ -182,7 +182,7 @@ public class Approver {
      * in case the results are matching. Otherwise, it will be kept for you to review it.
      *
      * In case of differences found in the output, the {@link Reporter} linked to this `Approvals` instance will be
-     * called ({@link Reporter#mismatch(ApprovalFiles)} ).
+     * called ({@link Reporter#mismatch(com.github.writethemfirst.approvals.files.ApprovedAndReceived)} ).
      *
      * @param output a {@link Path} containing the output of your program. It will be compared to the associated
      *               *approved* file.
@@ -194,7 +194,7 @@ public class Approver {
         if (output.toFile().isDirectory()) {
             verifyFolderContent(output);
         } else {
-            final ApprovalFolders files = approvedAndReceivedPathsForFolder(output);
+            final ApprovalFiles files = approvedAndReceivedPathsForFolder(output);
             copy(output, files.received);
             verifyImpl(files);
         }
@@ -209,7 +209,7 @@ public class Approver {
      * will be erased in case the results are matching. Otherwise, they will be kept for you to review it.
      *
      * In case of differences found in the output, the {@link Reporter} linked to this `Approvals` instance will be
-     * called ({@link Reporter#mismatch(ApprovalFiles)}) for each mismatched file.
+     * called ({@link Reporter#mismatch(com.github.writethemfirst.approvals.files.ApprovedAndReceived)}) for each mismatched file.
      *
      * @param actualFolder the folder containing the output of your program. It will be compared to the associated
      *                     *approved* folder
@@ -285,7 +285,7 @@ public class Approver {
         return callerMethod(testClass).orElse("unknown_method");
     }
 
-    private ApprovalFolders approvedAndReceivedPathsForFolder(final Path output) {
+    private ApprovalFiles approvedAndReceivedPathsForFolder(final Path output) {
         return approvedAndReceivedPathsForFolder().resolve(output);
     }
 
