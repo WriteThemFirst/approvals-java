@@ -18,7 +18,7 @@
 package com.github.writethemfirst.approvals.reporters;
 
 import com.github.writethemfirst.approvals.Reporter;
-import com.github.writethemfirst.approvals.files.ApprovedAndReceived;
+import com.github.writethemfirst.approvals.files.ApprovalFiles;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -46,7 +46,7 @@ public class JUnit5Reporter implements Reporter {
     private final String JUNIT5_ASSERTIONS = "org.junit.jupiter.api.Assertions";
 
     @Override
-    public void mismatch(final ApprovedAndReceived files) {
+    public void mismatch(final ApprovalFiles files) {
         try {
             final Class<?> assertionsClass = Class.forName(JUNIT5_ASSERTIONS);
             final Method assertEquals = assertionsClass.getMethod("assertEquals",

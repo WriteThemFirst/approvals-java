@@ -50,10 +50,10 @@ public class MatchesAndMismatches {
         mismatches.forEach(mismatch -> new ThrowsReporter().mismatch(mismatch));
     }
 
-    public void cleanupReceivedFiles(final ApprovedAndReceived approvedAndReceived) {
+    public void cleanupReceivedFiles(final ApprovalFiles approvalFiles) {
         matches.forEach(ar -> silentRemove(ar.received));
         if (mismatches.isEmpty()) {
-            silentRecursiveRemove(approvedAndReceived.received);
+            silentRecursiveRemove(approvalFiles.received);
         }
     }
 }

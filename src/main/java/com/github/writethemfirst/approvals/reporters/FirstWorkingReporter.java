@@ -18,7 +18,7 @@
 package com.github.writethemfirst.approvals.reporters;
 
 import com.github.writethemfirst.approvals.Reporter;
-import com.github.writethemfirst.approvals.files.ApprovedAndReceived;
+import com.github.writethemfirst.approvals.files.ApprovalFiles;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -71,7 +71,7 @@ public class FirstWorkingReporter implements Reporter {
      * @param files
      */
      @Override
-     public void mismatch(final ApprovedAndReceived files) {
+     public void mismatch(final ApprovalFiles files) {
         if (firstWorking().isPresent()) {
             firstWorking().get().mismatch(files);
         } else {

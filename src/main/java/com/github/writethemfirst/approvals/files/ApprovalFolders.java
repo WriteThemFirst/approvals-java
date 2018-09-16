@@ -29,7 +29,12 @@ import static com.github.writethemfirst.approvals.utils.FileUtils.copyToFolder;
 import static com.github.writethemfirst.approvals.utils.FileUtils.listFiles;
 import static java.util.stream.Collectors.partitioningBy;
 
-public class ApprovalFolders extends ApprovedAndReceived {
+/**
+ * ApprovalFolders is similar to ApprovalFiles : it holds a pair of {@link Path}s, *approved* and *received*.
+ *
+ * The difference is that these paths represents folders we are comparing.
+ */
+public class ApprovalFolders extends ApprovalFiles {
 
     /**
      * Constructs a pair of approval entries from the provided folder and method name. The path for both *approved* and
