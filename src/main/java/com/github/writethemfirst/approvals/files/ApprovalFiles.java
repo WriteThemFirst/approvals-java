@@ -208,12 +208,11 @@ public class ApprovalFiles {
      * @return An {@link ApprovalFiles} instance containing both the *approved* and matching *received* file
      */
     private ApprovalFiles associateMatchingReceivedFile(final Path approvedFile) {
-        if (areRegularFiles())
-            return this;
-        final Path approvedRelativePath = approved.relativize(approvedFile);
-        final Path receivedFile = received.resolve(approvedRelativePath);
-        return new ApprovalFiles(approvedFile, receivedFile);
+        return areRegularFiles()
+            ? this
+            : new ApprovalFiles(approvedFile, changeRoot(approvedFile, approved, received));
     }
+
 
     /**
      * If approved and received are directories, this method allows to create a new {@link ApprovalFiles} object which
@@ -229,11 +228,13 @@ public class ApprovalFiles {
      * @return An {@link ApprovalFiles} instance containing both the *approved* and matching *received* file
      */
     private ApprovalFiles associateMatchingApprovedFile(final Path receivedFile) {
-        if (areRegularFiles())
-            return this;
-        final Path receivedRelativePath = received.relativize(receivedFile);
-        final Path approvedFile = approved.resolve(receivedRelativePath);
-        return new ApprovalFiles(approvedFile, receivedFile);
+        return areRegularFiles()
+            ? this
+            : new ApprovalFiles(changeRoot(receivedFile, received, approved), receivedFile);
+    }
+
+    private Path changeRoot(final Path file, final Path initialRoot, final Path newRoot) {
+        return newRoot.resolve(initialRoot.relativize(file));
     }
 
     /**
