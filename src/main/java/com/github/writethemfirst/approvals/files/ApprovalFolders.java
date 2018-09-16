@@ -47,6 +47,10 @@ public class ApprovalFolders extends ApprovalFiles {
         super(folder, methodName);
     }
 
+    ApprovalFolders(final Path approved, final Path received) {
+        super(approved, received);
+    }
+
 
     /**
      * Appends to the approved and received paths the name of a file.
@@ -62,7 +66,7 @@ public class ApprovalFolders extends ApprovalFiles {
     }
 
     /**
-     * Copies files from *actual* to *received* folder.
+     * Creates the *approved* folder and copies files from *actual* to *received* folder.
      */
     public void prepareFolders(final Path actualFolder) {
         try {

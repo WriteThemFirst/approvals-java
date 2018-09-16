@@ -113,6 +113,10 @@ public class ApprovalFiles {
         }
     }
 
+    public ApprovalFolders parent() {
+        return new ApprovalFolders(approved.getParent(), received.getParent());
+    }
+
 
     /**
      * Builds the path to an approval file from the folder, method name, and extension to use.

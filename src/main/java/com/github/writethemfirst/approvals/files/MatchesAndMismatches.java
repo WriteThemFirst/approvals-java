@@ -39,21 +39,25 @@ public class MatchesAndMismatches {
     }
 
     public void reportMismatches(final Reporter reporter) {
-        mismatches.forEach(reporter::mismatch);
-    }
-
-    public boolean hasSeveralMismatches() {
-        return mismatches.size() > 1;
+        if (mismatches.size() > 0) {
+            final ApprovalFiles firstMismatch = mismatches.get(0);
+            if (mismatches.size() > 1) {
+                reporter.mismatch(firstMismatch.parent());
+            } else {
+                reporter.mismatch(firstMismatch);
+            }
+        }
     }
 
     public void throwMismatches() {
         mismatches.forEach(mismatch -> new ThrowsReporter().mismatch(mismatch));
     }
 
-    public void cleanupReceivedFiles(final ApprovalFiles approvalFiles) {
+    public void cleanupReceivedFiles() {
         matches.forEach(ar -> silentRemove(ar.received));
-        if (mismatches.isEmpty()) {
-            silentRecursiveRemove(approvalFiles.received);
+        if (mismatches.isEmpty() && !matches.isEmpty()) {
+            final ApprovalFiles firstMatch = matches.get(0);
+            silentRecursiveRemove(firstMatch.parent().received);
         }
     }
 }

@@ -221,16 +221,9 @@ public class Approver {
         approvalFolders.prepareFolders(actualFolder);
         final MatchesAndMismatches matchesAndMismatches = approvalFolders.matchesAndMismatches();
 
-        matchesAndMismatches.cleanupReceivedFiles(approvalFolders);
-        try {
-            matchesAndMismatches.throwMismatches();
-        } finally {
-            if (matchesAndMismatches.hasSeveralMismatches()) {
-                reporter.mismatch(approvalFolders);
-            } else {
-                matchesAndMismatches.reportMismatches(reporter);
-            }
-        }
+        matchesAndMismatches.cleanupReceivedFiles();
+        matchesAndMismatches.reportMismatches(reporter);
+        matchesAndMismatches.throwMismatches();
     }
 
 
