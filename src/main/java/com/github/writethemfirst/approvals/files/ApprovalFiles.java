@@ -186,9 +186,9 @@ public class ApprovalFiles {
     }
 
     /**
-     * Checks if approved and received are directories and not regular *approved* and *received* files.
+     * Checks if approved and received are directories or regular *approved* and *received* files.
      *
-     * @return true if both approved and received are directories
+     * @return true if both approved and received are simple files
      */
     private boolean areRegularFiles() {
         return approved.toFile().isFile() && received.toFile().isFile();
