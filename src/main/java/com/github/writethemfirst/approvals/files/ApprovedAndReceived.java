@@ -21,6 +21,7 @@ package com.github.writethemfirst.approvals.files;
 import java.nio.file.Path;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
+import static java.lang.String.format;
 
 public class ApprovedAndReceived {
     /**
@@ -28,26 +29,39 @@ public class ApprovedAndReceived {
      *
      * This entry can contain:
      *
-     * - A single *approved* file in case of a simple approval, - An *approved* folder buildApprovalFilePath in case of
-     * a folder approval, - A reference to a simple file located in an *approved* folder, to be used for later
-     * comparison
+     * - A single *approved* file in case of a simple approval, - An *approved* folder approvalFilePath in case of a
+     * folder approval, - A reference to a simple file located in an *approved* folder, to be used for later comparison
      */
     public final Path approved;
+
     /**
      * Path to an *received* entry.
      *
      * This entry can contain:
      *
-     * - A single *received* file in case of a simple approval, - An *received* folder buildApprovalFilePath in case of
-     * a folder approval, - A reference to a simple file located in an *received* folder, to be used for later
-     * comparison
+     * - A single *received* file in case of a simple approval, - An *received* folder approvalFilePath in case of a
+     * folder approval, - A reference to a simple file located in an *received* folder, to be used for later comparison
      */
     public final Path received;
+
+    /**
+     * Constructs a pair of approval entries from the provided folder and method name. The path for both *approved* and
+     * *received* files will be computed and used as approval files.
+     *
+     * @param folder     The folder in which the approval files will be located
+     * @param methodName The name of the method calling the test. It is used to actually name the approval files
+     */
+    public ApprovedAndReceived(final Path folder, final String methodName) {
+        this(
+            approvalFilePath(folder, methodName, "approved"),
+            approvalFilePath(folder, methodName, "received"));
+    }
 
     public ApprovedAndReceived(final Path approved, final Path received) {
         this.approved = approved;
         this.received = received;
     }
+
 
     public String approvedContent() {
         return silentRead(approved);
@@ -62,6 +76,19 @@ public class ApprovedAndReceived {
      */
     public boolean haveSameContent() {
         return receivedContent().equals(approvedContent());
+    }
+
+    /**
+     * Builds the path to an approval file from the folder, method name, and extension to use.
+     *
+     * @param folder     The folder in which the approval file will be searched for
+     * @param methodName The name of the method calling the test. It is used to actually name the approval files
+     * @param extension  The extension to use for the approval file (by default could be either *approved* or
+     *                   *received*)
+     * @return The path to the approval file computed from all the specified information
+     */
+    private static Path approvalFilePath(final Path folder, final String methodName, final String extension) {
+        return folder.resolve(format("%s.%s", methodName.replaceAll(" ", "_"), extension));
     }
 
     /**

@@ -69,19 +69,16 @@ public class ApprovalFiles extends ApprovedAndReceived {
         this(approved, received, false);
     }
 
-
     /**
-     * Builds a pair of approval entries from the provided folder and method name. The path for both *approved* and
+     * Constructs a pair of approval entries from the provided folder and method name. The path for both *approved* and
      * *received* files will be computed and used as approval files.
      *
      * @param folder     The folder in which the approval files should be located
      * @param methodName The name of the method calling the test. It is used to actually name the approval files
-     * @return An {@link ApprovalFiles} object, containing the pair of generated *approved* and *received* entries
      */
-    public static ApprovalFiles build(final Path folder, final String methodName) {
-        return new ApprovalFiles(
-            buildApprovalFilePath(folder, methodName, "approved"),
-            buildApprovalFilePath(folder, methodName, "received"));
+    public ApprovalFiles(final Path folder, final String methodName) {
+        super(folder, methodName);
+        approvedWasEmpty = false;
     }
 
 
@@ -117,19 +114,6 @@ public class ApprovalFiles extends ApprovedAndReceived {
     @Override
     public String approvedContent() {
         return approvedWasEmpty ? "" : silentRead(approved);
-    }
-
-    /**
-     * Builds and retrieves the path to an approval file from the folder, method name, and extension to use.
-     *
-     * @param folder     The folder in which the approval file will be searched for
-     * @param methodName The name of the method calling the test. It is used to actually name the approval files
-     * @param extension  The extension to use for the approval file (by default could be either *approved* or
-     *                   *received*)
-     * @return The path to the approval file computed from all the specified information
-     */
-    static Path buildApprovalFilePath(final Path folder, final String methodName, final String extension) {
-        return folder.resolve(format("%s.%s", methodName.replaceAll(" ", "_"), extension));
     }
 
 

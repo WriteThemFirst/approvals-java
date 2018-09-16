@@ -26,34 +26,21 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.github.writethemfirst.approvals.files.ApprovalFiles.buildApprovalFilePath;
 import static com.github.writethemfirst.approvals.utils.FileUtils.copyToFolder;
 import static com.github.writethemfirst.approvals.utils.FileUtils.listFiles;
 import static java.util.stream.Collectors.partitioningBy;
 
 public class ApprovalFolders extends ApprovedAndReceived {
-    /**
-     * Constructs an ApprovalFolders instance for a pair of *approved* and *received* folders..
-     *
-     * @param approved An *approved* folder
-     * @param received A *received* folder
-     */
-    private ApprovalFolders(final Path approved, final Path received) {
-        super(approved, received);
-    }
 
     /**
-     * Builds a pair of approval entries from the provided folder and method name. The path for both *approved* and
+     * Constructs a pair of approval entries from the provided folder and method name. The path for both *approved* and
      * *received* files will be computed and used as approval files.
      *
      * @param folder     The folder in which the approval files will be located
      * @param methodName The name of the method calling the test. It is used to actually name the approval files
-     * @return An {@link ApprovalFolders} object, containing the pair of generated *approved* and *received* entries
      */
-    public static ApprovalFolders build(final Path folder, final String methodName) {
-        return new ApprovalFolders(
-            buildApprovalFilePath(folder, methodName, "approved"),
-            buildApprovalFilePath(folder, methodName, "received"));
+    public ApprovalFolders(final Path folder, final String methodName) {
+        super(folder, methodName);
     }
 
     public List<ApprovalFiles> createEmptyApprovedFilesIfNeeded() {

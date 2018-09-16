@@ -290,17 +290,13 @@ public class Approver {
     }
 
     private ApprovalFolders approvedAndReceivedPathsForFolder() {
-        return ApprovalFolders.build(
-            folder,
-            customFileName != null ? customFileName : callerMethodName()
-        );
+        final String methodName = customFileName != null ? customFileName : callerMethodName();
+        return new ApprovalFolders(folder, methodName);
     }
 
     private ApprovalFiles approvedAndReceivedPaths() {
-        return ApprovalFiles.build(
-            folder,
-            customFileName != null ? customFileName : callerMethodName()
-        );
+        final String methodName = customFileName != null ? customFileName : callerMethodName();
+        return new ApprovalFiles(folder, methodName);
     }
 
 

@@ -21,7 +21,6 @@ import com.github.writethemfirst.approvals.files.ApprovalFiles;
 
 import java.nio.file.Path;
 
-import static com.github.writethemfirst.approvals.files.ApprovalFiles.build;
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static java.nio.file.Paths.get;
 
@@ -34,7 +33,7 @@ public class SimpleTestUtils {
         final String className = testClass.getSimpleName();
         final Path packageResourcesPath = get("src/test/resources/", testClass.getPackage().getName().split("\\."));
         final Path folderForClass = packageResourcesPath.resolve(className);
-        approvalFiles = build(folderForClass, methodName);
+        approvalFiles = new ApprovalFiles(folderForClass, methodName);
         received = approvalFiles.received;
         approved = approvalFiles.approved;
     }
