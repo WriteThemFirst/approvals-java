@@ -22,6 +22,7 @@ import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
 import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.reporters.linux.Linux;
+import com.github.writethemfirst.approvals.reporters.linux.MacOs;
 import com.github.writethemfirst.approvals.reporters.windows.Windows;
 import com.github.writethemfirst.approvals.utils.OSUtils;
 
@@ -52,6 +53,8 @@ public interface Reporter {
         ? Windows.DEFAULT
         : OSUtils.isLinux
         ? Linux.DEFAULT
+        : OSUtils.isMacOs
+        ? MacOs.DEFAULT
         : new FirstWorkingReporter(new JUnit5Reporter(), new ThrowsReporter());
 
     /**

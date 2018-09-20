@@ -33,12 +33,17 @@ public class OSUtils {
     /**
      * The Operating System full name retrieved from the system properties.
      */
-    private static final String OPERATING_SYSTEM = System.getProperty("os.name");
+    static final String OPERATING_SYSTEM = System.getProperty("os.name");
 
     /**
      * Indicates if the current operating system is included in the Windows Family (all versions included).
      */
     public static boolean isWindows = OPERATING_SYSTEM.startsWith("Windows");
+
+    /**
+     * Indicates if the current operating system is included in the Mac OS Family (all versions included).
+     */
+    public static boolean isMacOs = OPERATING_SYSTEM.toLowerCase().startsWith("mac");
 
     /**
      * Indicates if the current operating system is included in the Linux Family (all distributions / versions included).

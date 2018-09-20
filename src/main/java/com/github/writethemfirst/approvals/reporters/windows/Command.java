@@ -17,14 +17,18 @@
  */
 package com.github.writethemfirst.approvals.reporters.windows;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.Runtime.getRuntime;
+import static java.lang.String.join;
 import static java.lang.System.getenv;
 import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
 import static java.nio.file.Paths.get;
@@ -78,6 +82,7 @@ public class Command {
             of(pathToLatestExe().get()),
             stream(arguments))
             .toArray(String[]::new);
+        System.out.printf("Running command [%s]%n", join(" ", cmdArray));
         runtime.exec(cmdArray);
     }
 

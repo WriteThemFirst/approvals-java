@@ -54,7 +54,7 @@ public class CommandReporter implements Reporter {
     public void mismatch(final ApprovalFiles files) {
         if (command.isAvailable()) {
             try {
-                command.execute(actualArguments(files.approved, files.received));
+                command.execute(actualArguments(files.approved.toAbsolutePath(), files.received.toAbsolutePath()));
             } catch (final IOException e) {
                 throw new RuntimeException(e);
             }
