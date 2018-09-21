@@ -40,8 +40,14 @@ public interface MacOs {
         "idea"),
         "diff %received% %approved%");
 
+    Reporter IDEA_COMMUNITY = new CommandReporter(new Command(
+        "/Applications/IdeaIC.app/Contents/MacOS",
+        "idea"),
+        "diff %received% %approved%");
+
     Reporter DEFAULT = new FirstWorkingReporter(
         IDEA_ULTIMATE,
+        IDEA_COMMUNITY,
         KDIFF,
         new JUnit5Reporter(),
         new ThrowsReporter());
