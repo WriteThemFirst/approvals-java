@@ -83,7 +83,12 @@ public class Command {
             stream(arguments))
             .toArray(String[]::new);
         System.out.printf("Running command [%s]%n", join(" ", cmdArray));
-        runtime.exec(cmdArray);
+
+        try {
+            runtime.exec(cmdArray).waitFor();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
