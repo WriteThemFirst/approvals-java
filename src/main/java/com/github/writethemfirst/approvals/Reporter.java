@@ -20,11 +20,8 @@ package com.github.writethemfirst.approvals;
 import com.github.writethemfirst.approvals.files.ApprovalFiles;
 import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
 import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
+import com.github.writethemfirst.approvals.reporters.SupportedOs;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
-import com.github.writethemfirst.approvals.reporters.linux.Linux;
-import com.github.writethemfirst.approvals.reporters.linux.MacOs;
-import com.github.writethemfirst.approvals.reporters.windows.Windows;
-import com.github.writethemfirst.approvals.utils.OSUtils;
 
 /**
  * # Reporter
@@ -47,15 +44,13 @@ public interface Reporter {
     /**
      * Global property allowing to retrieve the default reporter for the current execution context.
      *
-     * Careful, that default reporter is completely dependent on the execution context (OS, classpath, etc.)
+     * Careful, that default reporter is completely dependent on the execution context (OS, classpath, etc.).
+     *
+     * If no native supported diff or merge tool is found (this happens in CI for instance), it falls back to throwing
+     * exceptions.
      */
-    Reporter DEFAULT = OSUtils.isWindows
-        ? Windows.DEFAULT
-        : OSUtils.isLinux
-        ? Linux.DEFAULT
-        : OSUtils.isMacOs
-        ? MacOs.DEFAULT
-        : new FirstWorkingReporter(new JUnit5Reporter(), new ThrowsReporter());
+    Reporter DEFAULT = SupportedOs.osDefaultReporter()
+        .orElse(new FirstWorkingReporter(new JUnit5Reporter(), new ThrowsReporter()));
 
     /**
      * A `Reporter` is called whenever a difference is found while comparing the output of a *Program Under Tests* and

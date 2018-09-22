@@ -18,11 +18,12 @@
 
 package com.github.writethemfirst.approvals.utils;
 
+import com.github.writethemfirst.approvals.reporters.SupportedOs;
+
 class OSUtilsTest {
-    public static void main(String[] args) {
-        System.out.println(OSUtils.OPERATING_SYSTEM);
-        System.out.println(OSUtils.isLinux);
-        System.out.println(OSUtils.isWindows);
-        System.out.println(OSUtils.isMacOs);
+    public static void main(final String[] args) {
+        for (final SupportedOs os : SupportedOs.values()) {
+            System.out.printf("%s %s%n", os, os.active);
+        }
     }
 }

@@ -35,8 +35,7 @@ import static java.nio.file.Files.createFile;
 import static java.nio.file.Paths.get;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class CommandTest {
     private final String OS_SEPARATOR = FileSystems.getDefault().getSeparator();
@@ -50,6 +49,7 @@ class CommandTest {
         final File temp = temporaryFolder.getRoot();
         touchIdeaExe(IDEA_8, temp);
         final Runtime runtime = mock(Runtime.class);
+        when(runtime.exec(any(String[].class))).thenReturn(mock(Process.class));
 
 
         final Command command = new Command(
