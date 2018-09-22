@@ -17,8 +17,6 @@
  */
 package com.github.writethemfirst.approvals.utils;
 
-import com.github.writethemfirst.approvals.files.ApprovalFiles;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -120,7 +118,7 @@ public class FileUtils {
      */
     public static void write(final String content, final Path file) {
         createParentDirectories(file);
-        try (BufferedWriter writer = newBufferedWriter(file)) {
+        try (final BufferedWriter writer = newBufferedWriter(file)) {
             writer.write(content);
         } catch (final IOException e) {
             final String message = format("Can't write the file located at <%s> because of <%s>.",

@@ -56,7 +56,7 @@ public class JUnit5Reporter implements Reporter {
         } catch (final InvocationTargetException e) {
             //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
             throw (AssertionError) e.getCause();
-        } catch (NoSuchMethodException | IllegalAccessException | ClassNotFoundException e) {
+        } catch (final NoSuchMethodException | IllegalAccessException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

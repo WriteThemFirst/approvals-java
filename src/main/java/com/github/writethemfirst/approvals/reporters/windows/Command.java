@@ -17,14 +17,11 @@
  */
 package com.github.writethemfirst.approvals.reporters.windows;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.Runtime.getRuntime;
@@ -86,7 +83,7 @@ public class Command {
 
         try {
             runtime.exec(cmdArray).waitFor();
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
