@@ -30,8 +30,8 @@
     <a href='http://hits.dwyl.io/WriteThemFirst/approvals-java'>
         <img src='http://hits.dwyl.io/WriteThemFirst/approvals-java.svg' />
     </a>
-    <a href='https://github.com/WriteThemFirst/approvals-java/tree/v0.5.0'>
-        <img src='https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/v0.5.0.svg' />
+    <a href='https://github.com/WriteThemFirst/approvals-java/tree/v0.5.1'>
+        <img src='https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/v0.5.1.svg' />
     </a>
     <a href='https://github.com/WriteThemFirst/approvals-java/issues/'>
         <img src='https://img.shields.io/github/issues/WriteThemFirst/approvals-java.svg' />
@@ -107,7 +107,7 @@ In your `pom.xml`, add this dependency:
 <dependency>
     <groupId>com.github.writethemfirst</groupId>
     <artifactId>approvals-java</artifactId>
-    <version>0.5.0</version>
+    <version>0.5.1</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -117,7 +117,7 @@ In your `pom.xml`, add this dependency:
 In your `build.gradle`, add this dependency:
 
 ```groovy
-testCompile 'com.github.writethemfirst:approvals-java:0.5.0'
+testCompile 'com.github.writethemfirst:approvals-java:0.5.1'
 ```
 
 ## Sbt (Scala users)
@@ -125,7 +125,7 @@ testCompile 'com.github.writethemfirst:approvals-java:0.5.0'
 In your `build.sbt`, add this dependency:
 
 ```scala
-libraryDependencies += "com.github.writethemfirst" % "approvals-java" % "0.5.0"
+libraryDependencies += "com.github.writethemfirst" % "approvals-java" % "0.5.1"
 ```
 
 
@@ -152,7 +152,7 @@ And then you can simply rely on the latest `SNAPSHOT`:
 <dependency>
     <groupId>com.github.writethemfirst</groupId>
     <artifactId>approvals-java</artifactId>
-    <version>0.5.1-SNAPSHOT</version>
+    <version>0.5.2-SNAPSHOT</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -335,9 +335,9 @@ The 28 results are stored in the *received* text file and compared with the *app
 
 # Advanced documentation
 
-If you can't find the information you're searching for in [our documentation](README.md) 
+If you can't find the information you're searching for in [our documentation](README.md)
 or in our [code sample](https://github.com/WriteThemFirst/GildedRoseApprovalDemo),
-then don't hesitate to have a look at our complete 
+then don't hesitate to have a look at our complete
 [Javadoc](https://www.javadoc.io/doc/com.github.writethemfirst/approvals-java/).
 
 # Frequently Asked Questions
@@ -346,7 +346,7 @@ Don't hesitate to have a quick look at our [Frequently Asked Questions](FAQ.md) 
 
 # Help/Contribute
 
-This project is completely open to any contributions! 
+This project is completely open to any contributions!
 *(and remember: feedback is a valuable contribution!)*
 
 Do not hesitate to:
