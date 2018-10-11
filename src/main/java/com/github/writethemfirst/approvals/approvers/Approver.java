@@ -145,10 +145,6 @@ public class Approver {
         return new Approver(reporter, customFileName, customExtension, testClass, headerWithLineFeed);
     }
 
-    private void writeReceivedFile(final Object output, final ApprovalFiles files) {
-        write(header + output, files.received);
-    }
-
 
     /**
      * Compares the actual output of your program (the function's argument) and the content of the *approved* file
@@ -168,8 +164,19 @@ public class Approver {
      */
     public void verify(final Object output) {
         final ApprovalFiles approvalFiles = approvedAndReceivedPaths();
-        writeReceivedFile(output, approvalFiles);
-        verifySimpleFile(approvalFiles);
+        final String expected = header + output;
+        verifyImpl(approvalFiles, expected);
+    }
+
+    private void verifyImpl(final ApprovalFiles approvalFiles, final String expected) {
+        if (approvalFiles.approvedContent().equals(expected)) {
+            silentRemove(approvalFiles.received);
+        } else {
+            write(expected, approvalFiles.received);
+            approvalFiles.createEmptyApprovedFileIfNeeded();
+            reporter.mismatch(approvalFiles);
+            new ThrowsReporter().mismatch(approvalFiles);
+        }
     }
 
 
@@ -195,9 +202,7 @@ public class Approver {
             approvalFolders.prepareFolders(output);
             verifyFolderContent(approvalFolders);
         } else {
-            final ApprovalFiles files = approvedAndReceivedPathsForFolder(output);
-            copy(output, files.received);
-            verifySimpleFile(files);
+            verifyImpl(approvedAndReceivedPathsForFolder(output), silentRead(output));
         }
     }
 
@@ -221,17 +226,6 @@ public class Approver {
         matchesAndMismatches.cleanupReceivedFiles();
         matchesAndMismatches.reportMismatches(reporter);
         matchesAndMismatches.throwMismatches();
-    }
-
-
-    private void verifySimpleFile(final ApprovalFiles files) {
-        if (files.haveSameContent()) {
-            silentRemove(files.received);
-        } else {
-            files.createEmptyApprovedFileIfNeeded();
-            reporter.mismatch(files);
-            new ThrowsReporter().mismatch(files);
-        }
     }
 
 
