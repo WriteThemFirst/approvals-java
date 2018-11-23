@@ -172,7 +172,9 @@ public class Approver {
         if (approvalFiles.approvedContent().equals(expected)) {
             silentRemove(approvalFiles.received);
         } else {
-            write(expected, approvalFiles.received);
+            if (!approvalFiles.receivedContent().equals(expected)) {
+                write(expected, approvalFiles.received);
+            }
             approvalFiles.createEmptyApprovedFileIfNeeded();
             reporter.mismatch(approvalFiles);
             new ThrowsReporter().mismatch(approvalFiles);
