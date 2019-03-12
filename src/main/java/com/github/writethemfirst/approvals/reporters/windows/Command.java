@@ -110,10 +110,16 @@ public class Command {
     private Optional<String> searchForExe() {
         final Stream<Path> programFilesFolders = concat(replaced(programFilesFolder), replaced(programFilesX86Folder));
         final Stream<Path> possiblePaths = concat(programFilesFolders, notReplaced());
-        return possiblePaths
-            .flatMap(this::matchingCommandInPath)
-            .map(Path::toString)
-            .max(naturalOrder());
+        try {
+            return possiblePaths
+                .flatMap(this::matchingCommandInPath)
+                .map(Path::toString)
+                .max(naturalOrder());
+        } catch (final Exception e) {
+            // can occur when there is a file system loop, see https://bugs.openjdk.java.net/browse/JDK-8039910
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
 
     private Stream<Path> matchingCommandInPath(final Path possiblePath) {
@@ -123,8 +129,8 @@ public class Command {
                 MAX_FOLDERS_DEPTH,
                 (p, a) -> p.endsWith(executable),
                 FOLLOW_LINKS);
-        } catch (final IOException e) {
-            System.err.println(e);
+        } catch (IOException e) {
+            e.printStackTrace();
             return Stream.empty();
         }
     }

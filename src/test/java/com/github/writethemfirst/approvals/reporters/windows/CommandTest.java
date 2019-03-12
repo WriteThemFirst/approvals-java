@@ -24,6 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.File;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
@@ -81,6 +82,24 @@ class CommandTest {
         final String expectedPath = "JetBrains" + OS_SEPARATOR + IDEA_8 + OS_SEPARATOR + "bin" + OS_SEPARATOR + "idea64.exe";
         assertThat(pathToExe.get()).endsWith(expectedPath);
         assertThat(available).isTrue();
+
+    }
+
+    // see also https://bugs.openjdk.java.net/browse/JDK-8039910
+    @Test
+    @ExtendWith(TemporaryFolderExtension.class)
+    void shouldIgnoreFileSystemLoop(final TemporaryFolder temporaryFolder) throws Exception {
+        final File temp = temporaryFolder.getRoot();
+        final Path sub = get(temp.toString(), "sub");
+        createDirectories(sub);
+        Files.createSymbolicLink(sub.resolve("sub"), sub);
+        final Command command = new Command(
+            temp + OS_SEPARATOR + "sub",
+            "idea64.exe");
+
+        final boolean available = command.isAvailable();
+
+        assertThat(available).isFalse();
 
     }
 
