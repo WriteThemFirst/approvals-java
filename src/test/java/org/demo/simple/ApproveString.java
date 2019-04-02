@@ -25,7 +25,7 @@ class ApproveString {
 
     @Test
     void verifySimpleString() {
-        verify("my string");
+        verify("my string ² and ³");
     }
 
     @Test
