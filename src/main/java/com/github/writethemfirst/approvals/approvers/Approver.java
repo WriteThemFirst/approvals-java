@@ -25,6 +25,7 @@ import com.github.writethemfirst.approvals.files.MatchesAndMismatches;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
@@ -77,17 +78,19 @@ public class Approver {
         this(Reporter.DEFAULT,
             null,
             "",
+            folderForClass(callerClass(Approver.class, Approvals.class)),
             callerClass(Approver.class, Approvals.class),
             "");
     }
 
     /**
-     * Protected constructor used by the "copy" methods.
+     * Private constructor used by the "copy" methods.
      */
     private Approver(
         final Reporter reporter,
         final String customFileName,
         final String customExtension,
+        final Path folder,
         final Class<?> testClass,
         final String header) {
 
@@ -95,7 +98,7 @@ public class Approver {
         this.customFileName = customFileName;
         this.customExtension = customExtension;
         this.testClass = testClass;
-        this.folder = folderForClass(testClass);
+        this.folder = folder;
         this.header = header;
     }
 
@@ -105,7 +108,7 @@ public class Approver {
      * @return a copy of this Approver
      */
     public Approver reportTo(final Reporter reporter) {
-        return new Approver(reporter, customFileName, customExtension, testClass, header);
+        return new Approver(reporter, customFileName, customExtension, folder, testClass, header);
     }
 
     /**
@@ -114,7 +117,7 @@ public class Approver {
      * @return a copy of this Approver
      */
     public Approver writeTo(final String customFileName) {
-        return new Approver(reporter, customFileName, customExtension, testClass, header);
+        return new Approver(reporter, customFileName, customExtension, folder, testClass, header);
     }
 
     /**
@@ -123,7 +126,16 @@ public class Approver {
      * @return a copy of this Approver
      */
     public Approver testing(final Class<?> testClass) {
-        return new Approver(reporter, customFileName, customExtension, testClass, header);
+        return new Approver(reporter, customFileName, customExtension, folder, testClass, header);
+    }
+
+    /**
+     * Specifies the folder name to store *approved* and *received* files.
+     *
+     * @return a copy of this Approver
+     */
+    public Approver writeToFolder(final String folder) {
+        return new Approver(reporter, customFileName, customExtension, Paths.get(folder), testClass, header);
     }
 
     /**
@@ -142,7 +154,7 @@ public class Approver {
     }
 
     private Approver header(final String headerWithLineFeed) {
-        return new Approver(reporter, customFileName, customExtension, testClass, headerWithLineFeed);
+        return new Approver(reporter, customFileName, customExtension, folder, testClass, headerWithLineFeed);
     }
 
 

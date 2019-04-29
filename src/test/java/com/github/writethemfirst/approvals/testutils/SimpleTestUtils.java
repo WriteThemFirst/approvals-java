@@ -30,9 +30,13 @@ public class SimpleTestUtils {
     public final ApprovalFiles approvalFiles;
 
     public SimpleTestUtils(final String methodName, final Class<?> testClass) {
-        final String className = testClass.getSimpleName();
-        final Path packageResourcesPath = get("src/test/resources/", testClass.getPackage().getName().split("\\."));
-        final Path folderForClass = packageResourcesPath.resolve(className);
+        this(
+            methodName,
+            get("src/test/resources/", testClass.getPackage().getName().split("\\.")).resolve(testClass.getSimpleName()).toString());
+    }
+
+    public SimpleTestUtils(final String methodName, final String testFolder) {
+        final Path folderForClass = get(testFolder);
         approvalFiles = new ApprovalFiles(folderForClass, methodName);
         received = approvalFiles.received;
         approved = approvalFiles.approved;

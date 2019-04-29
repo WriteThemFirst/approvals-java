@@ -21,6 +21,7 @@ import com.github.writethemfirst.approvals.approvers.Approver;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.reporters.windows.CommandReporter;
 import com.github.writethemfirst.approvals.testutils.SimpleTestUtils;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -147,6 +148,24 @@ class ApprovalsSimpleTest {
         final Approver approver = new Approver().writeTo("my scala method").reportTo(new ThrowsReporter());
 
         final SimpleTestUtils testUtils = new SimpleTestUtils("my_scala_method", getClass());
+        testUtils.cleanupPaths();
+
+        try {
+            approver.verify("new content");
+        } catch (final AssertionError e) {
+            //expected
+        }
+
+        assertThat(testUtils.received).hasContent("new content");
+
+        testUtils.cleanupPaths();
+    }
+
+    @Test
+    void shouldUseSpecifiedFolder() {
+        final Approver approver = new Approver().writeToFolder("src/test/resources/custom folder").writeTo("my ruby method").reportTo(new ThrowsReporter());
+
+        final SimpleTestUtils testUtils = new SimpleTestUtils("my ruby method", "src/test/resources/custom folder");
         testUtils.cleanupPaths();
 
         try {
