@@ -126,7 +126,7 @@ public class Approver {
      * @return a copy of this Approver
      */
     public Approver testing(final Class<?> testClass) {
-        return new Approver(reporter, customFileName, customExtension, folder, testClass, header);
+        return new Approver(reporter, customFileName, customExtension, folderForClass(testClass), testClass, header);
     }
 
     /**
