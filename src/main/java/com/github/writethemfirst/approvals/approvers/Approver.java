@@ -257,7 +257,7 @@ public class Approver {
     private static Path folderForClass(final Class<?> testClass) {
         final String packageName = testClass.getPackage().getName();
         final Path packageResourcesPath = get("src/test/resources/", packageName.split("\\."));
-        return packageResourcesPath.resolve(testClass.getSimpleName());
+        return packageResourcesPath.resolve(testClass.getSimpleName() + ".files");
     }
 
 

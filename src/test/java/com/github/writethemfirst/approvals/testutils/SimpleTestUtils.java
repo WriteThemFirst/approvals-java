@@ -32,7 +32,7 @@ public class SimpleTestUtils {
     public SimpleTestUtils(final String methodName, final Class<?> testClass) {
         this(
             methodName,
-            get("src/test/resources/", testClass.getPackage().getName().split("\\.")).resolve(testClass.getSimpleName()).toString());
+            get("src/test/resources/", testClass.getPackage().getName().split("\\.")).resolve(testClass.getSimpleName()) + ".files");
     }
 
     public SimpleTestUtils(final String methodName, final String testFolder) {

@@ -35,7 +35,7 @@ public class FolderTestUtils {
     public FolderTestUtils(final String methodName, final Class<?> testClass) throws IOException {
         final String className = testClass.getSimpleName();
         final Path packageResourcesPath = get("src/test/resources/", testClass.getPackage().getName().split("\\."));
-        final Path folderForClass = packageResourcesPath.resolve(className);
+        final Path folderForClass = packageResourcesPath.resolve(className + ".files");
         approvalFiles = new ApprovalFolders(folderForClass, methodName);
         received = approvalFiles.received;
         approved = approvalFiles.approved;
