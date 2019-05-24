@@ -18,7 +18,10 @@
 package com.github.writethemfirst.approvals.reporters.windows;
 
 import com.github.writethemfirst.approvals.Reporter;
-import com.github.writethemfirst.approvals.reporters.*;
+import com.github.writethemfirst.approvals.reporters.CommandReporter;
+import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
+import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
+import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.CommandFinder;
 
 
@@ -27,7 +30,7 @@ import com.github.writethemfirst.approvals.utils.CommandFinder;
  */
 public interface Windows {
 
-    Reporter IDEA = new CommandReporter(new CommandFinder(
+    CommandReporter IDEA = new CommandReporter(new CommandFinder(
         "%programFiles%\\JetBrains",
         "idea64.exe"),
         "diff %received% %approved%");
@@ -35,7 +38,7 @@ public interface Windows {
     /**
      * Download KDiff3 from https://sourceforge.net/projects/kdiff3/files/
      */
-    Reporter KDIFF = new CommandReporter(new CommandFinder(
+    CommandReporter KDIFF = new CommandReporter(new CommandFinder(
         "%programFiles%\\KDiff3",
         "kdiff3.exe"),
         "%received% %approved% -o %approved%");
@@ -43,7 +46,7 @@ public interface Windows {
     /**
      * Download GVim from http://www.vim.org/download.php
      */
-    Reporter GVIM = new CommandReporter(new CommandFinder(
+    CommandReporter GVIM = new CommandReporter(new CommandFinder(
         "%programFiles%\\Vim",
         "gvim.exe"),
         "-d %approved% %received% %received%");
@@ -51,27 +54,27 @@ public interface Windows {
     /**
      * Download TortoiseSVN from https://tortoisesvn.net/downloads.html
      */
-    Reporter TORTOISE_SVN = new CommandReporter(new CommandFinder(
+    CommandReporter TORTOISE_SVN = new CommandReporter(new CommandFinder(
         "%programFiles%\\TortoiseSVN",
         "TortoiseMerge.exe"));
 
-    Reporter BEYOND_COMPARE_3 = new CommandReporter(new CommandFinder(
+    CommandReporter BEYOND_COMPARE_3 = new CommandReporter(new CommandFinder(
         "%programFiles%\\Beyond Compare 3",
         "BCompare.exe"));
 
-    Reporter BEYOND_COMPARE_4 = new CommandReporter(new CommandFinder(
+    CommandReporter BEYOND_COMPARE_4 = new CommandReporter(new CommandFinder(
         "%programFiles%\\Beyond Compare 3",
         "BCompare.exe"));
 
-    Reporter WINMERGE = new CommandReporter(new CommandFinder(
+    CommandReporter WINMERGE = new CommandReporter(new CommandFinder(
         "%programFiles%\\WinMerge",
         "WinMergeU.exe"));
 
-    Reporter ARAXIS = new CommandReporter(new CommandFinder(
+    CommandReporter ARAXIS = new CommandReporter(new CommandFinder(
         "%programFiles%\\Araxis",
         "Compare.exe"));
 
-    Reporter CODE_COMPARE = new CommandReporter(new CommandFinder(
+    CommandReporter CODE_COMPARE = new CommandReporter(new CommandFinder(
         "%programFiles%\\Devart",
         "CodeCompare.exe"),
         "%received% %approved%");

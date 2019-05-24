@@ -31,7 +31,11 @@ import static java.util.stream.Stream.of;
  */
 public class ExecutableCommand {
     private final Runtime runtime;
-    private final String executable;
+    public final String executable;
+
+    public ExecutableCommand(final String executable) {
+        this(executable, Runtime.getRuntime());
+    }
 
     /**
      * Only use this constructor from test code so the environment Map and Runtime can be mocked.

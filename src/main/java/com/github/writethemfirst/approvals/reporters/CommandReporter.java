@@ -32,9 +32,9 @@ import static java.util.Arrays.stream;
  * A reporter which delegates execution to an external command.
  */
 public class CommandReporter implements Reporter {
-    private final String[] arguments;
+    final String[] arguments;
     private final static String DEFAULT_ARGUMENTS = "%received% %approved%";
-    private final ExecutableCommand executableCommand;
+    final ExecutableCommand executableCommand;
     private final boolean available;
 
     public CommandReporter(final ExecutableCommand command, final String... arguments) {

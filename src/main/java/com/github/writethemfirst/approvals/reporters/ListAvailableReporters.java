@@ -19,14 +19,41 @@
 package com.github.writethemfirst.approvals.reporters;
 
 import com.github.writethemfirst.approvals.Reporter;
+import com.github.writethemfirst.approvals.utils.ExecutableCommand;
+import com.github.writethemfirst.approvals.utils.FileUtils;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.github.writethemfirst.approvals.reporters.windows.Windows.*;
 
 public class ListAvailableReporters {
+    static String separator = "////";
+    static String home = System.getProperty("user.home");
+    static Path dotFile = Paths.get(home, ".approvals-java");
+
     public static void main(String[] args) {
-        Stream.of(KDIFF,
+        //write();
+        read();
+
+    }
+
+    private static void read() {
+        String lines2 = FileUtils.silentRead(dotFile);
+        Stream.of(lines2.split("\n|\r\n"))
+            .map(String::trim)
+            .filter(line -> !line.startsWith("#"))
+            .map(ListAvailableReporters::parseLine)
+            .filter(CommandReporter::isAvailable)
+            .map(r -> String.format("# %s %s %s", r.executableCommand.executable, separator, String.join(" ", r.arguments)))
+            .forEach(System.out::println);
+    }
+
+    private static void write() {
+        String lines = Stream.of(KDIFF,
             IDEA,
             TORTOISE_SVN,
             BEYOND_COMPARE_4,
@@ -36,6 +63,16 @@ public class ListAvailableReporters {
             CODE_COMPARE,
             GVIM)
             .filter(Reporter::isAvailable)
-            .forEach(System.out::println);
+            .map(r -> String.format("# %s %s %s%n", r.executableCommand.executable, separator, String.join(" ", r.arguments)))
+            .collect(Collectors.joining(""));
+        FileUtils.write(lines, dotFile);
+    }
+
+    static CommandReporter parseLine(String line) {
+        final String[] split = line.split(separator);
+        final String exec = split[0].trim();
+        final String[] args = split[1].trim().split(" ");
+        return new CommandReporter(new ExecutableCommand(exec), args);
+
     }
 }
