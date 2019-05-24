@@ -15,8 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals.reporters.windows;
+package com.github.writethemfirst.approvals.reporters;
 
+import com.github.writethemfirst.approvals.reporters.Command;
 import io.github.glytching.junit.extension.folder.TemporaryFolder;
 import io.github.glytching.junit.extension.folder.TemporaryFolderExtension;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.github.writethemfirst.approvals.reporters.windows.Command.*;
+import static com.github.writethemfirst.approvals.reporters.Command.*;
 import static java.lang.System.getenv;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.createFile;

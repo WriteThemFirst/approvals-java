@@ -18,9 +18,7 @@
 package com.github.writethemfirst.approvals.reporters.windows;
 
 import com.github.writethemfirst.approvals.Reporter;
-import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
-import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
-import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
+import com.github.writethemfirst.approvals.reporters.*;
 
 
 /**

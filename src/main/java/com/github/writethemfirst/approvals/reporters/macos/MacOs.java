@@ -21,8 +21,8 @@ import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
 import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
-import com.github.writethemfirst.approvals.reporters.windows.Command;
-import com.github.writethemfirst.approvals.reporters.windows.CommandReporter;
+import com.github.writethemfirst.approvals.reporters.Command;
+import com.github.writethemfirst.approvals.reporters.CommandReporter;
 
 
 /**

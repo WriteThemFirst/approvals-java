@@ -19,7 +19,7 @@ package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.approvers.Approver;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
-import com.github.writethemfirst.approvals.reporters.windows.CommandReporter;
+import com.github.writethemfirst.approvals.reporters.CommandReporter;
 import com.github.writethemfirst.approvals.testutils.SimpleTestUtils;
 import io.github.glytching.junit.extension.system.SystemProperty;
 import org.junit.jupiter.api.Test;

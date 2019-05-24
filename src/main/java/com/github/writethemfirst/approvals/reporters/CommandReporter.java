@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals.reporters.windows;
+package com.github.writethemfirst.approvals.reporters;
 
 import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.files.ApprovalFiles;
@@ -23,6 +23,7 @@ import com.github.writethemfirst.approvals.files.ApprovalFiles;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import static java.lang.String.join;
 import static java.util.Arrays.stream;
 
 /**
@@ -80,5 +81,10 @@ public class CommandReporter implements Reporter {
         return elt
             .replace("%approved%", approved.toString())
             .replace("%received%", received.toString());
+    }
+
+    @Override
+    public String toString() {
+        return join(" ", command.buildCommandArray(arguments));
     }
 }

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals.reporters.windows;
+package com.github.writethemfirst.approvals.reporters;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -75,10 +75,7 @@ public class Command {
      * Runs the executable outside the JVM by calling Runtime.exec().
      */
     void execute(final String... arguments) throws IOException {
-        final String[] cmdArray = concat(
-            of(pathToLatestExe().get()),
-            stream(arguments))
-            .toArray(String[]::new);
+        final String[] cmdArray = buildCommandArray(arguments);
         System.out.printf("Running command [%s]%n", join(" ", cmdArray));
 
         try {
@@ -86,6 +83,13 @@ public class Command {
         } catch (final InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    String[] buildCommandArray(final String[] arguments) {
+        return concat(
+            of(pathToLatestExe().get()),
+            stream(arguments))
+            .toArray(String[]::new);
     }
 
     /**
