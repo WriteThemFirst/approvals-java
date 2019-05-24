@@ -146,6 +146,26 @@ public class FileUtils {
      * @param destinationFile The file to which the data to be copied should be written
      */
     public static void copy(final Path sourceFile, final Path destinationFile) {
+        if (sourceFile.toFile().isDirectory()) {
+            copyDirectory(sourceFile, destinationFile);
+        } else {
+            copyFile(sourceFile, destinationFile);
+        }
+    }
+
+    private static void copyDirectory(final Path sourceDirectory, final Path destinationDirectory) {
+        try {
+            createDirectories(destinationDirectory);
+        } catch (IOException e) {
+            System.err.println(format("Could not create destination directory %s : %s", destinationDirectory, e));
+        }
+        final File[] children = sourceDirectory.toFile().listFiles();
+        if (children != null) {
+            Arrays.stream(children).forEach(child -> copy(child.toPath(), destinationDirectory.resolve(child.getName())));
+        }
+    }
+
+    private static void copyFile(final Path sourceFile, final Path destinationFile) {
         write(silentRead(sourceFile), destinationFile);
     }
 

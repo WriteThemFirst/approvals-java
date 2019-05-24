@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static com.github.writethemfirst.approvals.utils.FileUtils.copyToFolder;
-import static com.github.writethemfirst.approvals.utils.FileUtils.listFiles;
+import static com.github.writethemfirst.approvals.utils.FileUtils.*;
+import static java.lang.String.format;
 import static java.util.stream.Collectors.partitioningBy;
 
 /**
@@ -95,6 +95,14 @@ public class ApprovalFolders extends ApprovalFiles {
         return new MatchesAndMismatches(
             matchesAndMismatches.get(true),
             matchesAndMismatches.get(false));
+    }
+
+    /**
+     * Completely overrides the approved folder with the content from the received folder.
+     */
+    public void autoApprove() {
+        silentRecursiveRemove(approved);
+        copy(received, approved);
     }
 
 

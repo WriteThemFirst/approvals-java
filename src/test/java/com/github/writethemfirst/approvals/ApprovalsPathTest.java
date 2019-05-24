@@ -19,6 +19,8 @@ package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.approvers.Approver;
 import com.github.writethemfirst.approvals.testutils.FolderTestUtils;
+import com.github.writethemfirst.approvals.testutils.SimpleTestUtils;
+import io.github.glytching.junit.extension.system.SystemProperty;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -77,6 +79,24 @@ class ApprovalsPathTest {
         assertThatThrownBy(() -> approver.verify(testUtils.actual))
             .isInstanceOf(AssertionError.class)
             .hasMessageContaining("expected: <expected content> but was: <>");
+
+        testUtils.cleanupPaths();
+    }
+
+    @SystemProperty(name = "AUTO_APPROVE", value = "true")
+    @Test
+    void shouldOverrideApprovedFilesWhenForceBySystemProperty() throws IOException {
+        assertThat(Approver.isAutoApproving()).isTrue();
+        final FolderTestUtils testUtils = new FolderTestUtils("shouldOverrideApprovedFilesWhenForceBySystemProperty", getClass());
+
+        testUtils.writeActual("actual", "sample.xml");
+        testUtils.writeApproved("approved", "sample.xml");
+        testUtils.writeReceived("received", "sample.xml");
+
+        approver.verify(testUtils.actual);
+
+        assertThat(testUtils.received.resolve("sample.xml")).doesNotExist();
+        assertThat(testUtils.approved.resolve("sample.xml")).hasContent("actual");
 
         testUtils.cleanupPaths();
     }

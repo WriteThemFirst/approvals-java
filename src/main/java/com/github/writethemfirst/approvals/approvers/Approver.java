@@ -243,6 +243,9 @@ public class Approver {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     private void verifyFolderContent(final ApprovalFolders approvalFolders) {
+        if(isAutoApproving()) {
+            approvalFolders.autoApprove();
+        }
         final MatchesAndMismatches matchesAndMismatches = approvalFolders.matchesAndMismatches();
         matchesAndMismatches.cleanupReceivedFiles();
         matchesAndMismatches.reportMismatches(reporter);
