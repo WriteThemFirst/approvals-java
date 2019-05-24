@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.File;
+import java.nio.file.FileSystemException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -92,7 +93,13 @@ class CommandTest {
         final File temp = temporaryFolder.getRoot();
         final Path sub = get(temp.toString(), "sub");
         createDirectories(sub);
-        Files.createSymbolicLink(sub.resolve("sub"), sub);
+        try {
+            Files.createSymbolicLink(sub.resolve("sub"), sub);
+        } catch (FileSystemException e) {
+            // The bug this test checks has only been detected in docker containers and MacOS
+            // it is not reproducible on (at least some versions of) Windows
+            System.err.println("Cannot create a file system loop - this is expected on Windows");
+        }
         final Command command = new Command(
             temp + OS_SEPARATOR + "sub",
             "idea64.exe");
