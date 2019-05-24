@@ -28,6 +28,11 @@ class CustomFileNameDemo {
     }
 
     @Test
+    void verifyCustomFileNameWithSpecialChars() {
+        new Approver().writeTo("custom:file/name").verify("my string");
+    }
+
+    @Test
     void verifySimpleStringInCustomFolder() {
         new Approver().writeToFolder("src/test/resources/custom").verify("my string");
     }

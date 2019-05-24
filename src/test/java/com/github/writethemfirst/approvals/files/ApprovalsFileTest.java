@@ -15,13 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals;
+package com.github.writethemfirst.approvals.files;
 
+import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.approvers.Approver;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.testutils.FolderTestUtils;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,5 +65,11 @@ class ApprovalsFileTest {
         assertThat(testUtils.readReceived("file.txt")).isEqualTo("actual");
 
         testUtils.cleanupPaths();
+    }
+
+    @Test
+    void shouldEscapeFileName() {
+        final Path path = ApprovalFiles.approvalFilePath(Paths.get("folder"), "m-13#a:b_c+d*e/f g", "ext");
+        assertThat(path).hasFileName("m-13_a_b_c_d_e_f_g.ext");
     }
 }

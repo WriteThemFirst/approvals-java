@@ -137,8 +137,8 @@ public class ApprovalFiles {
      *                   *received*)
      * @return The path to the approval file computed from all the specified information
      */
-    private static Path approvalFilePath(final Path folder, final String methodName, final String extension) {
-        return folder.resolve(format("%s.%s", methodName.replaceAll(" ", "_"), extension));
+    static Path approvalFilePath(final Path folder, final String methodName, final String extension) {
+        return folder.resolve(format("%s.%s", methodName.replaceAll("[^a-zA-Z0-9-]", "_"), extension));
     }
 
     /**
