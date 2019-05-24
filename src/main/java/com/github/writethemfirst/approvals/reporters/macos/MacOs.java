@@ -21,7 +21,7 @@ import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
 import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
-import com.github.writethemfirst.approvals.reporters.Command;
+import com.github.writethemfirst.approvals.utils.CommandFinder;
 import com.github.writethemfirst.approvals.reporters.CommandReporter;
 
 
@@ -30,22 +30,22 @@ import com.github.writethemfirst.approvals.reporters.CommandReporter;
  */
 public interface MacOs {
 
-    Reporter KDIFF = new CommandReporter(new Command(
+    Reporter KDIFF = new CommandReporter(new CommandFinder(
         "/Applications/kdiff3.app/Contents/MacOS",
         "kdiff3"),
         "%received% %approved% -o %approved%");
 
-    Reporter IDEA_ULTIMATE = new CommandReporter(new Command(
+    Reporter IDEA_ULTIMATE = new CommandReporter(new CommandFinder(
         "/Applications/IntelliJ IDEA.app/Contents/MacOS",
         "idea"),
         "diff %received% %approved%");
 
-    Reporter IDEA_COMMUNITY = new CommandReporter(new Command(
+    Reporter IDEA_COMMUNITY = new CommandReporter(new CommandFinder(
         "/Applications/IdeaIC.app/Contents/MacOS",
         "idea"),
         "diff %received% %approved%");
 
-    Reporter IDEA_CE = new CommandReporter(new Command(
+    Reporter IDEA_CE = new CommandReporter(new CommandFinder(
         "/Applications/IntelliJ IDEA CE.app/Contents/MacOS",
         "idea"),
         "diff %received% %approved%");

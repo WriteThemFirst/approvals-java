@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals.reporters;
+package com.github.writethemfirst.approvals.utils;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,19 +25,19 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.lang.Runtime.getRuntime;
-import static java.lang.String.join;
 import static java.lang.System.getenv;
 import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
 import static java.nio.file.Paths.get;
-import static java.util.Arrays.stream;
 import static java.util.Comparator.naturalOrder;
 import static java.util.stream.Stream.concat;
 import static java.util.stream.Stream.of;
 
 /**
  * Wrapper around an executable command outside the JVM.
+ *
+ * It enables to look for the latest version based on folder names.
  */
-public class Command {
+public class CommandFinder {
     private static final int MAX_FOLDERS_DEPTH = 5;
     static String WINDOWS_ENV_PROGRAM_FILES = "ProgramFiles";
     static String WINDOWS_ENV_PROGRAM_FILES_X86 = "ProgramFiles(x86)";
@@ -47,7 +47,8 @@ public class Command {
 
     private final String path;
     private final String executable;
-    private Optional<String> cachedLatestPath;
+    private ExecutableCommand cachedExecutableCommand;
+    private boolean searched = false;
     private final String programFilesFolder;
     private final String programFilesX86Folder;
 
@@ -55,48 +56,31 @@ public class Command {
      * Represents the latest version of the executable found by scanning subfolders of path. The path will have
      * %programFiles% replaced by the actual value in the environment variable `ProgramFiles`.
      */
-    public Command(final String path, final String executable) {
+    public CommandFinder(final String path, final String executable) {
         this(path, executable, getRuntime(), getenv());
     }
 
     /**
      * Only use this constructor from test code so the environment Map and Runtime can be mocked.
      */
-    Command(final String path, final String executable, final Runtime runtime, final Map<String, String> env) {
+    CommandFinder(final String path, final String executable, final Runtime runtime, final Map<String, String> env) {
         this.path = path;
         this.executable = executable;
         this.runtime = runtime;
         programFilesFolder = env.get(WINDOWS_ENV_PROGRAM_FILES);
         programFilesX86Folder = env.get(WINDOWS_ENV_PROGRAM_FILES_X86);
-
     }
 
-    /**
-     * Runs the executable outside the JVM by calling Runtime.exec().
-     */
-    void execute(final String... arguments) throws IOException {
-        final String[] cmdArray = buildCommandArray(arguments);
-        System.out.printf("Running command [%s]%n", join(" ", cmdArray));
+    public Optional<ExecutableCommand> executableCommand() {
+        searchForLatest();
+        return Optional.ofNullable(cachedExecutableCommand);
+    }
 
-        try {
-            runtime.exec(cmdArray).waitFor();
-        } catch (final InterruptedException e) {
-            throw new RuntimeException(e);
+    private void searchForLatest() {
+        if (!searched) {
+            searchForExe().ifPresent(s -> cachedExecutableCommand = new ExecutableCommand(s, runtime));
+            searched = true;
         }
-    }
-
-    String[] buildCommandArray(final String[] arguments) {
-        return concat(
-            of(pathToLatestExe().get()),
-            stream(arguments))
-            .toArray(String[]::new);
-    }
-
-    /**
-     * Tests if an executable file was found in the path.
-     */
-    public boolean isAvailable() {
-        return pathToLatestExe().isPresent();
     }
 
     /**
@@ -104,14 +88,7 @@ public class Command {
      *
      * Sort order is based on folder names, assuming that latest version have a greater version number.
      */
-    Optional<String> pathToLatestExe() {
-        if (cachedLatestPath == null) {
-            cachedLatestPath = searchForExe();
-        }
-        return cachedLatestPath;
-    }
-
-    private Optional<String> searchForExe() {
+    Optional<String> searchForExe() {
         final Stream<Path> programFilesFolders = concat(replaced(programFilesFolder), replaced(programFilesX86Folder));
         final Stream<Path> possiblePaths = concat(programFilesFolders, notReplaced());
         try {

@@ -19,53 +19,65 @@ package com.github.writethemfirst.approvals.reporters;
 
 import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.files.ApprovalFiles;
+import com.github.writethemfirst.approvals.utils.CommandFinder;
+import com.github.writethemfirst.approvals.utils.ExecutableCommand;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Optional;
 
-import static java.lang.String.join;
 import static java.util.Arrays.stream;
 
 /**
  * A reporter which delegates execution to an external command.
  */
 public class CommandReporter implements Reporter {
-    private final Command command;
     private final String[] arguments;
     private final static String DEFAULT_ARGUMENTS = "%received% %approved%";
+    private final ExecutableCommand executableCommand;
+    private final boolean available;
 
+    public CommandReporter(final ExecutableCommand command, final String... arguments) {
+        this.available = command.isAvailable();
+        this.executableCommand = command;
+        this.arguments = arguments;
+    }
 
-    public CommandReporter(final Command command) {
+    public CommandReporter(final CommandFinder command) {
         this(command, DEFAULT_ARGUMENTS);
     }
 
     /**
      * Constructs the reporter with a single String of arguments, split on spaces.
      */
-    public CommandReporter(final Command command, final String arguments) {
+    public CommandReporter(final CommandFinder command, final String arguments) {
         this(command, arguments.split(" "));
     }
 
-    private CommandReporter(final Command command, final String... arguments) {
-        this.command = command;
+    private CommandReporter(final CommandFinder command, final String... arguments) {
         this.arguments = arguments;
+        final Optional<ExecutableCommand> executableCommand = command.executableCommand();
+        if (executableCommand.isPresent()) {
+            this.executableCommand = executableCommand.get();
+            available = this.executableCommand.isAvailable();
+        } else {
+            available = false;
+            this.executableCommand = null;
+        }
     }
 
     @Override
     public void mismatch(final ApprovalFiles files) {
-        if (command.isAvailable()) {
-            try {
-                command.execute(actualArguments(files.approved.toAbsolutePath(), files.received.toAbsolutePath()));
-            } catch (final IOException e) {
-                throw new RuntimeException(e);
-            }
+        try {
+            executableCommand.execute(actualArguments(files.approved.toAbsolutePath(), files.received.toAbsolutePath()));
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
         }
-
     }
 
     @Override
     public boolean isAvailable() {
-        return command.isAvailable();
+        return available;
     }
 
     /**
@@ -83,8 +95,5 @@ public class CommandReporter implements Reporter {
             .replace("%received%", received.toString());
     }
 
-    @Override
-    public String toString() {
-        return join(" ", command.buildCommandArray(arguments));
-    }
+
 }

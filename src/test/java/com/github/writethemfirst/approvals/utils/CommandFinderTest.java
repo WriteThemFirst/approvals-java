@@ -15,9 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals.reporters;
+package com.github.writethemfirst.approvals.utils;
 
-import com.github.writethemfirst.approvals.reporters.Command;
 import io.github.glytching.junit.extension.folder.TemporaryFolder;
 import io.github.glytching.junit.extension.folder.TemporaryFolderExtension;
 import org.junit.jupiter.api.Test;
@@ -31,7 +30,7 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.github.writethemfirst.approvals.reporters.Command.*;
+import static com.github.writethemfirst.approvals.utils.CommandFinder.*;
 import static java.lang.System.getenv;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.createFile;
@@ -40,7 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
-class CommandTest {
+class CommandFinderTest {
     private final String OS_SEPARATOR = FileSystems.getDefault().getSeparator();
     private final String IDEA_8 = "IntelliJ IDEA 2018";
     private final String IDEA_712 = "IntelliJ IDEA 2017.1.2";
@@ -55,13 +54,13 @@ class CommandTest {
         when(runtime.exec(any(String[].class))).thenReturn(mock(Process.class));
 
 
-        final Command command = new Command(
+        final CommandFinder command = new CommandFinder(
             temp + OS_SEPARATOR + "JetBrains",
             "idea64.exe",
             runtime,
             getenv());
 
-        command.execute("merge", "toto.approved", "toto.received", "toto.approved");
+        command.executableCommand().get().execute("merge", "toto.approved", "toto.received", "toto.approved");
 
         final String executable = temp + OS_SEPARATOR + "JetBrains" + OS_SEPARATOR + IDEA_8 + OS_SEPARATOR + "bin" + OS_SEPARATOR + "idea64.exe";
         then(runtime).should().exec(new String[]{executable, "merge", "toto.approved", "toto.received", "toto.approved"});
@@ -74,16 +73,14 @@ class CommandTest {
         touchIdeaExe(IDEA_712, temp);
         touchIdeaExe(IDEA_8, temp);
         touchIdeaExe(IDEA_73, temp);
-        final Command command = new Command(
+        final CommandFinder command = new CommandFinder(
             temp + OS_SEPARATOR + "JetBrains",
             "idea64.exe");
 
-        final Optional<String> pathToExe = command.pathToLatestExe();
-        final boolean available = command.isAvailable();
+        final Optional<String> pathToExe = command.searchForExe();
 
         final String expectedPath = "JetBrains" + OS_SEPARATOR + IDEA_8 + OS_SEPARATOR + "bin" + OS_SEPARATOR + "idea64.exe";
         assertThat(pathToExe.get()).endsWith(expectedPath);
-        assertThat(available).isTrue();
 
     }
 
@@ -101,13 +98,11 @@ class CommandTest {
             // it is not reproducible on (at least some versions of) Windows
             System.err.println("Cannot create a file system loop - this is expected on Windows");
         }
-        final Command command = new Command(
+        final CommandFinder command = new CommandFinder(
             temp + OS_SEPARATOR + "sub",
             "idea64.exe");
 
-        final boolean available = command.isAvailable();
-
-        assertThat(available).isFalse();
+        assertThat(command.searchForExe()).isEmpty();
 
     }
 
@@ -129,11 +124,9 @@ class CommandTest {
         final Map<String, String> mockedEnv = mock(Map.class);
         when(mockedEnv.get(environmentKey)).thenReturn(temp.getAbsolutePath());
 
-        final Command command = new Command(PROGRAM_FILES_KEY, "idea64.exe", mock(Runtime.class), mockedEnv);
+        final CommandFinder command = new CommandFinder(PROGRAM_FILES_KEY, "idea64.exe", mock(Runtime.class), mockedEnv);
 
-        final boolean available = command.isAvailable();
-
-        assertThat(available).isTrue();
+        assertThat(command.searchForExe()).isNotEmpty();
     }
 
     private void touchIdeaExe(final String version, final File temp) throws Exception {
@@ -146,12 +139,10 @@ class CommandTest {
     @ExtendWith(TemporaryFolderExtension.class)
     void shouldNotLocateIntelliJ(final TemporaryFolder temporaryFolder) {
         final File temp = temporaryFolder.getRoot();
-        final Command command = new Command(temp.toString(), "idea64.exe");
+        final CommandFinder command = new CommandFinder(temp.toString(), "idea64.exe");
 
-        final Optional<String> latestExe = command.pathToLatestExe();
-        final boolean available = command.isAvailable();
+        final Optional<String> latestExe = command.searchForExe();
 
         assertThat(latestExe).isEmpty();
-        assertThat(available).isFalse();
     }
 }
