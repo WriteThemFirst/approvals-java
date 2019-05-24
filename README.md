@@ -152,7 +152,7 @@ And then you can simply rely on the latest `SNAPSHOT`:
 <dependency>
     <groupId>com.github.writethemfirst</groupId>
     <artifactId>approvals-java</artifactId>
-    <version>0.7.1-SNAPSHOT</version>
+    <version>0.7.2-SNAPSHOT</version>
     <scope>test</scope>
 </dependency>
 ```
