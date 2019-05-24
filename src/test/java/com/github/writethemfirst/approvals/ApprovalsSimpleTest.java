@@ -21,7 +21,7 @@ import com.github.writethemfirst.approvals.approvers.Approver;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.reporters.windows.CommandReporter;
 import com.github.writethemfirst.approvals.testutils.SimpleTestUtils;
-import org.junit.jupiter.api.Disabled;
+import io.github.glytching.junit.extension.system.SystemProperty;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +30,6 @@ import static org.mockito.Mockito.mock;
 
 class ApprovalsSimpleTest {
     private final Approver approver = new Approver().reportTo(new ThrowsReporter());
-
 
     @Test
     void shouldThrowWhenMismatchAndUsingCommandReporter() {
@@ -70,6 +69,21 @@ class ApprovalsSimpleTest {
         testUtils.cleanupPaths();
     }
 
+    @SystemProperty(name = "AUTO_APPROVE", value = "true")
+    @Test
+    void shouldOverrideApprovedFileWhenForceBySystemProperty() {
+        assertThat(Approver.isAutoApproving()).isTrue();
+        final SimpleTestUtils testUtils = new SimpleTestUtils("shouldOverrideApprovedFileWhenForceBySystemProperty", getClass());
+        testUtils.writeReceived("last content");
+        testUtils.writeApproved("old approved");
+
+        approver.verify("new approved");
+
+        assertThat(testUtils.readReceived()).isEqualTo("");
+        assertThat(testUtils.readApproved()).isEqualTo("new approved");
+
+        testUtils.cleanupPaths();
+    }
 
     @Test
     void shouldFailWhenApprovedFileDoesNotExist() {

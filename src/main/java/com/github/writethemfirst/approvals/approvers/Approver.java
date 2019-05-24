@@ -181,6 +181,9 @@ public class Approver {
     }
 
     private void verifyImpl(final ApprovalFiles approvalFiles, final String expected) {
+        if (isAutoApproving()) {
+            write(expected, approvalFiles.approved);
+        }
         if (approvalFiles.hasApproved(expected)) {
             silentRemove(approvalFiles.received);
         } else {
@@ -191,6 +194,10 @@ public class Approver {
             reporter.mismatch(approvalFiles);
             new ThrowsReporter().mismatch(approvalFiles);
         }
+    }
+
+    public static boolean isAutoApproving() {
+        return "true".equals(System.getProperty("AUTO_APPROVE"));
     }
 
 

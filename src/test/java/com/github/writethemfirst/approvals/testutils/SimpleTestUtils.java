@@ -54,6 +54,10 @@ public class SimpleTestUtils {
         write(content, approved);
     }
 
+    public String readApproved() {
+        return silentRead(approved);
+    }
+
     public void cleanupPaths() {
         silentRemove(received);
         silentRemove(approved);
