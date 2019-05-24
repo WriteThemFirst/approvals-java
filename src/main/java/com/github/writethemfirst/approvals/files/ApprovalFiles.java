@@ -24,6 +24,7 @@ import java.nio.file.Path;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.createParentDirectories;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
+import static com.github.writethemfirst.approvals.utils.StringUtils.sameContent;
 import static java.lang.String.format;
 
 /**
@@ -90,11 +91,20 @@ public class ApprovalFiles {
         return silentRead(received);
     }
 
+    public boolean hasApproved(String content) {
+        return sameContent(approvedContent(), content);
+    }
+
+    public boolean hasReceived(String content) {
+        return sameContent(receivedContent(), content);
+    }
+
+
     /**
      * Checks if both files have the same content (by reading them and comparing the data afterwards).
      */
-    public boolean haveSameContent() {
-        return receivedContent().equals(approvedContent());
+    boolean haveSameContent() {
+        return sameContent(approvedContent(), receivedContent());
     }
 
     /**
@@ -113,7 +123,7 @@ public class ApprovalFiles {
         }
     }
 
-    public ApprovalFolders parent() {
+    ApprovalFolders parent() {
         return new ApprovalFolders(approved.getParent(), received.getParent());
     }
 

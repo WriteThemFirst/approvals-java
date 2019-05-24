@@ -15,36 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.demo.simple;
+package com.github.writethemfirst.approvals.utils;
 
-import org.junit.jupiter.api.Test;
+import static java.util.stream.IntStream.range;
 
-import static com.github.writethemfirst.approvals.Approvals.verify;
-
-class ApproveString {
-
-    @Test
-    void verifySimpleString() {
-        verify("my string ² and ³");
+public class StringUtils {
+    public static boolean sameContent(String expected, String actual) {
+        final String[] expectedElements = splitOnLineEndings(expected);
+        final String[] actualElements = splitOnLineEndings(actual);
+        return expectedElements.length == actualElements.length &&
+            range(0, expectedElements.length).allMatch(i -> expectedElements[i].equals(actualElements[i]));
     }
 
-    @Test
-    void verifyWithLineFeed() {
-        verify("line1\nline2");
-    }
-
-    @Test
-    void verifyWithTrailingSpaces() {
-        verify("line1   \nline2   \n   ");
-    }
-
-    @Test
-    void verifyWithCarriageReturnLineFeed() {
-        verify("line1\r\nline2");
-    }
-
-    @Test
-    void verifyWithHybridLineEndings() {
-        verify("line1\r\nline2\nline3");
+    private static String[] splitOnLineEndings(final String expected) {
+        return expected.split("\r\n|\n");
     }
 }

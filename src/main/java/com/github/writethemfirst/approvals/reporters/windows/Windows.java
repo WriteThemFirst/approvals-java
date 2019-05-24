@@ -79,6 +79,7 @@ public interface Windows {
 
 
     Reporter DEFAULT = new FirstWorkingReporter(
+        KDIFF,
         IDEA,
         TORTOISE_SVN,
         BEYOND_COMPARE_4,
@@ -86,7 +87,6 @@ public interface Windows {
         WINMERGE,
         ARAXIS,
         CODE_COMPARE,
-        KDIFF,
         GVIM,
         new JUnit5Reporter(),
         new ThrowsReporter());

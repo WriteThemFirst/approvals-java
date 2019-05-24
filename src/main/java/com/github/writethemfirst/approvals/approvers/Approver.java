@@ -181,10 +181,10 @@ public class Approver {
     }
 
     private void verifyImpl(final ApprovalFiles approvalFiles, final String expected) {
-        if (approvalFiles.approvedContent().equals(expected)) {
+        if (approvalFiles.hasApproved(expected)) {
             silentRemove(approvalFiles.received);
         } else {
-            if (!approvalFiles.receivedContent().equals(expected)) {
+            if (!approvalFiles.hasReceived(expected)) {
                 write(expected, approvalFiles.received);
             }
             approvalFiles.createEmptyApprovedFileIfNeeded();
