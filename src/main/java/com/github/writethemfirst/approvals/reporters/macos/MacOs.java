@@ -20,9 +20,9 @@ package com.github.writethemfirst.approvals.reporters.macos;
 import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.reporters.CommandReporter;
 import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
-import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
-import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.CommandFinder;
+
+import static java.util.stream.Stream.of;
 
 
 /**
@@ -55,12 +55,12 @@ public interface MacOs {
         "idea"),
         "diff %received% %approved%");
 
-    Reporter DEFAULT = new FirstWorkingReporter(
+    CommandReporter[] possibleNativeReporters = new CommandReporter[]{
         IDEA,
         IDEA_ULTIMATE,
         IDEA_COMMUNITY,
         IDEA_CE,
         KDIFF,
-        new JUnit5Reporter(),
-        new ThrowsReporter());
+    };
+
 }

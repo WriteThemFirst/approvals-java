@@ -17,12 +17,8 @@
  */
 package com.github.writethemfirst.approvals.reporters.linux;
 
-import com.github.writethemfirst.approvals.Reporter;
-import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
-import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
-import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
-import com.github.writethemfirst.approvals.utils.CommandFinder;
 import com.github.writethemfirst.approvals.reporters.CommandReporter;
+import com.github.writethemfirst.approvals.utils.CommandFinder;
 
 
 /**
@@ -30,26 +26,31 @@ import com.github.writethemfirst.approvals.reporters.CommandReporter;
  */
 public interface Linux {
 
-    Reporter IDEA_ULTIMATE = new CommandReporter(new CommandFinder(
+    CommandReporter IDEA_ULTIMATE = new CommandReporter(new CommandFinder(
         "/usr/bin",
         "intellij-idea-ultimate-edition"),
         "diff %received% %approved%");
 
-    Reporter IDEA_COMMUNITY = new CommandReporter(new CommandFinder(
+    CommandReporter IDEA_COMMUNITY = new CommandReporter(new CommandFinder(
         "/usr/bin",
         "idea.sh"),
         "diff %received% %approved%");
 
-    Reporter BEYOND_COMPARE = new CommandReporter(new CommandFinder(
+    CommandReporter BEYOND_COMPARE = new CommandReporter(new CommandFinder(
         "/usr/bin",
         "bcompare"),
         "%received% %approved%");
 
+    CommandReporter IDEA = new CommandReporter(new CommandFinder(
+        "/usr/local/bin",
+        "idea"),
+        "diff %received% %approved%");
 
-    Reporter DEFAULT = new FirstWorkingReporter(
+    CommandReporter[] possibleNativeReporters = new CommandReporter[]{
+        IDEA,
         IDEA_ULTIMATE,
         IDEA_COMMUNITY,
-        BEYOND_COMPARE,
-        new JUnit5Reporter(),
-        new ThrowsReporter());
+        BEYOND_COMPARE
+    };
+
 }

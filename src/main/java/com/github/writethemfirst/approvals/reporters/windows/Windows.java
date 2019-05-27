@@ -20,9 +20,9 @@ package com.github.writethemfirst.approvals.reporters.windows;
 import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.reporters.CommandReporter;
 import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
-import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
-import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.CommandFinder;
+
+import static java.util.stream.Stream.of;
 
 
 /**
@@ -80,16 +80,8 @@ public interface Windows {
         "%received% %approved%");
 
 
-    Reporter DEFAULT = new FirstWorkingReporter(
-        KDIFF,
-        IDEA,
-        TORTOISE_SVN,
-        BEYOND_COMPARE_4,
-        BEYOND_COMPARE_3,
-        WINMERGE,
-        ARAXIS,
-        CODE_COMPARE,
-        GVIM,
-        new JUnit5Reporter(),
-        new ThrowsReporter());
+    CommandReporter[] possibleNativeReporters = new CommandReporter[]{
+        KDIFF, IDEA, TORTOISE_SVN, BEYOND_COMPARE_4, BEYOND_COMPARE_3, WINMERGE, ARAXIS, CODE_COMPARE, GVIM
+    };
+
 }

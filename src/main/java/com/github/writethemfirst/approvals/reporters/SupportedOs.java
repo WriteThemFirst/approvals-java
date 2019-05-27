@@ -25,6 +25,8 @@ import com.github.writethemfirst.approvals.reporters.windows.Windows;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static java.util.stream.Stream.of;
+
 /**
  * # SupportedOs
  *
@@ -35,15 +37,17 @@ import java.util.Optional;
  * executed on.
  */
 public enum SupportedOs {
-    WINDOWS("windows", Windows.DEFAULT),
-    MAC_OS("mac", MacOs.DEFAULT),
-    LINUX("linux", Linux.DEFAULT);
+    WINDOWS("windows", Windows.possibleNativeReporters),
+    MAC_OS("mac", MacOs.possibleNativeReporters),
+    LINUX("linux", Linux.possibleNativeReporters);
 
     private final Reporter defaultReporter;
+    public final CommandReporter[] possibleReporters;
     public final boolean active;
 
-    SupportedOs(final String prefix, final Reporter defaultReporter) {
-        this.defaultReporter = defaultReporter;
+    SupportedOs(final String prefix, final CommandReporter... possibleReporters) {
+        this.possibleReporters = possibleReporters;
+        this.defaultReporter = new FirstWorkingReporter(of(possibleReporters).toArray(Reporter[]::new));
         final String osName = System.getProperty("os.name").toLowerCase();
         active = osName.startsWith(prefix);
     }
@@ -54,10 +58,18 @@ public enum SupportedOs {
      * @return the default Reporter (which will run a native diff tool) for the OS
      */
     public static Optional<Reporter> osDefaultReporter() {
+        return activeOs().map(os -> os.defaultReporter);
+    }
+
+    /**
+     * Identifies the current OS and the associated {@link Reporter}.
+     *
+     * @return the default Reporter (which will run a native diff tool) for the OS
+     */
+    public static Optional<SupportedOs> activeOs() {
         return Arrays
             .stream(values())
             .filter(os -> os.active)
-            .map(os -> os.defaultReporter)
             .findFirst();
     }
 }
