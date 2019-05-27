@@ -46,7 +46,7 @@ public class CommandReporterSpec {
         return new CommandReporter(finder(), arguments);
     }
 
-    private CommandFinder finder() {
+    public CommandFinder finder() {
         return new CommandFinder(folder, executableName);
     }
 }

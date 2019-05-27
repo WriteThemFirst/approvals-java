@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ReporterConfigurationTest {
     @Test
     void shouldHaveNoReporterWhenAllCommented() {
-        final Optional<CommandReporter> reporter = ReporterConfiguration.read(
+        final Optional<CommandReporter> reporter = ReporterConfiguration.parse(
             "# /Applications/kdiff3.app/Contents/MacOS/kdiff3 //// %received% %approved% -o %approved%\n" +
                 "# /usr/local/bin/idea //// diff %received% %approved%");
 

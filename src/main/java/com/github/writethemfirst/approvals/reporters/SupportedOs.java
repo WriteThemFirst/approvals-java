@@ -26,11 +26,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.github.writethemfirst.approvals.reporters.ListAvailableReporters.dotFile;
+import static com.github.writethemfirst.approvals.reporters.ReporterConfiguration.dotFile;
 import static com.github.writethemfirst.approvals.reporters.ReporterConfiguration.read;
-import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 import static java.lang.String.format;
-import static java.util.stream.Stream.of;
 
 /**
  * # SupportedOs
@@ -42,30 +40,17 @@ import static java.util.stream.Stream.of;
  * executed on.
  */
 public enum SupportedOs {
-    WINDOWS("windows", Windows.possibleNativeReporters),
-    MAC_OS("mac", MacOs.possibleNativeReporters),
-    LINUX("linux", Linux.possibleNativeReporters);
+    WINDOWS("windows", Windows.knownCommandReporters),
+    MAC_OS("mac", MacOs.knownCommandReporters),
+    LINUX("linux", Linux.knownCommandReporters);
 
-    private final Reporter defaultReporter;
-    public final List<CommandReporter> possibleReporters;
+    public final List<CommandReporterSpec> specs;
     public final boolean active;
 
-    SupportedOs(final String prefix, final List<CommandReporter> possibleReporters) {
-        this.possibleReporters = possibleReporters;
+    SupportedOs(final String prefix, final List<CommandReporterSpec> specs) {
+        this.specs = specs;
         final String osName = System.getProperty("os.name").toLowerCase();
         active = osName.startsWith(prefix);
-        defaultReporter = active ? defaultReporter(possibleReporters) : null;
-    }
-
-    private Reporter defaultReporter(final List<CommandReporter> possibleReporters) {
-        final Optional<CommandReporter> configuredReporter = read(silentRead(dotFile));
-        if (configuredReporter.isPresent()) {
-            System.out.println(format("Using reporter configured in %s", dotFile));
-            return configuredReporter.get();
-        } else {
-            System.err.println(format("No available reporter configured in %s", dotFile));
-            return new FirstWorkingReporter(possibleReporters.toArray(new Reporter[0]));
-        }
     }
 
     /**
@@ -74,7 +59,18 @@ public enum SupportedOs {
      * @return the default Reporter (which will run a native diff tool) for the OS
      */
     public static Optional<Reporter> osDefaultReporter() {
-        return activeOs().map(os -> os.defaultReporter);
+        return activeOs().map(SupportedOs::defaultReporter);
+    }
+
+    Reporter defaultReporter() {
+        final Optional<CommandReporter> configuredReporter = read();
+        if (configuredReporter.isPresent()) {
+            System.out.println(format("Using reporter configured in %s", dotFile));
+            return configuredReporter.get();
+        } else {
+            System.err.println(format("No available reporter configured in %s", dotFile));
+            return new FirstWorkingReporter(specs.stream().map(CommandReporterSpec::reporter).toArray(Reporter[]::new));
+        }
     }
 
     /**

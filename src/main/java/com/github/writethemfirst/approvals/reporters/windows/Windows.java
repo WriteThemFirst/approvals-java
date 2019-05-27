@@ -52,7 +52,7 @@ public interface Windows {
     CommandReporterSpec CODE_COMPARE = new CommandReporterSpec("%programFiles%\\Devart", "CodeCompare.exe");
 
 
-    List<CommandReporterSpec> knownCommandReporters = Arrays.asList(KDIFF, IDEA, TORTOISE_SVN,  BEYOND_COMPARE_3, WINMERGE, ARAXIS, CODE_COMPARE, GVIM);
+    List<CommandReporterSpec> knownCommandReporters = Arrays.asList(IDEA, KDIFF, TORTOISE_SVN, BEYOND_COMPARE_3, WINMERGE, ARAXIS, CODE_COMPARE, GVIM);
 
     List<CommandReporter> possibleNativeReporters = knownCommandReporters.stream().map(CommandReporterSpec::reporter).collect(Collectors.toList());
 

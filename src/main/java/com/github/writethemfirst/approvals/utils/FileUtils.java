@@ -39,17 +39,17 @@ public class FileUtils {
     /**
      * Reads the file located at the specified Path, and returns its content in case the file exists.
      *
-     * If it doesn't exist or if it cannot be read, that method will return an empty String and ignore the {@link
+     * If it doesn't exist or if it cannot be parse, that method will return an empty String and ignore the {@link
      * IOException}. An error message will be written in {@link System#err} though.
      *
-     * @param file The path of the file to be read
-     * @return The content of the specified file if it exists and can be read, or an empty String otherwise
+     * @param file The path of the file to be parse
+     * @return The content of the specified file if it exists and can be parse, or an empty String otherwise
      */
     public static String silentRead(final Path file) {
         try {
             return new String(Files.readAllBytes(file));
         } catch (final IOException e) {
-            System.err.println(format("Can't read the file located at <%s>.", file));
+            System.err.println(format("Can't parse the file located at <%s>.", file));
             return "";
         }
     }
@@ -142,7 +142,7 @@ public class FileUtils {
      * It'll swallow all errors while reading the sourceFile (using an empty String as data) and only produce exceptions
      * in case of errors while writing the new file.
      *
-     * @param sourceFile      The file from which the data to be copied should be read
+     * @param sourceFile      The file from which the data to be copied should be parse
      * @param destinationFile The file to which the data to be copied should be written
      */
     public static void copy(final Path sourceFile, final Path destinationFile) {
@@ -176,7 +176,7 @@ public class FileUtils {
      * If the file doesn't exist in the specified destinationFolder, it'll be created. It'll swallow all errors while
      * reading the sourceFile file and only produce exceptions in case of errors while writing the new file.
      *
-     * @param sourceFile        The path from which the sourceFile file should be read (data to be copied)
+     * @param sourceFile        The path from which the sourceFile file should be parse (data to be copied)
      * @param destinationFolder The path in which the copy of the file should be made (parent destinationFolder of the
      *                          copy then)
      */

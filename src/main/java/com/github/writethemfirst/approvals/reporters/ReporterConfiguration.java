@@ -19,33 +19,72 @@ package com.github.writethemfirst.approvals.reporters;
 
 import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.utils.ExecutableCommand;
+import com.github.writethemfirst.approvals.utils.FileUtils;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ReporterConfiguration {
-    static final String commentCharacter = "#";
-    static String lineEndingsRegexp = "\n|\r\n";
-    static String separator = "////";
+import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
+import static java.lang.String.format;
+import static java.lang.String.join;
 
+class ReporterConfiguration {
+    private static final String commentCharacter = "#";
+    private static String separator = "////";
+    private static String home = System.getProperty("user.home");
+    static Path dotFile = Paths.get(home, ".approvals-java");
 
-    public static Optional<CommandReporter> read(String configurationContent) {
+    static Optional<CommandReporter> read() {
+        if (dotFile.toFile().exists()) {
+            try {
+                return parse(silentRead(dotFile));
+            } catch (RuntimeException e) {
+                System.err.println(String.format("Could not parse configuration %s, using defaults", dotFile));
+                System.err.println(e);
+                return Optional.empty();
+            }
+        } else {
+            write();
+            System.out.println(format("Initialized %s, uncomment lines to select your preferred command", dotFile));
+            return Optional.empty();
+        }
+    }
+
+    static Optional<CommandReporter> parse(String configurationContent) {
         return parseReporters(configurationContent)
             .filter(Reporter::isAvailable)
             .findFirst();
     }
 
-     static Stream<CommandReporter> parseReporters(final String configurationContent) {
+    static Stream<CommandReporter> parseReporters(final String configurationContent) {
+        final String lineEndingsRegexp = "\n|\r\n";
         return Stream.of(configurationContent.split(lineEndingsRegexp))
             .map(String::trim)
             .filter(line -> !line.startsWith(commentCharacter))
             .map(ReporterConfiguration::parseLine);
     }
 
-    static CommandReporter parseLine(String line) {
+    private static CommandReporter parseLine(String line) {
         final String[] split = line.split(separator);
         final String exec = split[0].trim();
         final String[] args = split[1].trim().split(" ");
         return new CommandReporter(new ExecutableCommand(exec), args);
+    }
+
+    static void write() {
+        SupportedOs.activeOs().ifPresent(os ->
+            FileUtils.write(
+                os.specs.stream()
+                    .flatMap(s ->
+                        s.finder().searchForAllExe().map(e ->
+                            format("# %s %s %s%n", e, separator, join(" ", s.arguments))))
+                    .collect(Collectors.joining("")),
+                dotFile
+            )
+        );
+
     }
 }
