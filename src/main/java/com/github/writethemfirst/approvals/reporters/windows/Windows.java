@@ -17,12 +17,12 @@
  */
 package com.github.writethemfirst.approvals.reporters.windows;
 
-import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.reporters.CommandReporter;
-import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
-import com.github.writethemfirst.approvals.utils.CommandFinder;
+import com.github.writethemfirst.approvals.reporters.CommandReporterSpec;
 
-import static java.util.stream.Stream.of;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -30,58 +30,30 @@ import static java.util.stream.Stream.of;
  */
 public interface Windows {
 
-    CommandReporter IDEA = new CommandReporter(new CommandFinder(
-        "%programFiles%\\JetBrains",
-        "idea64.exe"),
-        "diff %received% %approved%");
-
+    CommandReporterSpec IDEA = new CommandReporterSpec("%programFiles%\\JetBrains", "idea64.exe", "diff %received% %approved%");
     /**
      * Download KDiff3 from https://sourceforge.net/projects/kdiff3/files/
      */
-    CommandReporter KDIFF = new CommandReporter(new CommandFinder(
-        "%programFiles%\\KDiff3",
-        "kdiff3.exe"),
-        "%received% %approved% -o %approved%");
+    CommandReporterSpec KDIFF = new CommandReporterSpec("%programFiles%\\KDiff3", "kdiff3.exe", "%received% %approved% -o %approved%");
 
     /**
      * Download GVim from http://www.vim.org/download.php
      */
-    CommandReporter GVIM = new CommandReporter(new CommandFinder(
-        "%programFiles%\\Vim",
-        "gvim.exe"),
-        "-d %approved% %received% %received%");
+    CommandReporterSpec GVIM = new CommandReporterSpec("%programFiles%\\Vim", "gvim.exe", "-d %approved% %received% %received%");
 
     /**
      * Download TortoiseSVN from https://tortoisesvn.net/downloads.html
      */
-    CommandReporter TORTOISE_SVN = new CommandReporter(new CommandFinder(
-        "%programFiles%\\TortoiseSVN",
-        "TortoiseMerge.exe"));
+    CommandReporterSpec TORTOISE_SVN = new CommandReporterSpec("%programFiles%\\TortoiseSVN", "TortoiseMerge.exe");
 
-    CommandReporter BEYOND_COMPARE_3 = new CommandReporter(new CommandFinder(
-        "%programFiles%\\Beyond Compare 3",
-        "BCompare.exe"));
-
-    CommandReporter BEYOND_COMPARE_4 = new CommandReporter(new CommandFinder(
-        "%programFiles%\\Beyond Compare 3",
-        "BCompare.exe"));
-
-    CommandReporter WINMERGE = new CommandReporter(new CommandFinder(
-        "%programFiles%\\WinMerge",
-        "WinMergeU.exe"));
-
-    CommandReporter ARAXIS = new CommandReporter(new CommandFinder(
-        "%programFiles%\\Araxis",
-        "Compare.exe"));
-
-    CommandReporter CODE_COMPARE = new CommandReporter(new CommandFinder(
-        "%programFiles%\\Devart",
-        "CodeCompare.exe"),
-        "%received% %approved%");
+    CommandReporterSpec BEYOND_COMPARE_3 = new CommandReporterSpec("%programFiles%\\Beyond Compare 3", "BCompare.exe");
+    CommandReporterSpec WINMERGE = new CommandReporterSpec("%programFiles%\\WinMerge", "WinMergeU.exe");
+    CommandReporterSpec ARAXIS = new CommandReporterSpec("%programFiles%\\WinMerge", "WinMergeU.exe");
+    CommandReporterSpec CODE_COMPARE = new CommandReporterSpec("%programFiles%\\Devart", "CodeCompare.exe");
 
 
-    CommandReporter[] possibleNativeReporters = new CommandReporter[]{
-        KDIFF, IDEA, TORTOISE_SVN, BEYOND_COMPARE_4, BEYOND_COMPARE_3, WINMERGE, ARAXIS, CODE_COMPARE, GVIM
-    };
+    List<CommandReporterSpec> knownCommandReporters = Arrays.asList(KDIFF, IDEA, TORTOISE_SVN,  BEYOND_COMPARE_3, WINMERGE, ARAXIS, CODE_COMPARE, GVIM);
+
+    List<CommandReporter> possibleNativeReporters = knownCommandReporters.stream().map(CommandReporterSpec::reporter).collect(Collectors.toList());
 
 }

@@ -17,10 +17,12 @@
  */
 package com.github.writethemfirst.approvals.reporters.macos;
 
-import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.reporters.CommandReporter;
-import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
-import com.github.writethemfirst.approvals.utils.CommandFinder;
+import com.github.writethemfirst.approvals.reporters.CommandReporterSpec;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Stream.of;
 
@@ -29,38 +31,16 @@ import static java.util.stream.Stream.of;
  * Defines `Reporter`s which work on MacOs only.
  */
 public interface MacOs {
+    CommandReporterSpec KDIFF = new CommandReporterSpec("/Applications/kdiff3.app/Contents/MacOS", "kdiff3", "%received% %approved% -o %approved%");
+    CommandReporterSpec IDEA_ULTIMATE = new CommandReporterSpec("/Applications/IntelliJ IDEA.app/Contents/MacOS", "idea", "diff %received% %approved%");
+    CommandReporterSpec IDEA_COMMUNITY = new CommandReporterSpec("/Applications/IdeaIC.app/Contents/MacOS", "idea", "diff %received% %approved%");
+    CommandReporterSpec IDEA_CE = new CommandReporterSpec("/Applications/IntelliJ IDEA CE.app/Contents/MacOS", "idea", "diff %received% %approved%");
+    CommandReporterSpec IDEA = new CommandReporterSpec("/usr/local/bin", "idea", "diff %received% %approved%");
 
-    CommandReporter KDIFF = new CommandReporter(new CommandFinder(
-        "/Applications/kdiff3.app/Contents/MacOS",
-        "kdiff3"),
-        "%received% %approved% -o %approved%");
 
-    CommandReporter IDEA_ULTIMATE = new CommandReporter(new CommandFinder(
-        "/Applications/IntelliJ IDEA.app/Contents/MacOS",
-        "idea"),
-        "diff %received% %approved%");
+    List<CommandReporterSpec> knownCommandReporters = Arrays.asList(IDEA, IDEA_ULTIMATE, IDEA_COMMUNITY, IDEA_CE, KDIFF);
 
-    CommandReporter IDEA_COMMUNITY = new CommandReporter(new CommandFinder(
-        "/Applications/IdeaIC.app/Contents/MacOS",
-        "idea"),
-        "diff %received% %approved%");
+    List<CommandReporter> possibleNativeReporters = knownCommandReporters.stream().map(CommandReporterSpec::reporter).collect(Collectors.toList());
 
-    CommandReporter IDEA_CE = new CommandReporter(new CommandFinder(
-        "/Applications/IntelliJ IDEA CE.app/Contents/MacOS",
-        "idea"),
-        "diff %received% %approved%");
-
-    CommandReporter IDEA = new CommandReporter(new CommandFinder(
-        "/usr/local/bin",
-        "idea"),
-        "diff %received% %approved%");
-
-    CommandReporter[] possibleNativeReporters = new CommandReporter[]{
-        IDEA,
-        IDEA_ULTIMATE,
-        IDEA_COMMUNITY,
-        IDEA_CE,
-        KDIFF,
-    };
 
 }

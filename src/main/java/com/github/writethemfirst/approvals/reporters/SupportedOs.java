@@ -23,6 +23,7 @@ import com.github.writethemfirst.approvals.reporters.macos.MacOs;
 import com.github.writethemfirst.approvals.reporters.windows.Windows;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static com.github.writethemfirst.approvals.reporters.ListAvailableReporters.dotFile;
@@ -46,24 +47,24 @@ public enum SupportedOs {
     LINUX("linux", Linux.possibleNativeReporters);
 
     private final Reporter defaultReporter;
-    public final CommandReporter[] possibleReporters;
+    public final List<CommandReporter> possibleReporters;
     public final boolean active;
 
-    SupportedOs(final String prefix, final CommandReporter... possibleReporters) {
+    SupportedOs(final String prefix, final List<CommandReporter> possibleReporters) {
         this.possibleReporters = possibleReporters;
         final String osName = System.getProperty("os.name").toLowerCase();
         active = osName.startsWith(prefix);
         defaultReporter = active ? defaultReporter(possibleReporters) : null;
     }
 
-    private Reporter defaultReporter(final CommandReporter[] possibleReporters) {
+    private Reporter defaultReporter(final List<CommandReporter> possibleReporters) {
         final Optional<CommandReporter> configuredReporter = read(silentRead(dotFile));
         if (configuredReporter.isPresent()) {
             System.out.println(format("Using reporter configured in %s", dotFile));
             return configuredReporter.get();
         } else {
             System.err.println(format("No available reporter configured in %s", dotFile));
-            return new FirstWorkingReporter(of(possibleReporters).toArray(Reporter[]::new));
+            return new FirstWorkingReporter(possibleReporters.toArray(new Reporter[0]));
         }
     }
 

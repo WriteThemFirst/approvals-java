@@ -43,7 +43,7 @@ public class ListAvailableReporters {
     private static void write() {
         SupportedOs.activeOs().ifPresent(os ->
             FileUtils.write(
-                stream(os.possibleReporters)
+                os.possibleReporters.stream()
                     .filter(Reporter::isAvailable)
                     .map(r -> String.format("# %s %s %s%n", r.executableCommand.executable, separator, String.join(" ", r.arguments)))
                     .collect(Collectors.joining("")

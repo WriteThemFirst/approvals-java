@@ -18,39 +18,26 @@
 package com.github.writethemfirst.approvals.reporters.linux;
 
 import com.github.writethemfirst.approvals.reporters.CommandReporter;
-import com.github.writethemfirst.approvals.utils.CommandFinder;
+import com.github.writethemfirst.approvals.reporters.CommandReporterSpec;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
  * Defines `Reporter`s which work on Linux only.
  */
 public interface Linux {
+    CommandReporterSpec IDEA = new CommandReporterSpec("/usr/local/bin", "idea", "diff %received% %approved%");
+    CommandReporterSpec IDEA_ULTIMATE = new CommandReporterSpec("/usr/bin", "intellij-idea-ultimate-edition", "diff %received% %approved%");
+    CommandReporterSpec IDEA_COMMUNITY = new CommandReporterSpec("/usr/bin", "idea.sh", "diff %received% %approved%");
+    CommandReporterSpec BEYOND_COMPARE = new CommandReporterSpec("/usr/bin", "bcompare");
 
-    CommandReporter IDEA_ULTIMATE = new CommandReporter(new CommandFinder(
-        "/usr/bin",
-        "intellij-idea-ultimate-edition"),
-        "diff %received% %approved%");
 
-    CommandReporter IDEA_COMMUNITY = new CommandReporter(new CommandFinder(
-        "/usr/bin",
-        "idea.sh"),
-        "diff %received% %approved%");
+    List<CommandReporterSpec> knownCommandReporters = Arrays.asList(IDEA, IDEA_ULTIMATE, IDEA_COMMUNITY, BEYOND_COMPARE);
 
-    CommandReporter BEYOND_COMPARE = new CommandReporter(new CommandFinder(
-        "/usr/bin",
-        "bcompare"),
-        "%received% %approved%");
+    List<CommandReporter> possibleNativeReporters = knownCommandReporters.stream().map(CommandReporterSpec::reporter).collect(Collectors.toList());
 
-    CommandReporter IDEA = new CommandReporter(new CommandFinder(
-        "/usr/local/bin",
-        "idea"),
-        "diff %received% %approved%");
-
-    CommandReporter[] possibleNativeReporters = new CommandReporter[]{
-        IDEA,
-        IDEA_ULTIMATE,
-        IDEA_COMMUNITY,
-        BEYOND_COMPARE
-    };
 
 }

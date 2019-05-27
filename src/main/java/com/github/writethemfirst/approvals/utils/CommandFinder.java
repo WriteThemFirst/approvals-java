@@ -88,18 +88,24 @@ public class CommandFinder {
      *
      * Sort order is based on folder names, assuming that latest version have a greater version number.
      */
-    Optional<String> searchForExe() {
+    public Optional<String> searchForExe() {
+        return searchForAllExe().max(naturalOrder());
+    }
+
+    /**
+     * Finds all versions of an installed software.
+     */
+    public Stream<String> searchForAllExe() {
         final Stream<Path> programFilesFolders = concat(replaced(programFilesFolder), replaced(programFilesX86Folder));
         final Stream<Path> possiblePaths = concat(programFilesFolders, notReplaced());
         try {
             return possiblePaths
                 .flatMap(this::matchingCommandInPath)
-                .map(Path::toString)
-                .max(naturalOrder());
+                .map(Path::toString);
         } catch (final Exception e) {
             // can occur when there is a file system loop, see https://bugs.openjdk.java.net/browse/JDK-8039910
             e.printStackTrace();
-            return Optional.empty();
+            return Stream.empty();
         }
     }
 
