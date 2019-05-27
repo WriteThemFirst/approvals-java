@@ -337,7 +337,7 @@ The 28 results are stored in the *received* text file and compared with the *app
 
 If you can't find the information you're searching for in [our documentation](README.md)
 or in our [code sample](https://github.com/WriteThemFirst/GildedRoseApprovalDemo),
-then don't hesitate to have a look at our complete
+then don't hesitate to have a look at our [FAQ](FAQ.md) or
 [Javadoc](https://www.javadoc.io/doc/com.github.writethemfirst/approvals-java/).
 
 # Frequently Asked Questions

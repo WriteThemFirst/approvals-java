@@ -11,6 +11,23 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## How can I use a different tool to approve the differences ?
+
+Since [v0.9.0](https://github.com/WriteThemFirst/approvals-java/releases/tag/v0.9.0) 
+a configuration file is generated on first test in `~/.approvals-java`.
+It contains all detected supported tools, you can select your favorite one by uncommenting it.
+
+Alternatively, you can provide your own tool using this syntax: 
+
+    # complete path /// arguments using reserved keywords %received% %approved%
+    
+    # Windows example
+    C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2019.1.1\bin\idea64.exe //// diff %received% %approved%
+
+    # Mac or linux example
+    /usr/local/bin/idea.sh //// diff %received% %approved%
+    
+    
 ## How to ensure IntelliJ is not creating empty lines in approved files? 
 
 **Problem:** When using the default `Windows.IDEA` Reporter, an empty line is added at the end of the *approved* file and the tests never pass.
