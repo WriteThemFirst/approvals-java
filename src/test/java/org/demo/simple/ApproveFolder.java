@@ -27,7 +27,7 @@ import static com.github.writethemfirst.approvals.Approvals.verifyAllFiles;
 class ApproveFolder {
     @Test
     void verifyFolder() {
-        verifyAllFiles(Paths.get("src/test/resources/org/demo/simple/ApproveFolder/verifyFolder.actual"));
+        verifyAllFiles(Paths.get("src/test/resources/org/demo/simple/ApproveFolder.files/verifyFolder.actual"));
     }
 
 }

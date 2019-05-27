@@ -25,6 +25,10 @@ import com.github.writethemfirst.approvals.reporters.windows.Windows;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static com.github.writethemfirst.approvals.reporters.ListAvailableReporters.dotFile;
+import static com.github.writethemfirst.approvals.reporters.ReporterConfiguration.read;
+import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
+import static java.lang.String.format;
 import static java.util.stream.Stream.of;
 
 /**
@@ -47,9 +51,20 @@ public enum SupportedOs {
 
     SupportedOs(final String prefix, final CommandReporter... possibleReporters) {
         this.possibleReporters = possibleReporters;
-        this.defaultReporter = new FirstWorkingReporter(of(possibleReporters).toArray(Reporter[]::new));
         final String osName = System.getProperty("os.name").toLowerCase();
         active = osName.startsWith(prefix);
+        defaultReporter = active ? defaultReporter(possibleReporters) : null;
+    }
+
+    private Reporter defaultReporter(final CommandReporter[] possibleReporters) {
+        final Optional<CommandReporter> configuredReporter = read(silentRead(dotFile));
+        if (configuredReporter.isPresent()) {
+            System.out.println(format("Using reporter configured in %s", dotFile));
+            return configuredReporter.get();
+        } else {
+            System.err.println(format("No available reporter configured in %s", dotFile));
+            return new FirstWorkingReporter(of(possibleReporters).toArray(Reporter[]::new));
+        }
     }
 
     /**
