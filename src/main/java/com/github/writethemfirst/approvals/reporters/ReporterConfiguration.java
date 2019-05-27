@@ -18,51 +18,34 @@
 package com.github.writethemfirst.approvals.reporters;
 
 import com.github.writethemfirst.approvals.Reporter;
-import com.github.writethemfirst.approvals.files.ApprovalFiles;
 import com.github.writethemfirst.approvals.utils.ExecutableCommand;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
-/**
- * # ConfiguredReporter
- *
- * Configures a Reporter from the file `~/.approvals-java`.
- */
-public class ConfiguredReporter implements Reporter {
-    final Reporter delegate;
+public class ReporterConfiguration {
+    static final String commentCharacter = "#";
+    static String lineEndingsRegexp = "\n|\r\n";
     static String separator = "////";
 
-    ConfiguredReporter(String configurationContent) {
-        delegate = read(configurationContent).orElse(Reporter.BASIC);
-    }
 
-
-    @Override
-    public void mismatch(final ApprovalFiles files) {
-        delegate.mismatch(files);
-    }
-
-    @Override
-    public boolean isAvailable() {
-        return delegate.isAvailable();
-    }
-
-
-    private static Optional<Reporter> read(String lines2) {
-        return Stream.of(lines2.split("\n|\r\n"))
-            .map(String::trim)
-            .filter(line -> !line.startsWith("#"))
-            .map(ConfiguredReporter::parseLine)
+    public static Optional<CommandReporter> read(String configurationContent) {
+        return parseReporters(configurationContent)
             .filter(Reporter::isAvailable)
             .findFirst();
     }
 
-    static Reporter parseLine(String line) {
+     static Stream<CommandReporter> parseReporters(final String configurationContent) {
+        return Stream.of(configurationContent.split(lineEndingsRegexp))
+            .map(String::trim)
+            .filter(line -> !line.startsWith(commentCharacter))
+            .map(ReporterConfiguration::parseLine);
+    }
+
+    static CommandReporter parseLine(String line) {
         final String[] split = line.split(separator);
         final String exec = split[0].trim();
         final String[] args = split[1].trim().split(" ");
         return new CommandReporter(new ExecutableCommand(exec), args);
-
     }
 }

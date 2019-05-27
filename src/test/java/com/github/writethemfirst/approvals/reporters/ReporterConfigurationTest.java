@@ -17,30 +17,31 @@
  */
 package com.github.writethemfirst.approvals.reporters;
 
-import com.github.writethemfirst.approvals.Reporter;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ConfiguredReporterTest {
+class ReporterConfigurationTest {
     @Test
-    void shouldDefaultReporterWhenAllCommented() {
-        final ConfiguredReporter reporter = new ConfiguredReporter(
+    void shouldHaveNoReporterWhenAllCommented() {
+        final Optional<CommandReporter> reporter = ReporterConfiguration.read(
             "# /Applications/kdiff3.app/Contents/MacOS/kdiff3 //// %received% %approved% -o %approved%\n" +
                 "# /usr/local/bin/idea //// diff %received% %approved%");
 
-        assertThat(reporter.isAvailable()).isTrue();
-        assertThat(reporter.delegate).isEqualTo(Reporter.BASIC);
+        assertThat(reporter).isEmpty();
     }
 
     @Test
-    void shouldUseFirstReporterConfiguredInFile() {
-        final ConfiguredReporter reporter = new ConfiguredReporter(
+    void shouldUseReportersConfiguredInFile() {
+        final Stream<CommandReporter> reporters = ReporterConfiguration.parseReporters(
             "# /Applications/kdiff3.app/Contents/MacOS/kdiff3 //// %received% %approved% -o %approved%\n" +
-                "/usr/local/bin/idea //// diff %received% %approved%");
+                "/usr/local/bin/idea //// diff %received% %approved%" +
+                "# C:\\Program Files (x86)\\Vim\\vim80\\gvim.exe //// -d %approved% %received% %received%");
 
 
-        assertThat(reporter.isAvailable()).isTrue();
-        assertThat(((CommandReporter) reporter.delegate).executableCommand.executable).isEqualTo("/usr/local/bin/idea");
+        assertThat(reporters).extracting(r -> r.executableCommand.executable).containsExactly("/usr/local/bin/idea");
     }
 }
