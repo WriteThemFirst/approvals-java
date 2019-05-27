@@ -22,13 +22,14 @@ import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.utils.ExecutableCommand;
 import com.github.writethemfirst.approvals.utils.FileUtils;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.github.writethemfirst.approvals.reporters.windows.Windows.*;
+import static com.github.writethemfirst.approvals.reporters.macos.MacOs.*;
+import static com.github.writethemfirst.approvals.reporters.windows.Windows.GVIM;
+
 
 public class ListAvailableReporters {
     static String separator = "////";
@@ -36,8 +37,8 @@ public class ListAvailableReporters {
     static Path dotFile = Paths.get(home, ".approvals-java");
 
     public static void main(String[] args) {
-        //write();
-        read();
+        write();
+        //read();
 
     }
 
@@ -53,14 +54,12 @@ public class ListAvailableReporters {
     }
 
     private static void write() {
-        String lines = Stream.of(KDIFF,
+        String lines = Stream.of(
+            KDIFF,
             IDEA,
-            TORTOISE_SVN,
-            BEYOND_COMPARE_4,
-            BEYOND_COMPARE_3,
-            WINMERGE,
-            ARAXIS,
-            CODE_COMPARE,
+            IDEA_CE,
+            IDEA_COMMUNITY,
+            IDEA_ULTIMATE,
             GVIM)
             .filter(Reporter::isAvailable)
             .map(r -> String.format("# %s %s %s%n", r.executableCommand.executable, separator, String.join(" ", r.arguments)))

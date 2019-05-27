@@ -19,7 +19,7 @@ package com.github.writethemfirst.approvals.reporters;
 
 import com.github.writethemfirst.approvals.Reporter;
 import com.github.writethemfirst.approvals.reporters.linux.Linux;
-import com.github.writethemfirst.approvals.reporters.linux.MacOs;
+import com.github.writethemfirst.approvals.reporters.macos.MacOs;
 import com.github.writethemfirst.approvals.reporters.windows.Windows;
 
 import java.util.Arrays;
@@ -36,7 +36,7 @@ import java.util.Optional;
  */
 public enum SupportedOs {
     WINDOWS("windows", Windows.DEFAULT),
-    MACOS("mac", MacOs.DEFAULT),
+    MAC_OS("mac", MacOs.DEFAULT),
     LINUX("linux", Linux.DEFAULT);
 
     private final Reporter defaultReporter;

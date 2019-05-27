@@ -40,6 +40,7 @@ import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
  * owns and  use them while computing the approvals.
  */
 public interface Reporter {
+    Reporter BASIC = new FirstWorkingReporter(new JUnit5Reporter(), new ThrowsReporter());
 
     /**
      * Global property allowing to retrieve the default reporter for the current execution context.
@@ -49,8 +50,7 @@ public interface Reporter {
      * If no native supported diff or merge tool is found (this happens in CI for instance), it falls back to throwing
      * exceptions.
      */
-    Reporter DEFAULT = SupportedOs.osDefaultReporter()
-        .orElse(new FirstWorkingReporter(new JUnit5Reporter(), new ThrowsReporter()));
+    Reporter DEFAULT = SupportedOs.osDefaultReporter().orElse(BASIC);
 
     /**
      * A `Reporter` is called whenever a difference is found while comparing the output of a *Program Under Tests* and

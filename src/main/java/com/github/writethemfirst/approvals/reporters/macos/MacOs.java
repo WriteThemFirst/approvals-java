@@ -15,42 +15,48 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals.reporters.linux;
+package com.github.writethemfirst.approvals.reporters.macos;
 
 import com.github.writethemfirst.approvals.Reporter;
+import com.github.writethemfirst.approvals.reporters.CommandReporter;
 import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
 import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 import com.github.writethemfirst.approvals.utils.CommandFinder;
-import com.github.writethemfirst.approvals.reporters.CommandReporter;
 
 
 /**
- * Defines `Reporter`s which work on Linux only.
+ * Defines `Reporter`s which work on MacOs only.
  */
 public interface MacOs {
 
-    Reporter KDIFF = new CommandReporter(new CommandFinder(
+    CommandReporter KDIFF = new CommandReporter(new CommandFinder(
         "/Applications/kdiff3.app/Contents/MacOS",
         "kdiff3"),
         "%received% %approved% -o %approved%");
 
-    Reporter IDEA_ULTIMATE = new CommandReporter(new CommandFinder(
+    CommandReporter IDEA_ULTIMATE = new CommandReporter(new CommandFinder(
         "/Applications/IntelliJ IDEA.app/Contents/MacOS",
         "idea"),
         "diff %received% %approved%");
 
-    Reporter IDEA_COMMUNITY = new CommandReporter(new CommandFinder(
+    CommandReporter IDEA_COMMUNITY = new CommandReporter(new CommandFinder(
         "/Applications/IdeaIC.app/Contents/MacOS",
         "idea"),
         "diff %received% %approved%");
 
-    Reporter IDEA_CE = new CommandReporter(new CommandFinder(
+    CommandReporter IDEA_CE = new CommandReporter(new CommandFinder(
         "/Applications/IntelliJ IDEA CE.app/Contents/MacOS",
         "idea"),
         "diff %received% %approved%");
 
+    CommandReporter IDEA = new CommandReporter(new CommandFinder(
+        "/usr/local/bin",
+        "idea"),
+        "diff %received% %approved%");
+
     Reporter DEFAULT = new FirstWorkingReporter(
+        IDEA,
         IDEA_ULTIMATE,
         IDEA_COMMUNITY,
         IDEA_CE,
