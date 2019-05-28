@@ -18,6 +18,8 @@
 
 package com.github.writethemfirst.approvals.files;
 
+import com.github.writethemfirst.approvals.utils.FileUtils;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -71,6 +73,7 @@ public class ApprovalFolders extends ApprovalFiles {
     public void prepareFolders(final Path actualFolder) {
         try {
             Files.createDirectories(approved);
+            FileUtils.silentRecursiveRemove(received);
         } catch (final IOException e) {
             throw new RuntimeException("could not create *approved* folder " + approved, e);
         }

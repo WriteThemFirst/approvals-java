@@ -41,11 +41,7 @@ public class MatchesAndMismatches {
     public void reportMismatches(final Reporter reporter) {
         if (mismatches.size() > 0) {
             final ApprovalFiles firstMismatch = mismatches.get(0);
-            if (mismatches.size() > 1) {
-                reporter.mismatch(firstMismatch.parent());
-            } else {
-                reporter.mismatch(firstMismatch);
-            }
+            reporter.mismatch(firstMismatch.parent());
         }
     }
 

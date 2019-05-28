@@ -49,7 +49,8 @@ public class FileUtils {
         try {
             return new String(Files.readAllBytes(file));
         } catch (final IOException e) {
-            System.err.println(format("Can't parse the file located at <%s>.", file));
+            System.err.println(format("Can't read the file located at <%s>.", file));
+            System.err.println(e);
             return "";
         }
     }
@@ -71,6 +72,7 @@ public class FileUtils {
             deleteIfExists(file);
         } catch (final IOException e) {
             System.err.println(format("Can't remove the file located at <%s>.", file));
+            System.err.println(e);
         }
     }
 
