@@ -176,7 +176,10 @@
                     </includes>
                     <excludes>
                         <exclude>**/**.approved</exclude>
+                        <exclude>**/*.approved/**</exclude>
                         <exclude>**/**.received</exclude>
+                        <exclude>**/*.received/**</exclude>
+                        <exclude>**/*.actual/**</exclude>
                     </excludes>
                     <useDefaultExcludes>true</useDefaultExcludes>
                     <mapping>
