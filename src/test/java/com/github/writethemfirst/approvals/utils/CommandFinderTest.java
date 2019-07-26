@@ -84,25 +84,28 @@ class CommandFinderTest {
 
     }
 
-    // see also https://bugs.openjdk.java.net/browse/JDK-8039910
     @Test
     @ExtendWith(TemporaryFolderExtension.class)
-    void shouldIgnoreFileSystemLoop(final TemporaryFolder temporaryFolder) throws Exception {
+    void shouldFindReporterDespiteRecursiveSymbolicLink(final TemporaryFolder temporaryFolder) throws Exception {
+        // See related issue https://github.com/WriteThemFirst/approvals-java/issues/74
         final File temp = temporaryFolder.getRoot();
-        final Path sub = get(temp.toString(), "sub");
-        createDirectories(sub);
+        touchIdeaExe(IDEA_8, temp);
+        final Path jetbrainsFolder = get(temp.toString(), "JetBrains");
         try {
-            Files.createSymbolicLink(sub.resolve("sub"), sub);
+            Files.createSymbolicLink(jetbrainsFolder.resolve("RecursiveLink"), jetbrainsFolder);
         } catch (FileSystemException e) {
-            // The bug this test checks has only been detected in docker containers and MacOS
+            // The bug this test checks has only been detected on some Linux distros,
+            // including Ubuntu, and MacOS
             // it is not reproducible on (at least some versions of) Windows
             System.err.println("Cannot create a file system loop - this is expected on Windows");
         }
-        final CommandFinder command = new CommandFinder(
-            temp + OS_SEPARATOR + "sub",
-            "idea64.exe");
+        final CommandFinder command = new CommandFinder(jetbrainsFolder.toString(), "idea64.exe");
 
-        assertThat(command.searchForExe()).isEmpty();
+        final Optional<String> pathToExe = command.searchForExe();
+
+        final String expectedPath = "JetBrains" + OS_SEPARATOR + IDEA_8 + OS_SEPARATOR + "bin" + OS_SEPARATOR + "idea64.exe";
+
+        assertThat(pathToExe.get()).endsWith(expectedPath);
 
     }
 
