@@ -33,9 +33,9 @@ public interface Linux {
     CommandReporterSpec IDEA_ULTIMATE = new CommandReporterSpec("/usr/bin", "intellij-idea-ultimate-edition", "diff %received% %approved%");
     CommandReporterSpec IDEA_COMMUNITY = new CommandReporterSpec("/usr/bin", "idea.sh", "diff %received% %approved%");
     CommandReporterSpec BEYOND_COMPARE = new CommandReporterSpec("/usr/bin", "bcompare");
+    CommandReporterSpec KDIFF3 = new CommandReporterSpec("/usr/bin", "kdiff3", "%received% %approved% -o %approved%");
 
-
-    List<CommandReporterSpec> knownCommandReporters = Arrays.asList(IDEA, IDEA_ULTIMATE, IDEA_COMMUNITY, BEYOND_COMPARE);
+    List<CommandReporterSpec> knownCommandReporters = Arrays.asList(IDEA, IDEA_ULTIMATE, IDEA_COMMUNITY, KDIFF3, BEYOND_COMPARE);
 
     List<CommandReporter> possibleNativeReporters = knownCommandReporters.stream().map(CommandReporterSpec::reporter).collect(Collectors.toList());
 
