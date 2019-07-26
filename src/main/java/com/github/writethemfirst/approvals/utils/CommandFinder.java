@@ -20,6 +20,7 @@ package com.github.writethemfirst.approvals.utils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -103,7 +104,6 @@ public class CommandFinder {
                 .flatMap(this::matchingCommandInPath)
                 .map(Path::toString);
         } catch (final Exception e) {
-            // can occur when there is a file system loop, see https://bugs.openjdk.java.net/browse/JDK-8039910
             e.printStackTrace();
             return Stream.empty();
         }
@@ -111,11 +111,9 @@ public class CommandFinder {
 
     private Stream<Path> matchingCommandInPath(final Path possiblePath) {
         try {
-            return Files.find(
-                possiblePath,
-                MAX_FOLDERS_DEPTH,
-                (p, a) -> p.endsWith(executable),
-                FOLLOW_LINKS);
+            FileVisitorWithResult visitor = new FileVisitorWithResult((p, a) -> p.endsWith(executable));
+            Files.walkFileTree(possiblePath, EnumSet.of(FOLLOW_LINKS), MAX_FOLDERS_DEPTH, visitor);
+            return visitor.result;
         } catch (IOException e) {
             e.printStackTrace();
             return Stream.empty();
