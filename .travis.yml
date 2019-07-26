@@ -8,6 +8,7 @@ cache:
 jobs:
   include:
   - stage: build'n'report
+    jdk: openjdk8
     before_script:
       - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
       - chmod +x ./cc-test-reporter
@@ -20,6 +21,7 @@ jobs:
     after_success:
       - bash <(curl -s https://codecov.io/bash)
   - stage: deploy
+    jdk: openjdk8
     script:
       - mvn deploy --settings settings.xml
   branches:
