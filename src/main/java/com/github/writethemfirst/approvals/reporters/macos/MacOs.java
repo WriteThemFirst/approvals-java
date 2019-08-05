@@ -17,14 +17,10 @@
  */
 package com.github.writethemfirst.approvals.reporters.macos;
 
-import com.github.writethemfirst.approvals.reporters.CommandReporter;
 import com.github.writethemfirst.approvals.reporters.CommandReporterSpec;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Stream.of;
 
 
 /**
@@ -41,8 +37,4 @@ public interface MacOs {
 
 
     List<CommandReporterSpec> knownCommandReporters = Arrays.asList(MELD, IDEA, RUBY_MINE, IDEA_ULTIMATE, IDEA_COMMUNITY, IDEA_CE, KDIFF);
-
-    List<CommandReporter> possibleNativeReporters = knownCommandReporters.stream().map(CommandReporterSpec::reporter).collect(Collectors.toList());
-
-
 }

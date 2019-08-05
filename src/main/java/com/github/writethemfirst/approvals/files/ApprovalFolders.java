@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
-import static java.lang.String.format;
 import static java.util.stream.Collectors.partitioningBy;
 
 /**

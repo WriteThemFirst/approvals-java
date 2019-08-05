@@ -17,12 +17,10 @@
  */
 package com.github.writethemfirst.approvals.reporters.windows;
 
-import com.github.writethemfirst.approvals.reporters.CommandReporter;
 import com.github.writethemfirst.approvals.reporters.CommandReporterSpec;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -51,9 +49,5 @@ public interface Windows {
     CommandReporterSpec ARAXIS = new CommandReporterSpec("%programFiles%\\WinMerge", "WinMergeU.exe");
     CommandReporterSpec CODE_COMPARE = new CommandReporterSpec("%programFiles%\\Devart", "CodeCompare.exe");
 
-
     List<CommandReporterSpec> knownCommandReporters = Arrays.asList(IDEA, KDIFF, TORTOISE_SVN, BEYOND_COMPARE_3, WINMERGE, ARAXIS, CODE_COMPARE, GVIM);
-
-    List<CommandReporter> possibleNativeReporters = knownCommandReporters.stream().map(CommandReporterSpec::reporter).collect(Collectors.toList());
-
 }

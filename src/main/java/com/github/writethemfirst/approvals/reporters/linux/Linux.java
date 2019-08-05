@@ -17,12 +17,10 @@
  */
 package com.github.writethemfirst.approvals.reporters.linux;
 
-import com.github.writethemfirst.approvals.reporters.CommandReporter;
 import com.github.writethemfirst.approvals.reporters.CommandReporterSpec;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -38,8 +36,4 @@ public interface Linux {
     CommandReporterSpec KDIFF3 = new CommandReporterSpec("/usr/bin", "kdiff3", "%received% %approved% -o %approved%");
 
     List<CommandReporterSpec> knownCommandReporters = Arrays.asList(MELD, IDEA, RUBY_MINE, IDEA_ULTIMATE, IDEA_COMMUNITY, KDIFF3, BEYOND_COMPARE);
-
-    List<CommandReporter> possibleNativeReporters = knownCommandReporters.stream().map(CommandReporterSpec::reporter).collect(Collectors.toList());
-
-
 }
