@@ -18,6 +18,7 @@
 package com.github.writethemfirst.approvals.reporters.macos;
 
 import com.github.writethemfirst.approvals.reporters.CommandReporterSpec;
+import com.github.writethemfirst.approvals.reporters.linux.Linux;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,10 +32,7 @@ public interface MacOs {
     CommandReporterSpec IDEA_ULTIMATE = new CommandReporterSpec("/Applications/IntelliJ IDEA.app/Contents/MacOS", "idea", "diff %received% %approved%");
     CommandReporterSpec IDEA_COMMUNITY = new CommandReporterSpec("/Applications/IdeaIC.app/Contents/MacOS", "idea", "diff %received% %approved%");
     CommandReporterSpec IDEA_CE = new CommandReporterSpec("/Applications/IntelliJ IDEA CE.app/Contents/MacOS", "idea", "diff %received% %approved%");
-    CommandReporterSpec IDEA = new CommandReporterSpec("/usr/local/bin", "idea", "diff %received% %approved%");
-    CommandReporterSpec RUBY_MINE = new CommandReporterSpec("/usr/local/bin", "mine", "diff %received% %approved%");
-    CommandReporterSpec MELD = new CommandReporterSpec("/usr/local/bin", "meld", "%received% %approved%");
 
 
-    List<CommandReporterSpec> knownCommandReporters = Arrays.asList(MELD, IDEA, RUBY_MINE, IDEA_ULTIMATE, IDEA_COMMUNITY, IDEA_CE, KDIFF);
+    List<CommandReporterSpec> knownCommandReporters = Arrays.asList(Linux.MELD, Linux.IDEA, Linux.RUBY_MINE, IDEA_ULTIMATE, IDEA_COMMUNITY, IDEA_CE, KDIFF);
 }
