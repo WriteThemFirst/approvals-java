@@ -36,10 +36,11 @@ public interface MacOs {
     CommandReporterSpec IDEA_COMMUNITY = new CommandReporterSpec("/Applications/IdeaIC.app/Contents/MacOS", "idea", "diff %received% %approved%");
     CommandReporterSpec IDEA_CE = new CommandReporterSpec("/Applications/IntelliJ IDEA CE.app/Contents/MacOS", "idea", "diff %received% %approved%");
     CommandReporterSpec IDEA = new CommandReporterSpec("/usr/local/bin", "idea", "diff %received% %approved%");
+    CommandReporterSpec RUBY_MINE = new CommandReporterSpec("/usr/local/bin", "mine", "diff %received% %approved%");
     CommandReporterSpec MELD = new CommandReporterSpec("/usr/local/bin", "meld", "%received% %approved%");
 
 
-    List<CommandReporterSpec> knownCommandReporters = Arrays.asList(MELD, IDEA, IDEA_ULTIMATE, IDEA_COMMUNITY, IDEA_CE, KDIFF);
+    List<CommandReporterSpec> knownCommandReporters = Arrays.asList(MELD, IDEA, RUBY_MINE, IDEA_ULTIMATE, IDEA_COMMUNITY, IDEA_CE, KDIFF);
 
     List<CommandReporter> possibleNativeReporters = knownCommandReporters.stream().map(CommandReporterSpec::reporter).collect(Collectors.toList());
 
