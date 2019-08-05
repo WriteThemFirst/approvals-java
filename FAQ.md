@@ -21,13 +21,24 @@ Alternatively, you can provide your own tool using this syntax:
 
     # complete path /// arguments using reserved keywords %received% %approved%
     
-    # Windows example
+### Windows example
+
     C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2019.1.1\bin\idea64.exe //// diff %received% %approved%
 
-    # Mac or linux example
+### Mac or linux example
+
     /usr/local/bin/idea.sh //// diff %received% %approved%
-    
-    
+
+### Rubymine support
+
+If you are doing JRuby developpement with Rubymine, you can use [RubyMine integrated diff tool]( https://www.jetbrains.com/help/ruby/command-line-differences-viewer.html) to approve the differences.
+
+1. Create the diff script with https://www.jetbrains.com/help/ruby/working-with-the-ide-features-from-command-line.html#launchers-macos-linux
+2. Update `~/.approvals-java` similar to IntelliJ : 
+
+       /usr/local/bin/mine //// diff %received% %approved%
+
+
 ## How to ensure IntelliJ is not creating empty lines in approved files? 
 
 **Problem:** When using the default `Windows.IDEA` Reporter, an empty line is added at the end of the *approved* file and the tests never pass.
