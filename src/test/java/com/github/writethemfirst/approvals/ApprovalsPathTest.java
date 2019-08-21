@@ -53,7 +53,7 @@ class ApprovalsPathTest {
 
         assertThatThrownBy(() -> approver.verify(testUtils.actual))
             .isInstanceOf(AssertionError.class)
-            .hasMessageContaining("expected: <some content> but was: <>");
+            .hasMessageContaining("expected [some content] but was []");
 
         testUtils.cleanupPaths();
     }
@@ -65,7 +65,7 @@ class ApprovalsPathTest {
 
         assertThatThrownBy(() -> approver.verify(testUtils.actual))
             .isInstanceOf(AssertionError.class)
-            .hasMessageContaining("expected: <> but was: <some content>");
+            .hasMessageContaining("expected [] but was [some content]");
 
         testUtils.cleanupPaths();
     }
@@ -77,7 +77,7 @@ class ApprovalsPathTest {
 
         assertThatThrownBy(() -> approver.verify(testUtils.actual))
             .isInstanceOf(AssertionError.class)
-            .hasMessageContaining("expected: <expected content> but was: <>");
+            .hasMessageContaining("expected [expected content] but was []");
 
         testUtils.cleanupPaths();
     }
@@ -167,7 +167,7 @@ class ApprovalsPathTest {
 
         assertThatThrownBy(() -> approver.verify(testUtils.actual))
             .isInstanceOf(AssertionError.class)
-            .hasMessageContaining("expected: <> but was: <actual>");
+            .hasMessageContaining("expected [] but was [actual]");
 
         testUtils.cleanupPaths();
     }

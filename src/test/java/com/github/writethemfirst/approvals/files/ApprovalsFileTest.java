@@ -60,7 +60,7 @@ class ApprovalsFileTest {
 
         assertThatThrownBy(() -> approver.verify(testUtils.actual.resolve("file.txt")))
             .isInstanceOf(AssertionError.class)
-            .hasMessageContaining("expected: <> but was: <actual>");
+            .hasMessageContaining("expected [] but was [actual]");
 
         assertThat(testUtils.readReceived("file.txt")).isEqualTo("actual");
 
