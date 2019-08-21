@@ -22,7 +22,9 @@ import com.github.writethemfirst.approvals.files.ApprovalFiles;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
+import static com.github.writethemfirst.approvals.utils.StringUtils.splitOnLineEndings;
 import static java.lang.String.format;
 
 /**
@@ -49,9 +51,9 @@ public class JUnit5Reporter implements Reporter {
     public void mismatch(final ApprovalFiles files) {
         try {
             final Class<?> assertionsClass = Class.forName(JUNIT5_ASSERTIONS);
-            final Method assertEquals = assertionsClass.getMethod("assertEquals",
-                Object.class, Object.class, String.class);
-            assertEquals.invoke(null, files.approvedContent(), files.receivedContent(),
+            final Method assertLinesMatch = assertionsClass.getMethod("assertLinesMatch",
+                List.class, List.class, String.class);
+            assertLinesMatch.invoke(null, splitOnLineEndings(files.approvedContent()), splitOnLineEndings(files.receivedContent()),
                 format("%s differs from %s", files.received, files.approved));
         } catch (final InvocationTargetException e) {
             //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException

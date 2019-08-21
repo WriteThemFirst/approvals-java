@@ -30,11 +30,11 @@ class JUnit5ReporterTest {
     @Test
     void shouldThrowWhenMismatch() {
         final SimpleTestUtils testUtils = new SimpleTestUtils("shouldThrowWhenMismatch", getClass());
-        testUtils.writeApproved("some text");
+        testUtils.writeApproved("some text1\nsometext2");
 
-        assertThatThrownBy(() -> approvals.verify("other text"))
+        assertThatThrownBy(() -> approvals.verify("other text\nmore text"))
             .isInstanceOf(AssertionError.class)
-            .hasMessageContaining("expected: <some text> but was: <other text>");
+            .hasMessageContaining("expected line #1:`some text1`");
 
         testUtils.cleanupPaths();
     }
@@ -47,7 +47,7 @@ class JUnit5ReporterTest {
 
         assertThatThrownBy(() -> approvals.verify("my text"))
             .isInstanceOf(AssertionError.class)
-            .hasMessageContaining("expected: <> but was: <my text>");
+            .hasMessageContaining("expected line #1:`` doesn't match");
 
         testUtils.cleanupPaths();
     }

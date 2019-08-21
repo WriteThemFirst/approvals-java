@@ -17,17 +17,20 @@
  */
 package com.github.writethemfirst.approvals.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static java.util.stream.IntStream.range;
 
 public class StringUtils {
     public static boolean sameContent(String expected, String actual) {
-        final String[] expectedElements = splitOnLineEndings(expected);
-        final String[] actualElements = splitOnLineEndings(actual);
-        return expectedElements.length == actualElements.length &&
-            range(0, expectedElements.length).allMatch(i -> expectedElements[i].equals(actualElements[i]));
+        final List<String> expectedElements = splitOnLineEndings(expected);
+        final List<String> actualElements = splitOnLineEndings(actual);
+        return expectedElements.size() == actualElements.size() &&
+            range(0, expectedElements.size()).allMatch(i -> expectedElements.get(i).equals(actualElements.get(i)));
     }
 
-    private static String[] splitOnLineEndings(final String expected) {
-        return expected.split("\r\n|\n");
+    public static List<String> splitOnLineEndings(final String s) {
+        return Arrays.asList(s.split("\r\n|\n"));
     }
 }
