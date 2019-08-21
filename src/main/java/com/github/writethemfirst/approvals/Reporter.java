@@ -18,8 +18,6 @@
 package com.github.writethemfirst.approvals;
 
 import com.github.writethemfirst.approvals.files.ApprovalFiles;
-import com.github.writethemfirst.approvals.reporters.FirstWorkingReporter;
-import com.github.writethemfirst.approvals.reporters.JUnit5Reporter;
 import com.github.writethemfirst.approvals.reporters.SupportedOs;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
 
@@ -40,7 +38,7 @@ import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
  * owns and  use them while computing the approvals.
  */
 public interface Reporter {
-    Reporter BASIC = new FirstWorkingReporter(new JUnit5Reporter(), new ThrowsReporter());
+    Reporter BASIC =  new ThrowsReporter();
 
     /**
      * Global property allowing to retrieve the default reporter for the current execution context.
