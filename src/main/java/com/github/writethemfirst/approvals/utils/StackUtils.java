@@ -48,17 +48,12 @@ public class StackUtils {
      * @param potentialReferenceClasses An array of all potential reference classes to use to search for a caller class.
      *                                  The first class which is found in the current stack trace will be used as
      *                                  reference
-     * @return The caller class of the first potential reference class found in the current stack trace
+     * @return The caller class name of the first potential reference class found in the current stack trace
      */
-    public static Class<?> callerClass(final Class<?>... potentialReferenceClasses) {
+    public static String callerClass(final Class<?>... potentialReferenceClasses) {
         // FIXME: Rewrite using dropWhile when switching to Java 9
         final List<String> classesInStack = distinctClassesInStack();
-        final String callerClassName = firstMatchingCallerClass(classesInStack, potentialReferenceClasses);
-        try {
-            return Class.forName(callerClassName);
-        } catch (final ClassNotFoundException e) {
-            throw new Error(format("Can't retrieve the caller class named <%s> in current class loader...", callerClassName), e);
-        }
+        return firstMatchingCallerClass(classesInStack, potentialReferenceClasses);
     }
 
     /**
@@ -78,7 +73,7 @@ public class StackUtils {
             .filter(className -> stream(potentialReferenceClasses).anyMatch(
                 referenceClass -> className.equals(referenceClass.getName())))
             .findFirst();
-        
+
         if (lastReferenceName.isPresent()) {
             final int referenceIndex = classesInStack.indexOf(lastReferenceName.get());
             if (referenceIndex + 1 < classesInStack.size()) {
@@ -118,8 +113,7 @@ public class StackUtils {
      * @return An `Optional` object containing either the caller method name (as a `String`) or an empty value if it
      * cannot be found
      */
-    public static Optional<String> callerMethod(final Class<?> referenceClass) {
-        final String referenceClassName = referenceClass.getName();
+    public static Optional<String> callerMethod(final String referenceClassName) {
         return stream(currentThread().getStackTrace())
             .filter(e -> e.getClassName().equals(referenceClassName))
             .filter(e -> !e.getMethodName().startsWith("lambda$"))

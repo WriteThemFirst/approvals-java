@@ -63,7 +63,7 @@ import static java.util.stream.Collectors.joining;
  * @see Reporter
  */
 public class Approver {
-    private final Class<?> testClass;
+    private final String testClass;
     private final Path folder;
     private final Reporter reporter;
     private final String customFileName;
@@ -91,7 +91,7 @@ public class Approver {
         final String customFileName,
         final String customExtension,
         final Path folder,
-        final Class<?> testClass,
+        final String testClass,
         final String header) {
 
         this.reporter = reporter;
@@ -100,6 +100,29 @@ public class Approver {
         this.testClass = testClass;
         this.folder = folder;
         this.header = header;
+    }
+
+    public static boolean isAutoApproving() {
+        return "true".equals(System.getProperty("AUTO_APPROVE"));
+    }
+
+    /**
+     * Computes and returns the Path to the folder to be used for storing the *approved* and *received* files linked to
+     * the `testClass` instance.
+     *
+     * The folder will be created under `src/test/resources` in the really same project, and will be named after the
+     * package name of the `testClass`, followed by the name of the `testClass` itself. That folder will later contain
+     * one pair of files (*approved* and *received*) for each method to be tested.
+     *
+     * @return The Path to the folder linked to the `testClass` attribute, used for storing the *received* and
+     * *approved* files.
+     */
+    private static Path folderForClass(final String qualifiedClassName) {
+        final String[] elements = qualifiedClassName.split("\\.");
+        final String[] packageElements = stream(elements).limit(elements.length - 1).toArray(String[]::new);
+        final Path packageResourcesPath = get("src/test/resources/", packageElements);
+        final String className = elements[elements.length - 1];
+        return packageResourcesPath.resolve(className + ".files");
     }
 
     /**
@@ -126,7 +149,7 @@ public class Approver {
      * @return a copy of this Approver
      */
     public Approver testing(final Class<?> testClass) {
-        return new Approver(reporter, customFileName, customExtension, folderForClass(testClass), testClass, header);
+        return new Approver(reporter, customFileName, customExtension, folderForClass(testClass.getName()), testClass.getName(), header);
     }
 
     /**
@@ -156,7 +179,6 @@ public class Approver {
     private Approver header(final String headerWithLineFeed) {
         return new Approver(reporter, customFileName, customExtension, folder, testClass, headerWithLineFeed);
     }
-
 
     /**
      * Compares the actual output of your program (the function's argument) and the content of the *approved* file
@@ -196,11 +218,6 @@ public class Approver {
         }
     }
 
-    public static boolean isAutoApproving() {
-        return "true".equals(System.getProperty("AUTO_APPROVE"));
-    }
-
-
     /**
      * Compares the actual output of your program (the function's argument) and the content of the *approved* file
      * matching with the test method.
@@ -227,7 +244,6 @@ public class Approver {
         }
     }
 
-
     /**
      * Compares the actual output of your program (files in the folder `actualFolder`) and the content of the *approved*
      * "Master" folder matching with the test method.
@@ -243,7 +259,7 @@ public class Approver {
      * @throws RuntimeException if the {@link Reporter} relies on executing an external command which failed
      */
     private void verifyFolderContent(final ApprovalFolders approvalFolders) {
-        if(isAutoApproving()) {
+        if (isAutoApproving()) {
             approvalFolders.autoApprove();
         }
         final MatchesAndMismatches matchesAndMismatches = approvalFolders.matchesAndMismatches();
@@ -251,25 +267,6 @@ public class Approver {
         matchesAndMismatches.reportMismatches(reporter);
         matchesAndMismatches.throwMismatches();
     }
-
-
-    /**
-     * Computes and returns the Path to the folder to be used for storing the *approved* and *received* files linked to
-     * the `testClass` instance.
-     *
-     * The folder will be created under `src/test/resources` in the really same project, and will be named after the
-     * package name of the `testClass`, followed by the name of the `testClass` itself. That folder will later contain
-     * one pair of files (*approved* and *received*) for each method to be tested.
-     *
-     * @return The Path to the folder linked to the `testClass` attribute, used for storing the *received* and
-     * *approved* files.
-     */
-    private static Path folderForClass(final Class<?> testClass) {
-        final String packageName = testClass.getPackage().getName();
-        final Path packageResourcesPath = get("src/test/resources/", packageName.split("\\."));
-        return packageResourcesPath.resolve(testClass.getSimpleName() + ".files");
-    }
-
 
     /**
      * Returns the caller method name using {@link com.github.writethemfirst.approvals.utils.StackUtils}.

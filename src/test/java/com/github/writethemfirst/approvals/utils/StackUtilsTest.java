@@ -28,28 +28,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 class StackUtilsTest {
     @Test
     void guessedClassShouldBeTestClass() {
-        final Class<?> guessed = StackUtils.callerClass(StackUtils.class);
-        assertThat(guessed).isEqualTo(getClass());
+        final String guessed = StackUtils.callerClass(StackUtils.class);
+        assertThat(guessed).isEqualTo(getClass().getName());
     }
 
     @Test
     void methodNameShouldBeEmpty() {
-        assertThat(callerMethod(String.class)).isEmpty();
+        assertThat(callerMethod(String.class.getName())).isEmpty();
     }
 
 
     @Test
     void methodNameShouldBeTheMethodName() {
-        assertThat(callerMethod(getClass())).contains("methodNameShouldBeTheMethodName");
+        assertThat(callerMethod(getClass().getName())).contains("methodNameShouldBeTheMethodName");
     }
 
   @Test
     void callerClassShouldExcludeSeveralArguments() {
-      assertThat(Utils.call()).isEqualTo(getClass());
+      assertThat(Utils.call()).isEqualTo(getClass().getName());
     }
 
     static class Utils {
-        static Class<?> call(){
+        static String call(){
             return callerClass(StackUtils.class, Utils.class);
         }
     }
@@ -58,6 +58,6 @@ class StackUtilsTest {
     @Test
     void methodNameShouldNotBeLambda() {
         Stream.of("whatever")
-            .forEach(s -> assertThat(callerMethod(getClass())).contains("methodNameShouldNotBeLambda"));
+            .forEach(s -> assertThat(callerMethod(getClass().getName())).contains("methodNameShouldNotBeLambda"));
     }
 }
