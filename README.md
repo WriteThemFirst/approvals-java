@@ -30,8 +30,8 @@
     <a href='http://hits.dwyl.io/WriteThemFirst/approvals-java'>
         <img src='http://hits.dwyl.io/WriteThemFirst/approvals-java.svg' />
     </a>
-    <a href='https://github.com/WriteThemFirst/approvals-java/tree/v0.11.0'>
-        <img src='https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/v0.11.0.svg' />
+    <a href='https://github.com/WriteThemFirst/approvals-java/tree/v0.11.1'>
+        <img src='https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/v0.11.1.svg' />
     </a>
     <a href='https://github.com/WriteThemFirst/approvals-java/issues/'>
         <img src='https://img.shields.io/github/issues/WriteThemFirst/approvals-java.svg' />
@@ -107,7 +107,7 @@ In your `pom.xml`, add this dependency:
 <dependency>
     <groupId>com.github.writethemfirst</groupId>
     <artifactId>approvals-java</artifactId>
-    <version>0.11.0</version>
+    <version>0.11.1</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -117,7 +117,7 @@ In your `pom.xml`, add this dependency:
 In your `build.gradle`, add this dependency:
 
 ```groovy
-testCompile 'com.github.writethemfirst:approvals-java:0.11.0'
+testCompile 'com.github.writethemfirst:approvals-java:0.11.1'
 ```
 
 ## Sbt (Scala users)
@@ -125,7 +125,7 @@ testCompile 'com.github.writethemfirst:approvals-java:0.11.0'
 In your `build.sbt`, add this dependency:
 
 ```scala
-libraryDependencies += "com.github.writethemfirst" % "approvals-java" % "0.11.0"
+libraryDependencies += "com.github.writethemfirst" % "approvals-java" % "0.11.1"
 ```
 
 
@@ -152,7 +152,7 @@ And then you can simply rely on the latest `SNAPSHOT`:
 <dependency>
     <groupId>com.github.writethemfirst</groupId>
     <artifactId>approvals-java</artifactId>
-    <version>0.11.1-SNAPSHOT</version>
+    <version>0.11.2-SNAPSHOT</version>
     <scope>test</scope>
 </dependency>
 ```
