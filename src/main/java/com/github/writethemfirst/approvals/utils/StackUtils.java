@@ -22,6 +22,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.codehaus.groovy.runtime.StackTraceUtils;
 
 import static java.lang.String.format;
 import static java.lang.Thread.currentThread;
@@ -93,7 +96,7 @@ public class StackUtils {
      * @return A List containing all distinct classes' names from the current thread stacktrace
      */
     private static List<String> distinctClassesInStack() {
-        return stream(currentThread().getStackTrace())
+        return stream(santizedStackTrace())
             .map(StackTraceElement::getClassName)
             .distinct()
             .collect(Collectors.toList());
@@ -114,10 +117,41 @@ public class StackUtils {
      * cannot be found
      */
     public static Optional<String> callerMethod(final String referenceClassName) {
-        return stream(currentThread().getStackTrace())
-            .filter(e -> e.getClassName().equals(referenceClassName))
+        return stream(santizedStackTrace())
+            .filter(e -> e.getClassName().equals(sanitizeClassName(referenceClassName)))
             .filter(e -> !e.getMethodName().startsWith("lambda$"))
             .map(StackTraceElement::getMethodName)
             .findFirst();
+    }
+
+    /**
+     * Remove all apparently Groovy-internal trace entries from the stacktrace.
+     * 
+     * The Groovy stacktrace is usually littered with lots of intermediate calls. Also in some version of Groovy, you
+     * find that a static method is represented as an inner class which is then called from
+     * org.codehaus.groovy.runtime.callsite.AbstractCallSite.callStatic(), which is not handled by Groovy's
+     * 
+     * @return An array of the stacktrace elements without internal Groovy entries.
+     */
+    private static StackTraceElement[] santizedStackTrace() {
+        Throwable t = new Throwable();
+        StackTraceUtils.sanitize(t);
+        return stream(t.getStackTrace())
+            .filter(e -> !(e.getMethodName().equals("callStatic")
+                && e.getClassName().matches(".*\\$\\p{javaLowerCase}[^.]*")))
+            .toArray(StackTraceElement[]::new);
+    }
+
+    /**
+     * Remove the $_methodName_closure1 String part from a Groovy closure class name.
+     * 
+     * Groovy closure are represented as inner classes. This method extracts the actual class name for these cases.
+     * 
+     * @param referenceClassName The `referenceClass` for which we want to search the caller method in the current
+     *                           thread stacktrace
+     * @return
+     */
+    public static String sanitizeClassName(String referenceClassName) {
+        return referenceClassName.replaceAll("\\$_.*_closure\\d", "");
     }
 }
