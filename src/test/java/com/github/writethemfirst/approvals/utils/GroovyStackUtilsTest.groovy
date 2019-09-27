@@ -17,7 +17,10 @@
  */
 package com.github.writethemfirst.approvals.utils;
 
+import org.codehaus.groovy.runtime.StackTraceUtils
 import org.junit.jupiter.api.Test;
+
+import com.github.writethemfirst.approvals.utils.StackUtilsTest.Utils
 
 import java.util.stream.Stream;
 
@@ -25,9 +28,9 @@ import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
 import static com.github.writethemfirst.approvals.utils.StackUtils.sanitizeClassName;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals
 
-class StackUtilsTest {
+class GroovyStackUtilsTest {
     @Test
     void guessedClassShouldBeTestClass() {
         final String guessed = StackUtils.callerClass(StackUtils.class);
@@ -59,12 +62,12 @@ class StackUtilsTest {
     void sanitizeClassNameInLambda() {
         String className = getClass().getName();
         Stream.of("whatever")
-            .forEach(s -> assertEquals(className, sanitizeClassName(getClass().getName())));
+            .forEach({s -> assertEquals(className, sanitizeClassName(getClass().getName()))});
     }
 
     @Test
     void methodNameShouldNotBeLambda() {
         Stream.of("whatever")
-            .forEach(s -> assertThat(callerMethod(getClass().getName())).contains("methodNameShouldNotBeLambda"));
+            .forEach({s -> assertThat(callerMethod(getClass().getName())).contains("methodNameShouldNotBeLambda")});
     }
 }
