@@ -25,7 +25,6 @@ import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
 import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
 import static com.github.writethemfirst.approvals.utils.StackUtils.sanitizeClassName;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class StackUtilsTest {
     @Test
@@ -38,6 +37,7 @@ class StackUtilsTest {
     void methodNameShouldBeEmpty() {
         assertThat(callerMethod(String.class.getName())).isEmpty();
     }
+
 
     @Test
     void methodNameShouldBeTheMethodName() {
@@ -59,7 +59,7 @@ class StackUtilsTest {
     void sanitizeClassNameInLambda() {
         String className = getClass().getName();
         Stream.of("whatever")
-            .forEach(s -> assertEquals(className, sanitizeClassName(getClass().getName())));
+            .forEach(s -> assertThat(sanitizeClassName(getClass().getName())).isEqualTo(className));
     }
 
     @Test
