@@ -22,12 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.codehaus.groovy.runtime.StackTraceUtils;
 
-import static java.lang.String.format;
-import static java.lang.Thread.currentThread;
 import static java.util.Arrays.stream;
 
 /**
