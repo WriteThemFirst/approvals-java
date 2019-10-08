@@ -23,13 +23,14 @@ import com.github.writethemfirst.approvals.files.ApprovalFiles;
 import com.github.writethemfirst.approvals.files.ApprovalFolders;
 import com.github.writethemfirst.approvals.files.MatchesAndMismatches;
 import com.github.writethemfirst.approvals.reporters.ThrowsReporter;
+import com.github.writethemfirst.approvals.utils.stack.StackUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.github.writethemfirst.approvals.utils.FileUtils.*;
-import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
-import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
+import static com.github.writethemfirst.approvals.utils.stack.StackUtils.callerClass;
+import static com.github.writethemfirst.approvals.utils.stack.StackUtils.callerMethod;
 import static java.nio.file.Paths.get;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
@@ -269,14 +270,14 @@ public class Approver {
     }
 
     /**
-     * Returns the caller method name using {@link com.github.writethemfirst.approvals.utils.StackUtils}.
+     * Returns the caller method name using {@link StackUtils}.
      *
      * It returns `unknown_method` in case the caller method cannot be retrieved automatically.
      *
      * Info: It doesn't return an option or null or an empty string, so the generated files are located in a visible
      * *unknown* file, which encourages the developer to solve the actual issue.
      *
-     * @return the caller method name found by {@link com.github.writethemfirst.approvals.utils.StackUtils} or
+     * @return the caller method name found by {@link StackUtils} or
      * `unknown_method` otherwise.
      */
     private String callerMethodName() {

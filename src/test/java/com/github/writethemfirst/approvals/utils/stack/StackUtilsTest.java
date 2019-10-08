@@ -15,14 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.writethemfirst.approvals.utils;
+package com.github.writethemfirst.approvals.utils.stack;
 
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
-import static com.github.writethemfirst.approvals.utils.StackUtils.callerClass;
-import static com.github.writethemfirst.approvals.utils.StackUtils.callerMethod;
+import static com.github.writethemfirst.approvals.utils.stack.StackUtils.callerClass;
+import static com.github.writethemfirst.approvals.utils.stack.StackUtils.callerMethod;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class StackUtilsTest {
