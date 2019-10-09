@@ -107,7 +107,7 @@ In your `pom.xml`, add this dependency:
 <dependency>
     <groupId>com.github.writethemfirst</groupId>
     <artifactId>approvals-java</artifactId>
-    <version>0.11.1</version>
+    <version>0.12.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -117,7 +117,7 @@ In your `pom.xml`, add this dependency:
 In your `build.gradle`, add this dependency:
 
 ```groovy
-testCompile 'com.github.writethemfirst:approvals-java:0.11.1'
+testCompile 'com.github.writethemfirst:approvals-java:0.12.0'
 ```
 
 ## Sbt (Scala users)
@@ -125,7 +125,7 @@ testCompile 'com.github.writethemfirst:approvals-java:0.11.1'
 In your `build.sbt`, add this dependency:
 
 ```scala
-libraryDependencies += "com.github.writethemfirst" % "approvals-java" % "0.11.1"
+libraryDependencies += "com.github.writethemfirst" % "approvals-java" % "0.12.0"
 ```
 
 
@@ -152,7 +152,7 @@ And then you can simply rely on the latest `SNAPSHOT`:
 <dependency>
     <groupId>com.github.writethemfirst</groupId>
     <artifactId>approvals-java</artifactId>
-    <version>0.11.2-SNAPSHOT</version>
+    <version>0.12.1-SNAPSHOT</version>
     <scope>test</scope>
 </dependency>
 ```
