@@ -17,7 +17,9 @@
  */
 package com.github.writethemfirst.approvals.utils.stack;
 
+import java.util.Iterator;
 import java.util.Optional;
+import java.util.ServiceLoader;
 
 /**
  * # StackUtils
@@ -29,9 +31,6 @@ import java.util.Optional;
  * used by the *Approval Files*.
  */
 public class StackUtils {
-    private final static FindCaller findCaller = new FindCaller() {
-    };
-
     /**
      * Returns the caller class of the first potential reference class found by searching the current thread
      * stacktrace.
@@ -45,8 +44,13 @@ public class StackUtils {
      * @return The caller class name of the first potential reference class found in the current stack trace
      */
     public static String callerClass(final Class<?>... potentialReferenceClasses) {
-        return findCaller
-            .callerClass(potentialReferenceClasses);
+        return getFindCaller().callerClass(potentialReferenceClasses);
+    }
+
+    private static FindCaller getFindCaller() {
+        final ServiceLoader<FindCaller> load = ServiceLoader.load(FindCaller.class);
+        final Iterator<FindCaller> iterator = load.iterator();
+        return iterator.next();
     }
 
 
@@ -60,11 +64,11 @@ public class StackUtils {
      * method can be found, an empty `Optional` will be returned.
      *
      * @param referenceClassName The class for which we want to search the caller method in the current thread
-     *                       stacktrace
+     *                           stacktrace
      * @return An `Optional` object containing either the caller method name (as a `String`) or an empty value if it
      * cannot be found
      */
     public static Optional<String> callerMethod(final String referenceClassName) {
-        return findCaller.callerMethod(referenceClassName);
+        return getFindCaller().callerMethod(referenceClassName);
     }
 }
