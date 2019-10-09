@@ -30,8 +30,8 @@
     <a href='http://hits.dwyl.io/WriteThemFirst/approvals-java'>
         <img src='http://hits.dwyl.io/WriteThemFirst/approvals-java.svg' />
     </a>
-    <a href='https://github.com/WriteThemFirst/approvals-java/tree/v0.11.1'>
-        <img src='https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/v0.11.1.svg' />
+    <a href='https://github.com/WriteThemFirst/approvals-java/tree/v0.12.0'>
+        <img src='https://img.shields.io/github/commits-since/WriteThemFirst/approvals-java/v0.12.0.svg' />
     </a>
     <a href='https://github.com/WriteThemFirst/approvals-java/issues/'>
         <img src='https://img.shields.io/github/issues/WriteThemFirst/approvals-java.svg' />
