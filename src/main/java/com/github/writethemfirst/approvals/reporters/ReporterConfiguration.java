@@ -42,13 +42,17 @@ class ReporterConfiguration {
             try {
                 return parse(silentRead(dotFile));
             } catch (RuntimeException e) {
-                System.err.println(String.format("Could not parse configuration %s, using defaults", dotFile));
+                System.err.println(format("Could not parse configuration %s, using defaults", dotFile));
                 System.err.println(e);
                 return Optional.empty();
             }
         } else {
-            write();
-            System.out.println(format("Initialized %s, uncomment lines to select your preferred command", dotFile));
+            try {
+                write();
+                System.out.println(format("Initialized %s, uncomment lines to select your preferred command", dotFile));
+            } catch (RuntimeException e) {
+                System.err.println(format("Could not initialize %s : %s", dotFile, e));
+            }
             return Optional.empty();
         }
     }
