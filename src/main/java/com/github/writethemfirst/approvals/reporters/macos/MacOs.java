@@ -34,5 +34,5 @@ public interface MacOs {
     CommandReporterSpec IDEA_CE = new CommandReporterSpec("/Applications/IntelliJ IDEA CE.app/Contents/MacOS", "idea", "diff %received% %approved%");
 
 
-    List<CommandReporterSpec> knownCommandReporters = Arrays.asList(Linux.MELD, Linux.IDEA, Linux.RUBY_MINE, IDEA_ULTIMATE, IDEA_COMMUNITY, IDEA_CE, KDIFF);
+    List<CommandReporterSpec> knownCommandReporters = Arrays.asList(Linux.MELD, Linux.VS_CODE, Linux.IDEA, Linux.RUBY_MINE, IDEA_ULTIMATE, IDEA_COMMUNITY, IDEA_CE, KDIFF);
 }

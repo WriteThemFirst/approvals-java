@@ -27,6 +27,7 @@ import java.util.List;
  * Defines `Reporter`s which work on Linux only.
  */
 public interface Linux {
+    CommandReporterSpec VS_CODE = new CommandReporterSpec("/usr/local/bin", "code", "--diff %received% %approved%");
     CommandReporterSpec IDEA = new CommandReporterSpec("/usr/local/bin", "idea", "diff %received% %approved%");
     CommandReporterSpec RUBY_MINE = new CommandReporterSpec("/usr/local/bin", "mine", "diff %received% %approved%");
     CommandReporterSpec MELD = new CommandReporterSpec("/usr/local/bin", "meld", "%received% %approved%");
@@ -35,5 +36,5 @@ public interface Linux {
     CommandReporterSpec BEYOND_COMPARE = new CommandReporterSpec("/usr/bin", "bcompare");
     CommandReporterSpec KDIFF3 = new CommandReporterSpec("/usr/bin", "kdiff3", "%received% %approved% -o %approved%");
 
-    List<CommandReporterSpec> knownCommandReporters = Arrays.asList(MELD, IDEA, RUBY_MINE, IDEA_ULTIMATE, IDEA_COMMUNITY, KDIFF3, BEYOND_COMPARE);
+    List<CommandReporterSpec> knownCommandReporters = Arrays.asList(MELD, VS_CODE, IDEA, RUBY_MINE, IDEA_ULTIMATE, IDEA_COMMUNITY, KDIFF3, BEYOND_COMPARE);
 }
