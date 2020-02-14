@@ -26,19 +26,20 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import static com.github.writethemfirst.approvals.reporters.Environment.isInCi;
 import static java.util.Arrays.stream;
 
 /**
  * A reporter which delegates execution to an external command.
  */
 public class CommandReporter implements Reporter {
-    final String[] arguments;
     private final static String DEFAULT_ARGUMENTS = "%received% %approved%";
+    final String[] arguments;
     final ExecutableCommand executableCommand;
     private final boolean available;
 
     public CommandReporter(final ExecutableCommand command, final String... arguments) {
-        this.available = command.isAvailable();
+        this.available = command.isAvailable() && !isInCi();
         this.executableCommand = command;
         this.arguments = arguments;
     }
@@ -59,7 +60,7 @@ public class CommandReporter implements Reporter {
         final Optional<ExecutableCommand> executableCommand = command.executableCommand();
         if (executableCommand.isPresent()) {
             this.executableCommand = executableCommand.get();
-            available = this.executableCommand.isAvailable();
+            available = this.executableCommand.isAvailable() && !isInCi();
         } else {
             available = false;
             this.executableCommand = null;

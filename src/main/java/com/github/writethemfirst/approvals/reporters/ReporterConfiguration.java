@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.github.writethemfirst.approvals.reporters.Environment.isInCi;
 import static com.github.writethemfirst.approvals.utils.FileUtils.silentRead;
 import static java.lang.String.format;
 import static java.lang.String.join;
@@ -38,7 +39,9 @@ class ReporterConfiguration {
     static Path dotFile = Paths.get(home, ".approvals-java");
 
     static Optional<CommandReporter> read() {
-        if (dotFile.toFile().exists()) {
+        if (isInCi()) {
+            return Optional.empty();
+        } else if (dotFile.toFile().exists()) {
             try {
                 return parse(silentRead(dotFile));
             } catch (RuntimeException e) {
@@ -47,6 +50,7 @@ class ReporterConfiguration {
                 return Optional.empty();
             }
         } else {
+            System.err.println(format("No configuration file yet %s", dotFile));
             try {
                 write();
                 System.out.println(format("Initialized %s, uncomment lines to select your preferred command", dotFile));

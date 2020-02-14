@@ -68,7 +68,6 @@ public enum SupportedOs {
             System.out.println(format("Using reporter configured in %s", dotFile));
             return configuredReporter.get();
         } else {
-            System.err.println(format("No available reporter configured in %s", dotFile));
             return new FirstWorkingReporter(specs.stream().map(CommandReporterSpec::reporter).toArray(Reporter[]::new));
         }
     }
