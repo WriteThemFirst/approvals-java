@@ -141,12 +141,14 @@ The CI will:
 - Deploy the jars:
     - On [oss.jfrog.org](https://oss.jfrog.org/artifactory/oss-snapshot-local) for SNAPSHOTs,
     - On [Bintray](https://bintray.com/writethemfirst/maven/approvals-java) for releases.
-    
+
 ## Releasing the library
 
 Releasing a new version of the library is the only action requiring manual operations. To trigger a new release, you have to:
 
 - Push a commit including a final version in the `pom.xml`,
+
+    `./new_tag.sh 0.13.0`
 
 That will trigger the delivery of all necessary jars on [Bintray](https://bintray.com/writethemfirst/maven/approvals-java).
 
@@ -185,13 +187,13 @@ npm install -g doctoc
 
 And then update the table of contents of Markdown documents with:
 
-``` 
+```
 doctoc *.md
 ```
 
 Or update a single document with:
 
-``` 
+```
 doctoc README.md
 ```
 
@@ -220,7 +222,7 @@ Once you created a [new release on GitHub](https://github.com/WriteThemFirst/app
 
 You can get that by executing the provided script at the root of the repository:
 
-``` 
+```
 ./changelog.sh
 ```
 
@@ -231,12 +233,12 @@ It will compute the changelog and display it in your terminal. You can then copy
 ## Adding a new Reporter
 
 You should probably instantiate a new `CommandReporter` in the `Windows` or `Linux` (TBC) interface.
- 
+
 Here is a sample syntax:
 
 ```java
 Reporter IDEA = new CommandReporter(new Command(
-    "%programFiles%\\JetBrains", "idea64.exe"), 
+    "%programFiles%\\JetBrains", "idea64.exe"),
     "merge %approved% %received% %approved%");
 ```
 
