@@ -288,12 +288,12 @@ public class Approver {
         return approvedAndReceivedPathsForFolder().resolve(output);
     }
 
-    private ApprovalFolders approvedAndReceivedPathsForFolder() {
+    public ApprovalFolders approvedAndReceivedPathsForFolder() {
         final String methodName = customFileName != null ? customFileName : callerMethodName();
         return new ApprovalFolders(folder, methodName);
     }
 
-    private ApprovalFiles approvedAndReceivedPaths() {
+    public ApprovalFiles approvedAndReceivedPaths() {
         final String methodName = customFileName != null ? customFileName : callerMethodName();
         return new ApprovalFiles(folder, methodName);
     }
