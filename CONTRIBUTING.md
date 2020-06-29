@@ -148,8 +148,8 @@ Releasing a new version of the library is the only action requiring manual opera
 
 - Push a commit including a final version in the `pom.xml`,
 
-    `./new_tag.sh 0.13.0`
-    `git push origin v0.13.0`
+    `./new_tag.sh v0.13.1`
+    `git push origin vv0.13.1`
 
 
 That will trigger the delivery of all necessary jars on [Bintray](https://bintray.com/writethemfirst/maven/approvals-java).
