@@ -10,3 +10,6 @@ indent_size = 4
 [*.approved]
 insert_final_newline = false
 trim_trailing_whitespace = false
+
+[*.yml]
+indent_size = 2
