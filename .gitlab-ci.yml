@@ -3,6 +3,10 @@ cache:
   paths:
     - $HOME/.m2/
 
+stages:
+  - test
+  - publish
+
 test:
   stage: test
   script:
