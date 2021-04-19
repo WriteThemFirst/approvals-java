@@ -70,3 +70,6 @@ gradle-app.setting
 ###############################################
 
 *~
+
+release.properties
+*.releaseBackup
