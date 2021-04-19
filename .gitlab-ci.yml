@@ -5,6 +5,23 @@ cache:
 
 test:
   stage: test
-  script: "mvn test"
+  script:
+    - mvn test
 
+publish snapshots:
+  stage: publish
+  script:
+    - mvn -s ./settings.xml clean deploy
+  rules:
+    - if: '$CI_COMMIT_TAG != null'
+      when: never
+    - when: on_success
 
+publish release:
+  stage: publish
+  script:
+    - mvn versions:set -DnewVersion=${CI_COMMIT_TAG/v}
+    - mvn -s ./settings.xml clean deploy
+  rules:
+    - if: '$CI_COMMIT_TAG != null'
+      when: on_success

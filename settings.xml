@@ -4,9 +4,9 @@
 
     <servers>
         <server>
-            <id>bintray</id>
-            <username>${env.BINTRAY_USERNAME}</username>
-            <password>${env.BINTRAY_API_KEY}</password>
+            <id>ossrh</id>
+            <username>${env.SONATYPE_USERNAME}</username>
+            <password>${env.SONATYPE_PASSWORD}</password>
         </server>
     </servers>
 
