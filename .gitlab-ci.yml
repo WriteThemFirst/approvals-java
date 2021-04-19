@@ -27,6 +27,10 @@ publish snapshots:
 
 publish release:
   stage: publish
+  before_script:
+    - apt update
+    - apt install -y gpg
+    - gpg --import <(echo "$GITLAB_PGP_PRIVATE_KEY")
   script:
     - mvn versions:set -DnewVersion=${CI_COMMIT_TAG/v}
     - mvn -s ./settings.xml clean deploy
