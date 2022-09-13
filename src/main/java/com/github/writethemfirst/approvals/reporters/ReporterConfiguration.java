@@ -34,8 +34,8 @@ import static java.lang.String.join;
 
 class ReporterConfiguration {
     private static final String commentCharacter = "#";
-    private static String separator = "////";
-    private static String home = System.getProperty("user.home");
+    private static final String separator = "////";
+    private static final String home = System.getProperty("user.home");
     static Path dotFile = Paths.get(home, ".approvals-java");
 
     static Optional<CommandReporter> read() {
@@ -45,17 +45,17 @@ class ReporterConfiguration {
             try {
                 return parse(silentRead(dotFile));
             } catch (RuntimeException e) {
-                System.err.println(format("Could not parse configuration %s, using defaults", dotFile));
+                System.err.printf("Could not parse configuration %s, using defaults%n", dotFile);
                 System.err.println(e);
                 return Optional.empty();
             }
         } else {
-            System.err.println(format("No configuration file yet %s", dotFile));
+            System.err.printf("No configuration file yet %s%n", dotFile);
             try {
                 write();
-                System.out.println(format("Initialized %s, uncomment lines to select your preferred command", dotFile));
+                System.out.printf("Initialized %s, uncomment lines to select your preferred command%n", dotFile);
             } catch (RuntimeException e) {
-                System.err.println(format("Could not initialize %s : %s", dotFile, e));
+                System.err.printf("Could not initialize %s : %s%n", dotFile, e);
             }
             return Optional.empty();
         }
