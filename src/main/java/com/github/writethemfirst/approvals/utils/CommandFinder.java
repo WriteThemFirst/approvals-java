@@ -65,7 +65,7 @@ public class CommandFinder {
      * Only use this constructor from test code so the environment Map and Runtime can be mocked.
      */
     CommandFinder(final String path, final String executable, final Runtime runtime, final Map<String, String> env) {
-        this.path = path;
+        this.path = path.replace("~", System.getProperty("user.home"));
         this.executable = executable;
         this.runtime = runtime;
         programFilesFolder = env.get(WINDOWS_ENV_PROGRAM_FILES);
@@ -110,8 +110,13 @@ public class CommandFinder {
     }
 
     private Stream<Path> matchingCommandInPath(final Path possiblePath) {
+        System.out.printf("Looking for a candidate diff tool in %s (looking for %s)%n", possiblePath, executable);
         try {
-            FileVisitorWithResult visitor = new FileVisitorWithResult((p, a) -> p.endsWith(executable));
+            FileVisitorWithResult visitor = new FileVisitorWithResult((p, a) -> {
+                boolean found = p.endsWith(executable);
+                if(found) System.out.printf("Found a candidate diff tool : %s%n", executable);
+                return found;
+            });
             Files.walkFileTree(possiblePath, EnumSet.of(FOLLOW_LINKS), MAX_FOLDERS_DEPTH, visitor);
             return visitor.result;
         } catch (IOException e) {
