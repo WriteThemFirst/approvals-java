@@ -18,4 +18,4 @@ previous_tag=$(git describe --tags --abbrev=0 ${latest_tag}^)
 git log ${previous_tag}...${latest_tag} \
   --pretty=format:"* [%s](https://github.com/WriteThemFirst/approvals-java/commit/%H)" \
   --reverse \
-  | grep ":sparkles:\|:bug:\|:boom:"
+  | grep ":sparkles:\|:bug:\|:boom:\|feat:\|fix:"
