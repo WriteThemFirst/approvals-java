@@ -28,7 +28,8 @@ import java.util.List;
  * Defines `Reporter`s which work on MacOs only.
  */
 public interface MacOs {
-    CommandReporterSpec KDIFF = new CommandReporterSpec("/Applications/kdiff3.app/Contents/MacOS", "kdiff3", "%received% %approved% -o %approved%");
+    CommandReporterSpec KDIFF_OLD = new CommandReporterSpec("/Applications/kdiff3.app/Contents/MacOS", "kdiff3", "%received% %approved% -o %approved%");
+    CommandReporterSpec KDIFF_BREW = new CommandReporterSpec("/opt/homebrew/bin", "kdiff3", "%received% %approved% -o %approved%");
     CommandReporterSpec IDEA_ULTIMATE = new CommandReporterSpec("/Applications/IntelliJ IDEA.app/Contents/MacOS", "idea", "diff %received% %approved%");
     CommandReporterSpec IDEA_COMMUNITY = new CommandReporterSpec("/Applications/IdeaIC.app/Contents/MacOS", "idea", "diff %received% %approved%");
     CommandReporterSpec IDEA_COMMUNITY_TOOLBOX = new CommandReporterSpec("~/Library/Application Support/JetBrains/Toolbox/scripts", "idea", "diff %received% %approved%");
@@ -38,5 +39,5 @@ public interface MacOs {
     List<CommandReporterSpec> knownCommandReporters = Arrays.asList(
         Linux.MELD, Linux.VS_CODE, Linux.IDEA, Linux.RUBY_MINE,
         IDEA_ULTIMATE, IDEA_COMMUNITY, IDEA_COMMUNITY_TOOLBOX, IDEA_CE,
-        KDIFF);
+        KDIFF_BREW, KDIFF_OLD);
 }
