@@ -24,7 +24,7 @@
 
     <groupId>com.colisweb</groupId>
     <artifactId>approvals-java</artifactId>
-    <version>0.13.3-SNAPSHOT</version>
+    <version>v0.13.4-SNAPSHOT</version>
 
     <name>Approvals-Java</name>
     <description>Approval testing library for Java. Alleviates the burden of hand-writing assertions.</description>
