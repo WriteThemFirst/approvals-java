@@ -96,5 +96,8 @@ public class CommandReporter implements Reporter {
             .replace("%received%", received.toString());
     }
 
-
+    @Override
+    public String toString() {
+        return executableCommand.executable;
+    }
 }

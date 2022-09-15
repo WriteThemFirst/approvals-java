@@ -28,7 +28,6 @@ import java.util.Optional;
 
 import static com.github.writethemfirst.approvals.reporters.ReporterConfiguration.dotFile;
 import static com.github.writethemfirst.approvals.reporters.ReporterConfiguration.read;
-import static java.lang.String.format;
 
 /**
  * # SupportedOs
@@ -65,10 +64,17 @@ public enum SupportedOs {
     Reporter defaultReporter() {
         final Optional<CommandReporter> configuredReporter = read();
         if (configuredReporter.isPresent()) {
-            System.out.println(format("Using reporter configured in %s", dotFile));
+            System.out.printf("Using reporter configured in %s : %s%n", dotFile, configuredReporter.get());
             return configuredReporter.get();
         } else {
-            return new FirstWorkingReporter(specs.stream().map(CommandReporterSpec::reporter).toArray(Reporter[]::new));
+            FirstWorkingReporter first = new FirstWorkingReporter(specs.stream().map(CommandReporterSpec::reporter).toArray(Reporter[]::new));
+            if(first.firstWorking().isPresent()) {
+                Reporter reporter = first.firstWorking().get();
+                System.out.printf("No reporter configured in %s, using %s%n", dotFile, reporter);
+            } else {
+                System.out.printf("No reporter configured in %s and no reporter supported on this platform, likely a bug in approvals%n", dotFile);
+            }
+            return first;
         }
     }
 

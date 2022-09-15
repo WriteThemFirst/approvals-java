@@ -75,7 +75,7 @@ public class FirstWorkingReporter implements Reporter {
         if (firstWorking().isPresent()) {
             firstWorking().get().mismatch(files);
         } else {
-            System.err.println(format("No working reporter for reporting mismatch between %s and %s", files.approved, files.received));
+            System.err.printf("No working reporter for reporting mismatch between %s and %s%n", files.approved, files.received);
         }
     }
 
@@ -96,7 +96,7 @@ public class FirstWorkingReporter implements Reporter {
      * @return A potential first working reporter (it'll either return the first one it founds, or empty in case none is
      * found).s
      */
-    private Optional<Reporter> firstWorking() {
+    Optional<Reporter> firstWorking() {
         final boolean firstTime = firstWorking == null;
         if (firstTime) {
             firstWorking = findFirstAvailable();
