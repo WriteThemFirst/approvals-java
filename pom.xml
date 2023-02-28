@@ -239,7 +239,7 @@
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
-                <version>1.9.5</version>
+                <version>1.11.3</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.pitest</groupId>
