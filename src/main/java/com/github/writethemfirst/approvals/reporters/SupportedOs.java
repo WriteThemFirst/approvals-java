@@ -70,9 +70,9 @@ public enum SupportedOs {
             FirstWorkingReporter first = new FirstWorkingReporter(specs.stream().map(CommandReporterSpec::reporter).toArray(Reporter[]::new));
             if(first.firstWorking().isPresent()) {
                 Reporter reporter = first.firstWorking().get();
-                System.out.printf("No reporter configured in %s, using %s%n", dotFile, reporter);
+                System.out.printf("No available reporter configured in %s, using %s%n", dotFile, reporter);
             } else {
-                System.out.printf("No reporter configured in %s and no reporter supported on this platform, likely a bug in approvals%n", dotFile);
+                System.out.printf("No available reporter configured in %s and no reporter supported on this platform, likely a bug in approvals%n", dotFile);
             }
             return first;
         }
